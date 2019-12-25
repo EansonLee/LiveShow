@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#3F51B5</color>
+    <color name="colorPrimaryDark">#303F9F</color>
+    <color name="colorAccent">#FF4081</color>
+
+
+    <!--主题样式-->
+    <color name="main_color">#f55825</color>
+    <color name="font_black_color">#333333</color>
+    <color name="font_second_color">#999999</color>
+    <color name="font_red_color">#FF686C</color>
+    <color name="font_orange_color">#FF8E00</color>
+    <color name="font_bule_color">#1F7CEC</color>
+
+    <color name="font_my_color">#666666</color>
+    <color name="font_my_blue_color">#1C7AEB</color>
+
+    <color name="bg_main_color">#F0F0F0</color>
+    <color name="divider_main_color">#E6E6E6</color>
+
+    <color name="radio_button_selected_color">#f55825</color>
+    <color name="radio_button_unselected_color">#F9F9F9</color>
+
+    <color name="vercode_shape_color">#CDCDCD</color>
+    <color name="vercode_text_color">#666666</color>
+
+    <color name="hint_text_color">#C3C3C3</color>
+    <color name="divide_line_color">#DCDCDC</color>
+
+    <color name="chart_line_color">#FF6028</color>
+
+    <color name="my_background_color">#f8f8f8</color>
+
+    <color name="white">#ffffff</color>
+    <color name="black">#000000</color>
+    <color name="white_50">#50ffffff</color>
+    //粉色背景
+    <color name="pink">#FFF5F1</color>
+</resources>

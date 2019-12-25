@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/layout_login"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    android:orientation="vertical">
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="94dp"
+        android:layout_marginLeft="115dp"
+        android:layout_marginRight="120dp"
+        android:layout_marginTop="90dp"
+        android:src="@mipmap/loginlogo" />
+
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="19dp"
+        android:gravity="center">
+
+
+        <com.maywide.liveshow.widget.ClearEditText
+            android:id="@+id/et_phone"
+            android:layout_width="288dp"
+            android:layout_height="40dp"
+            android:background="@color/white"
+            android:hint="@string/login_hint_phone_text"
+            android:inputType="number"
+            android:paddingLeft="25dp"
+            android:textColor="@color/font_black_color"
+            android:textColorHint="@color/hint_text_color"
+            android:textSize="@dimen/font16" />
+
+        <ImageView
+            android:id="@+id/iv_phone"
+            android:layout_width="12dp"
+            android:layout_height="15dp"
+            android:layout_alignLeft="@+id/et_phone"
+            android:layout_alignTop="@+id/et_phone"
+            android:layout_marginBottom="10px"
+            android:layout_marginLeft="5dp"
+            android:layout_marginTop="14dp"
+            android:src="@mipmap/iphone_login" />
+
+        <!--<ImageView-->
+            <!--android:id="@+id/iv_delete"-->
+            <!--android:layout_width="11dp"-->
+            <!--android:layout_height="11dp"-->
+            <!--android:layout_alignBottom="@+id/et_phone"-->
+            <!--android:layout_alignRight="@+id/et_phone"-->
+            <!--android:layout_alignTop="@+id/et_phone"-->
+            <!--android:layout_marginRight="5dp"-->
+            <!--android:src="@mipmap/delete_login"-->
+            <!--android:visibility="gone" />-->
+
+        <View
+            android:layout_width="288dp"
+            android:layout_height="1dp"
+            android:layout_below="@+id/iv_phone"
+            android:background="@color/divide_line_color" />
+
+    </RelativeLayout>
+
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="60dp"
+        android:gravity="center">
+
+
+        <EditText
+            android:id="@+id/et_var"
+            android:layout_width="288dp"
+            android:layout_height="40dp"
+            android:background="@color/white"
+            android:hint="@string/login_hint_vercode_text"
+            android:inputType="number"
+            android:paddingLeft="25dp"
+            android:textColor="@color/font_black_color"
+            android:textColorHint="@color/hint_text_color"
+            android:textSize="@dimen/font16" />
+
+        <ImageView
+            android:layout_width="12dp"
+            android:layout_height="15dp"
+            android:layout_alignBottom="@+id/et_var"
+            android:layout_alignLeft="@+id/et_var"
+            android:layout_alignTop="@+id/et_var"
+            android:layout_marginLeft="5dp"
+            android:src="@mipmap/ver_code_login" />
+
+        <TextView
+            android:id="@+id/tv_var"
+            android:layout_width="80dp"
+            android:layout_height="29dp"
+            android:layout_alignRight="@+id/et_var"
+            android:layout_alignTop="@+id/et_var"
+            android:layout_marginBottom="11px"
+            android:layout_marginRight="5dp"
+            android:background="@drawable/shape_edit"
+            android:gravity="center"
+            android:text="@string/login_get_vercoed_text"
+            android:textColor="@color/vercode_text_color"
+            android:textSize="@dimen/font12" />
+
+        <View
+            android:layout_width="288dp"
+            android:layout_height="1dp"
+            android:layout_below="@+id/tv_var"
+            android:background="@color/divide_line_color" />
+
+    </RelativeLayout>
+
+    <TextView
+        android:id="@+id/tv_login"
+        android:layout_width="286dp"
+        android:layout_height="44dp"
+        android:layout_marginLeft="45dp"
+        android:layout_marginRight="44dp"
+        android:background="@drawable/login_selector"
+        android:elevation="3dp"
+        android:gravity="center"
+        android:text="@string/login_center_text"
+        android:textColor="@color/white"
+        android:textSize="@dimen/font16" />
+
+</LinearLayout>

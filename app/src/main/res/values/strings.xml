@@ -1,0 +1,71 @@
+<resources>
+    <string name="app_name">决策眼</string>
+
+    <string name="http_loading">加载中...</string>
+    <string name="net_err">连接服务器失败，请检查网络...</string>
+    <string name="net_dialog_err">网络请求失败，请检查您的网络设置</string>
+
+    <!--mian-->
+    <string name="bottom_navigation_item_home">主页</string>
+    <string name="bottom_navigation_item_bi">BI数据</string>
+    <string name="bottom_navigation_item_bbs">U互动社区</string>
+    <string name="bottom_navigation_item_gd">聚焦广电</string>
+    <string name="bottom_navigation_item_user">我的</string>
+
+    <!--home-->
+    <string name="home_common_kpi">常用指标</string>
+    <string name="home_all_kpi">全部指标</string>
+    <string name="home_banner_err">加载失败</string>
+    <string name="home_load_err">加载失败</string>
+    <string name="home_data_err">无加载数据</string>
+    <string name="home_kpi_empty">你还没有常用指标，请设置</string>
+
+    <!-- bidata-->
+    <string name="bidata_title">BI数据</string>
+
+    <!-- ucommunity-->
+    <string name="ucommunity_title">U互动社区</string>
+
+    <!-- focus_gd -->
+    <string name="focus_gd_title">聚焦广电</string>
+
+    <!-- my -->
+    <string name="my_title">我的</string>
+    <string name="my_phone">手机号</string>
+    <string name="my_catch">清理缓存</string>
+    <string name="my_version">检查更新</string>
+    <string name="my_logout">退出登录</string>
+    <string name="my_cacheclear">缓存清理</string>
+    <string name="my_checkcatche">确定清空离线缓存</string>
+    <string name="my_cancle">取消</string>
+    <string name="my_sure">确定</string>
+    <string name="my_checklogout">确定退出登录</string>
+
+    <!--login-->
+    <string name="login_hint_phone_text">请输入手机号</string>
+    <string name="login_hint_vercode_text">请输入验证码</string>
+    <string name="login_get_vercoed_text">获取验证码</string>
+    <string name="login_center_text">登录</string>
+    <string name="login_err">验证码或密码错误</string>
+    <string name="getVer_err">获取验证码失败</string>
+    <string name="phone_empety">手机号不能为空</string>
+    <string name="phone_err">请输入正确的手机号</string>
+    <string name="getVer_success">验证码已发送</string>
+
+
+    <!-- manageKpi-->
+    <string name="managekpi_title">全部指标</string>
+    <string name="managekpi_title_edit">指标编辑</string>
+    <string name="managekpi_common_kpi">常用指标</string>
+    <string name="managekpi_other_kpi">其他指标</string>
+    <string name="managekpi_cancel">取消</string>
+    <string name="managekpi_finish">完成</string>
+    <string name="managekpi_edit">编辑</string>
+    <string name="managekpi_comonkpi_empty">请添加常用指标</string>
+    <string name="managekpi_otherkpi_empty">没有更多指标</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+
+
+</resources>

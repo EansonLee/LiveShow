@@ -1,0 +1,161 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/my_background_color"
+    android:orientation="vertical">
+
+    <include layout="@layout/view_mian_title" />
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:background="@color/white"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
+
+        <ImageView
+            android:layout_width="22dp"
+            android:layout_height="22dp"
+            android:layout_marginLeft="15dp"
+            android:layout_marginRight="12dp"
+            android:src="@mipmap/iphone" />
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/my_phone"
+            android:textColor="@color/font_black_color"
+            android:textSize="@dimen/font14" />
+
+        <TextView
+            android:id="@+id/tv_phone"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="13dp"
+            android:text="11111111111"
+            android:textColor="@color/font_my_color"
+            android:textSize="@dimen/font14" />
+
+
+    </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginLeft="49dp"
+        android:background="@color/divider_main_color" />
+
+    <LinearLayout
+        android:id="@+id/ly_catche"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:background="@color/white"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
+
+        <ImageView
+            android:layout_width="22dp"
+            android:layout_height="22dp"
+            android:layout_marginLeft="15dp"
+            android:layout_marginRight="12dp"
+            android:src="@mipmap/cache" />
+
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/my_catch"
+            android:textColor="@color/font_black_color"
+            android:textSize="@dimen/font14" />
+
+        <TextView
+            android:id="@+id/tv_cache"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/font_my_color"
+            android:textSize="@dimen/font14" />
+
+
+        <ImageView
+            android:layout_width="7dp"
+            android:layout_height="12dp"
+            android:layout_marginLeft="8dp"
+            android:layout_marginRight="13dp"
+            android:src="@mipmap/arrow_right" />
+
+
+    </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginLeft="49dp"
+        android:background="@color/divider_main_color" />
+
+    <LinearLayout
+        android:id="@+id/ly_update"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:background="@color/white"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
+
+        <ImageView
+            android:layout_width="22dp"
+            android:layout_height="22dp"
+            android:layout_marginLeft="15dp"
+            android:layout_marginRight="12dp"
+            android:src="@mipmap/update" />
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/my_version"
+            android:textColor="@color/font_black_color"
+            android:textSize="@dimen/font14" />
+
+
+        <TextView
+            android:id="@+id/tv_update"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="1.0.0"
+            android:textColor="@color/font_my_color"
+            android:textSize="@dimen/font14" />
+
+        <ImageView
+            android:layout_width="7dp"
+            android:layout_height="12dp"
+            android:layout_marginLeft="8dp"
+            android:layout_marginRight="13dp"
+            android:src="@mipmap/arrow_right" />
+
+    </LinearLayout>
+
+    <!--<View-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="1dp"-->
+        <!--android:layout_marginLeft="49dp"-->
+        <!--android:background="@color/divider_main_color" />-->
+
+
+    <TextView
+        android:id="@+id/tv_logout"
+        android:layout_width="286dp"
+        android:layout_height="44dp"
+        android:layout_marginLeft="45dp"
+        android:layout_marginRight="45dp"
+        android:layout_marginTop="61dp"
+        android:background="@drawable/logout_selector"
+        android:elevation="3dp"
+        android:gravity="center"
+        android:text="@string/my_logout"
+        android:textColor="@color/white"
+        android:textSize="@dimen/font16" />
+
+</LinearLayout>
