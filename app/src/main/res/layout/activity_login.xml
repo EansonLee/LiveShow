@@ -6,62 +6,55 @@
     android:background="@color/white"
     android:orientation="vertical">
 
-    <ImageView
+    <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="94dp"
-        android:layout_marginLeft="115dp"
-        android:layout_marginRight="120dp"
+        android:layout_marginLeft="89dp"
         android:layout_marginTop="90dp"
-        android:src="@mipmap/loginlogo" />
+        android:layout_marginRight="89dp"
+        android:layout_marginBottom="69.5dp"
+        android:text="@string/login_bg_text"
+        android:textColor="#F97698"
+        android:textSize="18sp" />
 
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="19dp"
+        android:layout_marginBottom="10dp"
         android:gravity="center">
 
 
         <com.maywide.liveshow.widget.ClearEditText
             android:id="@+id/et_phone"
-            android:layout_width="288dp"
+            android:layout_width="match_parent"
             android:layout_height="40dp"
-            android:background="@color/white"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:background="@mipmap/login_et_bg"
             android:hint="@string/login_hint_phone_text"
             android:inputType="number"
-            android:paddingLeft="25dp"
+            android:paddingLeft="70dp"
             android:textColor="@color/font_black_color"
             android:textColorHint="@color/hint_text_color"
             android:textSize="@dimen/font16" />
+
+        <TextView
+            android:id="@+id/tv_num"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="33dp"
+            android:text="+86" />
 
         <ImageView
             android:id="@+id/iv_phone"
             android:layout_width="12dp"
             android:layout_height="15dp"
-            android:layout_alignLeft="@+id/et_phone"
-            android:layout_alignTop="@+id/et_phone"
-            android:layout_marginBottom="10px"
-            android:layout_marginLeft="5dp"
-            android:layout_marginTop="14dp"
-            android:src="@mipmap/iphone_login" />
-
-        <!--<ImageView-->
-            <!--android:id="@+id/iv_delete"-->
-            <!--android:layout_width="11dp"-->
-            <!--android:layout_height="11dp"-->
-            <!--android:layout_alignBottom="@+id/et_phone"-->
-            <!--android:layout_alignRight="@+id/et_phone"-->
-            <!--android:layout_alignTop="@+id/et_phone"-->
-            <!--android:layout_marginRight="5dp"-->
-            <!--android:src="@mipmap/delete_login"-->
-            <!--android:visibility="gone" />-->
-
-        <View
-            android:layout_width="288dp"
-            android:layout_height="1dp"
-            android:layout_below="@+id/iv_phone"
-            android:background="@color/divide_line_color" />
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="7.5dp"
+            android:layout_toRightOf="@+id/tv_num"
+            android:src="@mipmap/drop_down_icon" />
 
     </RelativeLayout>
 
@@ -69,64 +62,144 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="60dp"
+        android:layout_marginBottom="39.5dp"
         android:gravity="center">
 
 
         <EditText
             android:id="@+id/et_var"
-            android:layout_width="288dp"
+            android:layout_width="match_parent"
             android:layout_height="40dp"
-            android:background="@color/white"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:background="@mipmap/login_et_bg"
             android:hint="@string/login_hint_vercode_text"
             android:inputType="number"
-            android:paddingLeft="25dp"
+            android:paddingLeft="15dp"
             android:textColor="@color/font_black_color"
             android:textColorHint="@color/hint_text_color"
             android:textSize="@dimen/font16" />
 
-        <ImageView
-            android:layout_width="12dp"
-            android:layout_height="15dp"
-            android:layout_alignBottom="@+id/et_var"
-            android:layout_alignLeft="@+id/et_var"
-            android:layout_alignTop="@+id/et_var"
-            android:layout_marginLeft="5dp"
-            android:src="@mipmap/ver_code_login" />
+        <!--<ImageView-->
+        <!--android:layout_width="12dp"-->
+        <!--android:layout_height="15dp"-->
+        <!--android:layout_alignLeft="@+id/et_var"-->
+        <!--android:layout_alignTop="@+id/et_var"-->
+        <!--android:layout_alignBottom="@+id/et_var"-->
+        <!--android:layout_marginLeft="5dp"-->
+        <!--android:src="@mipmap/ver_code_login" />-->
 
-        <TextView
-            android:id="@+id/tv_var"
-            android:layout_width="80dp"
-            android:layout_height="29dp"
-            android:layout_alignRight="@+id/et_var"
-            android:layout_alignTop="@+id/et_var"
-            android:layout_marginBottom="11px"
-            android:layout_marginRight="5dp"
-            android:background="@drawable/shape_edit"
-            android:gravity="center"
-            android:text="@string/login_get_vercoed_text"
-            android:textColor="@color/vercode_text_color"
-            android:textSize="@dimen/font12" />
-
-        <View
-            android:layout_width="288dp"
-            android:layout_height="1dp"
-            android:layout_below="@+id/tv_var"
-            android:background="@color/divide_line_color" />
+        <!--<TextView-->
+        <!--android:id="@+id/tv_var"-->
+        <!--android:layout_width="80dp"-->
+        <!--android:layout_height="29dp"-->
+        <!--android:layout_alignRight="@+id/et_var"-->
+        <!--android:layout_alignTop="@+id/et_var"-->
+        <!--android:layout_marginBottom="11px"-->
+        <!--android:layout_marginRight="5dp"-->
+        <!--android:background="@drawable/shape_edit"-->
+        <!--android:gravity="center"-->
+        <!--android:text="@string/login_get_vercoed_text"-->
+        <!--android:textColor="@color/vercode_text_color"-->
+        <!--android:textSize="@dimen/font12" />-->
 
     </RelativeLayout>
 
     <TextView
         android:id="@+id/tv_login"
-        android:layout_width="286dp"
+        android:layout_width="match_parent"
         android:layout_height="44dp"
-        android:layout_marginLeft="45dp"
-        android:layout_marginRight="44dp"
-        android:background="@drawable/login_selector"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:layout_marginBottom="2.5dp"
+        android:background="@mipmap/login_btn"
         android:elevation="3dp"
         android:gravity="center"
         android:text="@string/login_center_text"
         android:textColor="@color/white"
         android:textSize="@dimen/font16" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="90dp"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="@string/login_regist"
+            android:textColor="@color/main_color"
+            android:textSize="@dimen/sp_12" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="3"
+            android:gravity="center" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="@string/forget_pwd"
+            android:textColor="@color/font_second_color"
+            android:textSize="@dimen/sp_12" />
+
+    </LinearLayout>
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="12.5dp"
+        android:layout_gravity="center"
+        android:layout_marginBottom="18dp"
+        android:src="@mipmap/other_way_login" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="10dp"
+        android:gravity="center"
+        android:orientation="horizontal">
+
+        <ImageView
+            android:layout_width="34dp"
+            android:layout_height="34dp"
+            android:layout_marginRight="18dp"
+            android:src="@mipmap/btn_qq" />
+
+        <ImageView
+            android:layout_width="34dp"
+            android:layout_height="34dp"
+            android:src="@mipmap/btn_wechat" />
+
+    </LinearLayout>
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/login_reps"
+            android:textColor="@color/font_second_color"
+            android:textSize="@dimen/sp_12" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/login_clause"
+            android:textColor="@color/main_color"
+            android:textSize="12sp" />
+
+
+    </LinearLayout>
 
 </LinearLayout>

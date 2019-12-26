@@ -36,14 +36,12 @@ import retrofit2.Response;
 
 public class LoginActivity extends BaseAcitivity implements View.OnClickListener {
 
-    @BindView(R.id.view_status_bar)
-    View statusBar;
+//    @BindView(R.id.view_status_bar)
+//    View statusBar;
     @BindView(R.id.et_phone)
     EditText etPhone;
     @BindView(R.id.et_var)
     EditText etVar;
-    @BindView(R.id.tv_var)
-    TextView tvVar;
     @BindView(R.id.tv_login)
     TextView tvLogin;
 
@@ -52,7 +50,7 @@ public class LoginActivity extends BaseAcitivity implements View.OnClickListener
     LinearLayout layoutLogin;
 
     //倒计时
-    private TimeCount timeCount;
+//    private TimeCount timeCount;
     //请求体
     private LoginReq loginReq;
     private LoginGetVerReq getVerReq;
@@ -69,32 +67,13 @@ public class LoginActivity extends BaseAcitivity implements View.OnClickListener
     @Override
     protected void initView() {
 
-        StatusBarUtils.setStatusWhite(this, getStatusBarView());
+//        StatusBarUtils.setStatusWhite(this, getStatusBarView());
 
-        tvVar.setOnClickListener(this);
         tvLogin.setOnClickListener(this);
 
-        timeCount = new TimeCount(60000, 1000);
+//        timeCount = new TimeCount(60000, 1000);
 
         addLayoutListener(layoutLogin, tvLogin);
-
-        //验证码框监听
-        etVar.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-//                tvLogin
-            }
-
-            @Override
-            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-
-            }
-
-            @Override
-            public void afterTextChanged(Editable editable) {
-                tvLogin.setBackgroundResource(R.drawable.logout_selector);
-            }
-        });
 
     }
 
@@ -108,7 +87,7 @@ public class LoginActivity extends BaseAcitivity implements View.OnClickListener
 
     @Override
     protected View getStatusBarView() {
-        return statusBar;
+        return null;
     }
 
     @Override
@@ -120,14 +99,6 @@ public class LoginActivity extends BaseAcitivity implements View.OnClickListener
     public void onClick(View view) {
         switch (view.getId()) {
 
-            case R.id.tv_var:
-                loginGetVerReq();
-
-                //隐藏输入键盘
-                InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-                imm.hideSoftInputFromWindow(view.getWindowToken(), 0); //强制隐藏键盘
-
-                break;
             case R.id.tv_login:
                 loginReq();
                 break;
@@ -195,48 +166,6 @@ public class LoginActivity extends BaseAcitivity implements View.OnClickListener
     }
 
     /**
-     * 获取验证码请求
-     */
-    private void loginGetVerReq() {
-
-        String phoneNum = etPhone.getText().toString();
-
-        if (isCorrectPhoneNum(phoneNum)) {
-            getVerReq.setMobile(phoneNum);
-        } else {
-            return;
-        }
-
-//        timeCount.start();
-
-        RetrofitClient
-                .getInstance()
-                .api(API.class)
-                .loginVerReq(getVerReq)
-                .enqueue(new Callback<ResponseObj<LoginResp>>() {
-                    @Override
-                    public void onResponse(Call<ResponseObj<LoginResp>> call, Response<ResponseObj<LoginResp>> response) {
-
-                        ResponseObj resp = response.body();
-
-                        if (null != resp) {
-                            if ("0".equals(resp.getCode())) {
-                                timeCount.start();
-                                showToast(getString(R.string.getVer_success));
-                            } else {
-                                showToast(resp.getMsg());
-                            }
-                        }
-                    }
-
-                    @Override
-                    public void onFailure(Call<ResponseObj<LoginResp>> call, Throwable t) {
-                        showToast(getString(R.string.getVer_err));
-                    }
-                });
-    }
-
-    /**
      * 手机号是否正确
      *
      * @param phoneNum
@@ -257,7 +186,7 @@ public class LoginActivity extends BaseAcitivity implements View.OnClickListener
     }
 
     /**
-     * 验证码判断
+     * 密码判断
      *
      * @param VerCode
      * @return
@@ -269,7 +198,7 @@ public class LoginActivity extends BaseAcitivity implements View.OnClickListener
             return true;
         } else {
 //            tvLogin.setBackgroundResource(R.drawable.login_selector);
-            showToast("验证码不能为空");
+            showToast("密码不能为空");
             return false;
         }
 
@@ -335,14 +264,14 @@ public class LoginActivity extends BaseAcitivity implements View.OnClickListener
 
         @Override
         public void onTick(long millisUntilFinished) {
-            tvVar.setClickable(false);
-            tvVar.setText(millisUntilFinished / 1000 + "秒重新发送");
+//            tvVar.setClickable(false);
+//            tvVar.setText(millisUntilFinished / 1000 + "秒重新发送");
         }
 
         @Override
         public void onFinish() {
-            tvVar.setText(R.string.login_get_vercoed_text);
-            tvVar.setClickable(true);
+//            tvVar.setText(R.string.login_get_vercoed_text);
+//            tvVar.setClickable(true);
         }
     }
 }

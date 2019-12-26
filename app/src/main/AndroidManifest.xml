@@ -25,9 +25,9 @@
 
         <activity android:name="com.maywide.liveshow.activity.ManageKpiActivity"></activity>
 
-        <activity android:name="com.maywide.liveshow.activity.LoginActivity" />
+        <activity android:name="com.maywide.liveshow.activity.SplashActivity" />
 
-        <activity android:name="com.maywide.liveshow.activity.SplashActivity">
+        <activity android:name="com.maywide.liveshow.activity.LoginActivity">
 
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

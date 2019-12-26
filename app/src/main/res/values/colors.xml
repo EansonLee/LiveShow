@@ -6,9 +6,9 @@
 
 
     <!--主题样式-->
-    <color name="main_color">#f55825</color>
+    <color name="main_color">#F97698</color>
     <color name="font_black_color">#333333</color>
-    <color name="font_second_color">#999999</color>
+    <color name="font_second_color">#858585</color>
     <color name="font_red_color">#FF686C</color>
     <color name="font_orange_color">#FF8E00</color>
     <color name="font_bule_color">#1F7CEC</color>
