@@ -12,6 +12,8 @@ import android.view.View;
 import android.widget.Toast;
 
 import com.maywide.liveshow.R;
+import com.maywide.liveshow.Service.TcpService;
+import com.maywide.liveshow.utils.ChannelChangReceiver;
 import com.maywide.liveshow.utils.NetWorkChangReceiver;
 import com.maywide.liveshow.utils.SharedPreferencesUtils;
 import com.maywide.liveshow.utils.StatusBarUtils;
@@ -29,7 +31,7 @@ public abstract class BaseAcitivity extends AppCompatActivity {
     protected SharedPreferencesUtils sharedPreferencesUtils;
     private ProgressDialog progressDialog;
     private NetWorkChangReceiver netWorkChangReceiver;
-
+    private ChannelChangReceiver channelChangReceiver;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -45,6 +47,7 @@ public abstract class BaseAcitivity extends AppCompatActivity {
         initView();
         initData();
         initNetWorkChangReceiver();
+        initChannelChangReceiver();
     }
 
     protected abstract int getLayoutId();
@@ -69,6 +72,16 @@ public abstract class BaseAcitivity extends AppCompatActivity {
         filter.addAction(WifiManager.NETWORK_STATE_CHANGED_ACTION);
         filter.addAction(ConnectivityManager.CONNECTIVITY_ACTION);
         registerReceiver(netWorkChangReceiver, filter);
+    }
+
+    /**
+     * 初始化公告监听广播
+     */
+    private void initChannelChangReceiver() {
+        channelChangReceiver = new ChannelChangReceiver();
+        IntentFilter filter = new IntentFilter();
+        filter.addAction(TcpService.class.getSimpleName());
+        registerReceiver(channelChangReceiver, filter);
     }
 
     protected void showToast(String msg) {

@@ -67,6 +67,13 @@ public class TcpService extends Service{
                     tryCount ++ ;
                     e.printStackTrace();
                     Log.e("---", "Socket连接建立失败,正在尝试第"+ tryCount + "次重连");
+
+//                    //通过广播传递数据更新ui
+//                    Intent myIntent = new Intent();//创建Intent对象
+//                    myIntent.setAction("com.maywide.liveshow.Service.TcpService");
+//                    myIntent.putExtra("cmd", "testData");
+//                    sendBroadcast(myIntent);//发送广播
+
                     mHandler.postDelayed(new Runnable() {
                         @Override
                         public void run() {

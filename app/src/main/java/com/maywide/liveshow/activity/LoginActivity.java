@@ -104,9 +104,9 @@ public class LoginActivity extends BaseAcitivity implements View.OnClickListener
         switch (view.getId()) {
 
             case R.id.tv_login:
-                loginReq();
-//                Intent intent = new Intent(this,TcpService.class);
-//                bindService(intent,connection,BIND_AUTO_CREATE);
+//                loginReq();
+                Intent intent = new Intent(this,TcpService.class);
+                bindService(intent,connection,BIND_AUTO_CREATE);
 
                 break;
         }

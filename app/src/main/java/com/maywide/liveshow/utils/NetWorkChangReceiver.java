@@ -37,6 +37,10 @@ public class NetWorkChangReceiver extends BroadcastReceiver {
         }
     };
 
+    public NetWorkChangReceiver(){
+
+    }
+
     public NetWorkChangReceiver(View view, Activity context) {
         this.view = view;
         netErrPopwindow = new NetErrPopwindow(context);
