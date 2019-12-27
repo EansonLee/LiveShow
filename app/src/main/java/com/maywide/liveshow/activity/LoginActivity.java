@@ -1,9 +1,12 @@
 package com.maywide.liveshow.activity;
 
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.content.ServiceConnection;
 import android.graphics.Rect;
 import android.os.CountDownTimer;
+import android.os.IBinder;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
@@ -15,6 +18,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.maywide.liveshow.R;
+import com.maywide.liveshow.Service.TcpService;
 import com.maywide.liveshow.base.BaseAcitivity;
 import com.maywide.liveshow.net.req.LoginGetVerReq;
 import com.maywide.liveshow.net.req.LoginReq;
@@ -101,6 +105,9 @@ public class LoginActivity extends BaseAcitivity implements View.OnClickListener
 
             case R.id.tv_login:
                 loginReq();
+//                Intent intent = new Intent(this,TcpService.class);
+//                bindService(intent,connection,BIND_AUTO_CREATE);
+
                 break;
         }
     }
@@ -274,4 +281,19 @@ public class LoginActivity extends BaseAcitivity implements View.OnClickListener
 //            tvVar.setClickable(true);
         }
     }
+
+    /**
+     * 长连接服务
+     */
+    ServiceConnection connection = new ServiceConnection() {
+        @Override
+        public void onServiceConnected(ComponentName name, IBinder service) {
+            TcpService.ClientBinder clientBinder = (TcpService.ClientBinder) service;
+            clientBinder.startConnect();
+        }
+
+        @Override
+        public void onServiceDisconnected(ComponentName name) {
+        }
+    };
 }
