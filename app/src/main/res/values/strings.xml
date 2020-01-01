@@ -57,6 +57,18 @@
     <string name="login_reps">登陆即代表</string>
     <string name="login_clause">《服务和隐私条款》</string>
 
+    <!--startLive-->
+    <string name="live_title">直播标题</string>
+    <string name="live_hint_title">给直播写个标题吧</string>
+    <string name="live_share">分享至</string>
+    <string name="live_beauty">美颜</string>
+    <string name="start_live_text">开始直播</string>
+
+    <!--Live-->
+    <string name="live_brodcast">公告栏</string>
+    <string name="live_star">星钻</string>
+    <string name="live_protect">守护</string>
+    <string name="live_wait">虚位以待</string>
 
     <!-- manageKpi-->
     <string name="managekpi_title">全部指标</string>
@@ -68,6 +80,12 @@
     <string name="managekpi_edit">编辑</string>
     <string name="managekpi_comonkpi_empty">请添加常用指标</string>
     <string name="managekpi_otherkpi_empty">没有更多指标</string>
+
+    <!-- 权限提示信息 -->
+    <string name="permission_write_external_storage">程序需要缓存一些数据在SD卡，否则无法运行。</string>
+    <string name="permission_camera">程序需要使用摄像头权限用来音视频通话，否则无法运行。</string>
+    <string name="permission_record_audio">程序需要录音权限用来音视频通话，否则无法运行。</string>
+    <string name="permission_read_phone_state">程序需要电话监听权限用来音视频通话，否则无法运行。</string>
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>

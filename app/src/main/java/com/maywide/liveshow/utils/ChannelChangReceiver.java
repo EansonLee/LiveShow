@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.util.Log;
 
 /**
+ * socket长链接测试
  * Created by liyizhen on 2019/12/27.
  */
 

@@ -1,0 +1,173 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".activity.LiveActivity">
+    <!--头像栏-->
+    <LinearLayout
+        android:id="@+id/ly_user"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="13dp"
+        android:gravity="center_vertical">
+
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/tv_live"
+            android:layout_width="31dp"
+            android:layout_height="30dp"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="4dp"
+            android:background=""
+            android:src="@mipmap/add_icon" />
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/tv_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="4546464646"
+                android:textColor="@color/white"
+                android:textSize="@dimen/font12" />
+
+            <TextView
+                android:id="@+id/tv_id"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="ID:"
+                android:textColor="@color/white"
+                android:textSize="@dimen/font12" />
+        </LinearLayout>
+
+        <View
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"></View>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="34dp"
+            android:background="@mipmap/broadcast_bg"
+            android:gravity="center"
+            android:text="< 公告栏"
+            android:textColor="@color/white" />
+
+    </LinearLayout>
+    <!--星钻栏-->
+    <LinearLayout
+        android:id="@+id/ly_coin"
+        android:layout_width="match_parent"
+        android:layout_height="15dp"
+        android:layout_below="@id/ly_user"
+        android:layout_marginLeft="16dp"
+        android:orientation="horizontal">
+
+        <LinearLayout
+            android:id="@+id/ly_star"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_marginRight="25dp"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_marginRight="8dp"
+                android:text="@string/live_star"
+                android:textColor="@color/white"
+                android:textSize="@dimen/font11" />
+
+            <TextView
+                android:id="@+id/tv_star"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_marginRight="2dp"
+                android:text="88"
+                android:textColor="@color/white"
+                android:textSize="@dimen/font11" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:text=">"
+                android:textColor="@color/white"
+                android:textSize="@dimen/font11" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/ly_protect"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="8dp"
+                android:text="@string/live_protect"
+                android:textColor="@color/white"
+                android:textSize="@dimen/font11" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="5dp"
+                android:text="@string/live_wait"
+                android:textColor="@color/white"
+                android:textSize="@dimen/font11" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:text=">"
+                android:textColor="@color/white"
+                android:textSize="@dimen/font11" />
+
+        </LinearLayout>
+
+    </LinearLayout>
+    <!--公告滚动栏-->
+    <LinearLayout
+        android:id="@+id/ly_broadcast"
+        android:layout_width="match_parent"
+        android:layout_height="30dp"
+        android:layout_below="@+id/ly_coin"
+        android:background="@mipmap/title_bg"
+        android:gravity="center_vertical"
+        android:paddingLeft="15dp">
+
+        <ImageView
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_marginRight="6dp"
+            android:src="@mipmap/broad_icon" />
+
+        <TextView
+            android:id="@+id/tv_broadcast"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:gravity="center_vertical"
+            android:text="--"
+            android:textColor="@color/main_color"
+            android:textSize="@dimen/font12" />
+
+    </LinearLayout>
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="0dp"></LinearLayout>
+
+</RelativeLayout>

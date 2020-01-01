@@ -9,6 +9,7 @@ import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.Toast;
 
 import com.maywide.liveshow.R;
@@ -17,6 +18,7 @@ import com.maywide.liveshow.utils.ChannelChangReceiver;
 import com.maywide.liveshow.utils.NetWorkChangReceiver;
 import com.maywide.liveshow.utils.SharedPreferencesUtils;
 import com.maywide.liveshow.utils.StatusBarUtils;
+import com.wushuangtech.wstechapi.TTTRtcEngine;
 
 import butterknife.ButterKnife;
 
@@ -27,6 +29,8 @@ import butterknife.ButterKnife;
 public abstract class BaseAcitivity extends AppCompatActivity {
 
     public static String mobile = "17017300910";
+    //三体sdk引擎
+    protected TTTRtcEngine mTTTEngine;
 
     protected SharedPreferencesUtils sharedPreferencesUtils;
     private ProgressDialog progressDialog;
@@ -48,6 +52,11 @@ public abstract class BaseAcitivity extends AppCompatActivity {
         initData();
         initNetWorkChangReceiver();
         initChannelChangReceiver();
+
+        //获取三体SDK实例对象
+        mTTTEngine = TTTRtcEngine.getInstance();
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON,
+                WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
     }
 
     protected abstract int getLayoutId();

@@ -4,7 +4,7 @@ android {
     compileSdkVersion 28
     defaultConfig {
         applicationId "com.maywide.liveshow"
-        minSdkVersion 15
+        minSdkVersion 16
         targetSdkVersion 28
         versionCode 1
         versionName "1.0"
@@ -15,6 +15,12 @@ android {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+
+    repositories {
+        flatDir {
+            dirs 'libs'
         }
     }
 }
@@ -70,4 +76,8 @@ dependencies {
     implementation 'com.github.SheHuan:NiceDialog:1.1.9'
     //webview
     implementation 'com.just.agentweb:agentweb:4.0.2'
+    //三体
+    implementation(name: '3T_Native_SDK_for_Android', ext: 'aar')
+    //圆形图片
+    compile 'de.hdodenhof:circleimageview:2.1.0'
 }
