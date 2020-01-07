@@ -111,6 +111,21 @@
     <string name="ttt_error_exit_other_anchor_enter">其他人以主播身份进入</string>
     <string name="ttt_error_exit_token_expired">token 值已过期</string>
 
+
+    <!--弹框提示信息-->
+    <string name="dialog_live_open">开启直播</string>
+    <string name="dialog_check_live_open">是否开启直播</string>
+    <string name="dialog_exit_live">退出直播</string>
+    <string name="dialog_check_live">是否退出直播</string>
+    <string name="dialog_open_beauty">开启美颜</string>
+    <string name="dialog_check_beauty">是否开启美颜</string>
+    <string name="dialog_close_beauty">关闭美颜</string>
+    <string name="dialog_check_close_beauty">是否关闭美颜</string>
+    <string name="dialog_open_camera">开启相机</string>
+    <string name="dialog_check_camera">是否开启相机</string>
+    <string name="dialog_open_locate">开启定位</string>
+    <string name="dialog_check_locate">是否开启定位</string>
+
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
 

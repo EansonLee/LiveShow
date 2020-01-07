@@ -19,6 +19,7 @@ import com.maywide.liveshow.base.BaseAcitivity;
 import com.maywide.liveshow.bean.MyPermissionBean;
 import com.maywide.liveshow.utils.EnterLiveRoomReceiver;
 import com.maywide.liveshow.utils.MyPermissionManager;
+import com.maywide.liveshow.widget.ConfirmDialog;
 import com.wushuangtech.library.Constants;
 import com.wushuangtech.wstechapi.model.PublisherConfiguration;
 
@@ -91,12 +92,6 @@ public class StartLiveActivity extends BaseAcitivity implements View.OnClickList
 
     @Override
     protected void initData() {
-        // ***注册广播，接收 SDK 的回调信令*** 重要操作!加TODO高亮
-        enterLiveRoomReceiver = new EnterLiveRoomReceiver(getProgressDialog(), isLoging, this);
-        IntentFilter filter = new IntentFilter();
-        filter.addAction(MyTTTRtcEngineEventHandler.TAG);
-        registerReceiver(enterLiveRoomReceiver, filter);
-
         //权限设置
         mPermissionList.add(new MyPermissionBean(Manifest.permission.WRITE_EXTERNAL_STORAGE, getResources().getString(R.string.permission_write_external_storage)));
         mPermissionList.add(new MyPermissionBean(Manifest.permission.RECORD_AUDIO, getResources().getString(R.string.permission_record_audio)));
@@ -104,8 +99,11 @@ public class StartLiveActivity extends BaseAcitivity implements View.OnClickList
         mPermissionList.add(new MyPermissionBean(Manifest.permission.READ_PHONE_STATE, getResources().getString(R.string.permission_read_phone_state)));
         //如果获得权限
         if (checkPermission()) {
-            //直播房间设置
-            mustConfigSdk();
+            // ***注册广播，接收 SDK 的回调信令*** 重要操作!加TODO高亮
+            enterLiveRoomReceiver = new EnterLiveRoomReceiver(getProgressDialog(), isLoging, this);
+            IntentFilter filter = new IntentFilter();
+            filter.addAction(MyTTTRtcEngineEventHandler.TAG);
+            registerReceiver(enterLiveRoomReceiver, filter);
         }
 
     }
@@ -167,7 +165,17 @@ public class StartLiveActivity extends BaseAcitivity implements View.OnClickList
                 break;
             //关闭
             case R.id.iv_close:
-                finish();
+                //弹框确定
+                ConfirmDialog confirmDialog = ConfirmDialog.newInstance(getString(R.string.dialog_exit_live), getString(R.string.dialog_check_live));
+                confirmDialog.setOutCancel(false);
+                confirmDialog.setMargin(70);
+                confirmDialog.setOnSureClickListener(new ConfirmDialog.OnSureClickListener() {
+                    @Override
+                    public void onSureClik() {
+                        finish();
+                    }
+                });
+                confirmDialog.show(getSupportFragmentManager());
                 break;
             //分享
             case R.id.ly_share:
@@ -175,16 +183,40 @@ public class StartLiveActivity extends BaseAcitivity implements View.OnClickList
                 break;
             //美颜
             case R.id.ly_beauty:
-
+                //弹框确定
+                ConfirmDialog beautyDialog = ConfirmDialog.newInstance(getString(R.string.dialog_open_beauty), getString(R.string.dialog_check_beauty));
+                beautyDialog.setOutCancel(false);
+                beautyDialog.setMargin(70);
+                beautyDialog.setOnSureClickListener(new ConfirmDialog.OnSureClickListener() {
+                    @Override
+                    public void onSureClik() {
+                        int beautyCode = mTTTEngine.setBeautyFaceStatus(true, 0.5f, 0.5f);
+                        if (0 == beautyCode) {
+                            showToast("美颜开启成功");
+                        }
+                    }
+                });
+                beautyDialog.show(getSupportFragmentManager());
                 break;
             //开始直播
             case R.id.tv_start_live:
-                showProgressDialog("正在进入房间");
-                if (isLoging) {
-                    return;
-                }
-                isLoging = true;
-                optConfigSdk();
+                //弹框确定
+                ConfirmDialog liveDialog = ConfirmDialog.newInstance(getString(R.string.dialog_live_open), getString(R.string.dialog_check_live_open));
+                liveDialog.setOutCancel(false);
+                liveDialog.setMargin(70);
+                liveDialog.setOnSureClickListener(new ConfirmDialog.OnSureClickListener() {
+                    @Override
+                    public void onSureClik() {
+                        showProgressDialog("正在进入房间");
+                        if (isLoging) {
+                            return;
+                        }
+                        isLoging = true;
+                        mustConfigSdk();
+                        optConfigSdk();
+                    }
+                });
+                liveDialog.show(getSupportFragmentManager());
                 break;
         }
     }
@@ -216,6 +248,8 @@ public class StartLiveActivity extends BaseAcitivity implements View.OnClickList
         mTTTEngine.setClientRole(LocalConfig.mLocalRole); // 必须设置的 API
         // 3.启用视频模块功能
         mTTTEngine.enableVideo(); // 必须设置的 API
+        // 关闭美颜
+        mTTTEngine.setBeautyFaceStatus(false,0.5f,0.5f);
         // 4.设置推流地址，只有主播角色的用户设置有效。该推流地址仅供Demo运行演示使用，不可在正式环境中使用。
         // 必须设置的 API
         if (LocalConfig.mLocalRole == CLIENT_ROLE_ANCHOR) {

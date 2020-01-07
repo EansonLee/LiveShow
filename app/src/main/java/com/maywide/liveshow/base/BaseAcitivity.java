@@ -101,7 +101,7 @@ public abstract class BaseAcitivity extends AppCompatActivity {
     public ProgressDialog getProgressDialog() {
         if (progressDialog == null) {
             progressDialog = new ProgressDialog(this);
-            progressDialog.setCancelable(false);
+            progressDialog.setCancelable(true);
             progressDialog.setCanceledOnTouchOutside(false);
         }
         return progressDialog;

@@ -3,7 +3,9 @@ package com.maywide.liveshow.activity;
 import android.content.IntentFilter;
 import android.graphics.Rect;
 import android.os.Bundle;
+import android.support.v4.app.FragmentManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.SurfaceView;
 import android.view.View;
 import android.view.ViewTreeObserver;
 import android.widget.EditText;
@@ -14,22 +16,29 @@ import android.widget.TextView;
 
 import com.makeramen.roundedimageview.RoundedImageView;
 import com.maywide.liveshow.Handler.MyTTTRtcEngineEventHandler;
+import com.maywide.liveshow.LocalConfig;
 import com.maywide.liveshow.R;
 import com.maywide.liveshow.base.BaseAcitivity;
 import com.maywide.liveshow.base.MyApplication;
+import com.maywide.liveshow.utils.DataCleanManager;
 import com.maywide.liveshow.utils.EnterLiveRoomReceiver;
 import com.maywide.liveshow.utils.LiveShowReceiver;
+import com.maywide.liveshow.widget.ConfirmDialog;
+import com.wushuangtech.library.Constants;
+import com.wushuangtech.wstechapi.model.VideoCanvas;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+
+import static com.wushuangtech.library.Constants.CLIENT_ROLE_ANCHOR;
 
 /**
  * 直播界面
  */
 public class LiveActivity extends BaseAcitivity implements View.OnClickListener {
     //直播界面
-    @BindView(R.id.ly_live)
-    RelativeLayout lyLive;
+    @BindView(R.id.ly_live_show)
+    LinearLayout lyLiveShow;
     //头像
     @BindView(R.id.iv_live_icon)
     RoundedImageView ivLiveIcon;
@@ -75,16 +84,17 @@ public class LiveActivity extends BaseAcitivity implements View.OnClickListener 
     //关闭
     @BindView(R.id.iv_close)
     ImageView ivClose;
+    //是否美颜标志位
+    private boolean isBeauty = false;
 
     private LiveShowReceiver liveShowReceiver;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         ButterKnife.bind(this);
         //动态弹起布局
-        addLayoutListener(lyLive, lyBottom);
+        addLayoutListener(lyLiveShow, lyBottom);
     }
 
     @Override
@@ -95,11 +105,27 @@ public class LiveActivity extends BaseAcitivity implements View.OnClickListener 
     @Override
     protected void initView() {
 
+        ivBeauty.setOnClickListener(this);
+        ivPhoto.setOnClickListener(this);
+        ivShare.setOnClickListener(this);
+        ivClose.setOnClickListener(this);
+        lyStar.setOnClickListener(this);
+        lyProtect.setOnClickListener(this);
     }
 
     @Override
     protected void initData() {
-
+        // 如果角色是主播，打开自己的本地视频
+        if (LocalConfig.mLocalRole == CLIENT_ROLE_ANCHOR) {
+            // 打开本地预览视频，并开始推流
+            // 创建 SurfaceView
+            SurfaceView mSurfaceView = mTTTEngine.CreateRendererView(this);
+            // 配置 SurfaceView
+            mTTTEngine.setupLocalVideo(new VideoCanvas(0, Constants.RENDER_MODE_HIDDEN, mSurfaceView), getRequestedOrientation());
+            lyLiveShow.addView(mSurfaceView);
+            // 开始预览
+            mTTTEngine.startPreview();
+        }
     }
 
     @Override
@@ -115,6 +141,13 @@ public class LiveActivity extends BaseAcitivity implements View.OnClickListener 
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
+            //星钻
+            case R.id.ly_star:
+
+                break;
+            case R.id.ly_protect:
+
+                break;
             //拍照
             case R.id.iv_photo:
 
@@ -125,10 +158,28 @@ public class LiveActivity extends BaseAcitivity implements View.OnClickListener 
                 break;
             //美颜
             case R.id.iv_beauty:
-
+                //弹框确定
+                ConfirmDialog beautyDialog = ConfirmDialog.newInstance(getString(R.string.dialog_open_beauty), getString(R.string.dialog_check_beauty));
+                //如果没开美颜提示开美颜
+                if (!isBeauty) {
+                    showBeautyDialog(getString(R.string.dialog_open_beauty), getString(R.string.dialog_check_beauty));
+                } else {
+                    //开美颜提示关闭美颜
+                    showBeautyDialog(getString(R.string.dialog_close_beauty), getString(R.string.dialog_check_close_beauty));
+                }
                 break;
             case R.id.iv_close:
-                finish();
+                //弹框确定
+                ConfirmDialog confirmDialog = ConfirmDialog.newInstance(getString(R.string.dialog_exit_live), getString(R.string.dialog_check_live));
+                confirmDialog.setOutCancel(false);
+                confirmDialog.setMargin(60);
+                confirmDialog.setOnSureClickListener(new ConfirmDialog.OnSureClickListener() {
+                    @Override
+                    public void onSureClik() {
+                        finish();
+                    }
+                });
+                confirmDialog.show(getSupportFragmentManager());
                 break;
         }
     }
@@ -195,5 +246,55 @@ public class LiveActivity extends BaseAcitivity implements View.OnClickListener 
             e.printStackTrace();
         }
         super.onDestroy();
+    }
+
+    @Override
+    public void onBackPressed() {
+        //弹框确定
+        ConfirmDialog confirmDialog = ConfirmDialog.newInstance(getString(R.string.dialog_exit_live), getString(R.string.dialog_check_live));
+        confirmDialog.setOutCancel(false);
+        confirmDialog.setMargin(60);
+        confirmDialog.setOnSureClickListener(new ConfirmDialog.OnSureClickListener() {
+            @Override
+            public void onSureClik() {
+                finish();
+            }
+        });
+        confirmDialog.show(getSupportFragmentManager());
+    }
+
+    /**
+     * 美颜弹框
+     *
+     * @param title
+     * @param msg
+     */
+    private void showBeautyDialog(String title, String msg) {
+        ConfirmDialog beautyDialog = ConfirmDialog.newInstance(title, msg);
+        beautyDialog.setOutCancel(false);
+        beautyDialog.setMargin(70);
+        beautyDialog.setOnSureClickListener(new ConfirmDialog.OnSureClickListener() {
+            @Override
+            public void onSureClik() {
+                if (!isBeauty) {
+                    int beautyCode = mTTTEngine.setBeautyFaceStatus(true, 0.5f, 0.5f);
+                    if (0 == beautyCode) {
+                        isBeauty = true;
+                        showToast("美颜开启成功");
+                    } else {
+                        showToast("美颜开启失败");
+                    }
+                } else {
+                    int beautyCode = mTTTEngine.setBeautyFaceStatus(false, 0.5f, 0.5f);
+                    if (0 == beautyCode) {
+                        isBeauty = false;
+                        showToast("美颜关闭成功");
+                    } else {
+                        showToast("美颜开启失败");
+                    }
+                }
+            }
+        });
+        beautyDialog.show(getSupportFragmentManager());
     }
 }

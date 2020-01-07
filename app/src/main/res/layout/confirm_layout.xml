@@ -11,7 +11,8 @@
         android:id="@+id/title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="15dp"
+        android:gravity="center"
+        android:layout_marginTop="20dp"
         android:text="@string/my_cacheclear"
         android:textColor="@color/black"
         android:textSize="@dimen/font16" />
@@ -20,8 +21,7 @@
         android:id="@+id/message"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="15dp"
-        android:layout_marginRight="15dp"
+        android:gravity="center"
         android:layout_marginTop="15dp"
         android:text="@string/my_checkcatche"
         android:textColor="@color/black"
@@ -30,7 +30,7 @@
     <View
         android:layout_width="match_parent"
         android:layout_height="2px"
-        android:layout_marginTop="15dp"
+        android:layout_marginTop="20dp"
         android:background="#e6e6e6" />
 
     <LinearLayout
@@ -44,7 +44,7 @@
             android:layout_weight="1"
             android:gravity="center"
             android:text="@string/my_cancle"
-            android:textColor="@color/font_my_blue_color" />
+            android:textColor="@color/font_second_color" />
 
         <View
             android:layout_width="2px"
@@ -58,7 +58,7 @@
             android:layout_weight="1"
             android:gravity="center"
             android:text="@string/my_sure"
-            android:textColor="@color/font_my_blue_color" />
+            android:textColor="@color/main_color" />
 
     </LinearLayout>
 </LinearLayout>
