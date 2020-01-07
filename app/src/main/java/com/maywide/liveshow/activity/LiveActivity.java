@@ -137,11 +137,11 @@ public class LiveActivity extends BaseAcitivity implements View.OnClickListener 
      * 直播广播注册
      */
     private void initEngine() {
-        liveShowReceiver = new LiveShowReceiver();
-        IntentFilter filter = new IntentFilter();
-        filter.addAction(MyTTTRtcEngineEventHandler.TAG);
-        registerReceiver(liveShowReceiver, filter);
-        ((MyApplication) getApplicationContext()).mMyTTTRtcEngineEventHandler.setIsSaveCallBack(false);
+//        liveShowReceiver = new LiveShowReceiver();
+//        IntentFilter filter = new IntentFilter();
+//        filter.addAction(MyTTTRtcEngineEventHandler.TAG);
+//        registerReceiver(liveShowReceiver, filter);
+//        ((MyApplication) getApplicationContext()).mMyTTTRtcEngineEventHandler.setIsSaveCallBack(false);
     }
 
     /**
