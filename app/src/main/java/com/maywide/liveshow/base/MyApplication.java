@@ -36,7 +36,7 @@ public class MyApplication extends Application {
         ScreenAdapter.setup(this);
         ScreenAdapter.register(this, 375, ScreenAdapter.MATCH_BASE_WIDTH, ScreenAdapter.MATCH_UNIT_DP);
 
-//1.创建自定义的 SDK 的回调接收类，继承自SDK的回调基类 TTTRtcEngineEventHandler
+        //1.创建自定义的 SDK 的回调接收类，继承自SDK的回调基类 TTTRtcEngineEventHandler
         mMyTTTRtcEngineEventHandler = new MyTTTRtcEngineEventHandler(getApplicationContext());
         //2.创建SDK的实例对象，APPID需要去官网上申请获取。
         TTTRtcEngine mTTTEngine = TTTRtcEngine.create(getApplicationContext(), "1b25d805f99393bad26c3642096b93e6",

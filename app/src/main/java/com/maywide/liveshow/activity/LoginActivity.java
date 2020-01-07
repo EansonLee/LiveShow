@@ -1,18 +1,14 @@
 package com.maywide.liveshow.activity;
 
 import android.content.ComponentName;
-import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.graphics.Rect;
 import android.os.CountDownTimer;
 import android.os.IBinder;
-import android.text.Editable;
 import android.text.TextUtils;
-import android.text.TextWatcher;
 import android.view.View;
 import android.view.ViewTreeObserver;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -26,7 +22,6 @@ import com.maywide.liveshow.net.resp.LoginResp;
 import com.maywide.liveshow.net.resp.ResponseObj;
 import com.maywide.liveshow.net.retrofit.API;
 import com.maywide.liveshow.net.retrofit.RetrofitClient;
-import com.maywide.liveshow.utils.StatusBarUtils;
 
 import butterknife.BindView;
 import retrofit2.Call;
@@ -40,7 +35,7 @@ import retrofit2.Response;
 
 public class LoginActivity extends BaseAcitivity implements View.OnClickListener {
 
-//    @BindView(R.id.view_status_bar)
+    //    @BindView(R.id.view_status_bar)
 //    View statusBar;
     @BindView(R.id.et_phone)
     EditText etPhone;
@@ -105,9 +100,11 @@ public class LoginActivity extends BaseAcitivity implements View.OnClickListener
 
             case R.id.tv_login:
 //                loginReq();
-                Intent intent = new Intent(this,TcpService.class);
-                bindService(intent,connection,BIND_AUTO_CREATE);
-
+//                Intent intent = new Intent(this, TcpService.class);
+//                bindService(intent, connection, BIND_AUTO_CREATE);
+                Intent intent = new Intent(this, StartLiveActivity.class);
+                startActivity(intent);
+                finish();
                 break;
         }
     }
@@ -296,4 +293,6 @@ public class LoginActivity extends BaseAcitivity implements View.OnClickListener
         public void onServiceDisconnected(ComponentName name) {
         }
     };
+
+
 }

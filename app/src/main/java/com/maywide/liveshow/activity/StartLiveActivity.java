@@ -3,18 +3,24 @@ package com.maywide.liveshow.activity;
 import android.Manifest;
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.content.IntentFilter;
+import android.graphics.Rect;
 import android.os.Bundle;
 import android.view.View;
+import android.view.ViewTreeObserver;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.maywide.liveshow.Handler.MyTTTRtcEngineEventHandler;
 import com.maywide.liveshow.LocalConfig;
 import com.maywide.liveshow.R;
 import com.maywide.liveshow.base.BaseAcitivity;
 import com.maywide.liveshow.bean.MyPermissionBean;
+import com.maywide.liveshow.utils.EnterLiveRoomReceiver;
 import com.maywide.liveshow.utils.MyPermissionManager;
 import com.wushuangtech.library.Constants;
+import com.wushuangtech.wstechapi.model.PublisherConfiguration;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,8 +30,15 @@ import butterknife.ButterKnife;
 
 import static com.wushuangtech.library.Constants.CLIENT_ROLE_ANCHOR;
 
+/**
+ * 开始直播（准备界面）
+ */
 public class StartLiveActivity extends BaseAcitivity implements View.OnClickListener {
 
+    @BindView(R.id.ly_start_live)
+    LinearLayout lyStartLive;
+    @BindView(R.id.view_status_bar)
+    View statusBar;
     @BindView(R.id.iv_locate)
     ImageView ivLocate;
     @BindView(R.id.iv_photo)
@@ -39,6 +52,15 @@ public class StartLiveActivity extends BaseAcitivity implements View.OnClickList
     @BindView(R.id.tv_start_live)
     TextView tvStartLive;
 
+    //房间名称
+    private String roomName = "123";
+
+    //是否进入直播间标志位
+    private boolean isLoging;
+    //直播前广播消息用于接收sdk是否可以进入直播,
+    private EnterLiveRoomReceiver enterLiveRoomReceiver;
+
+
     //权限
     private MyPermissionManager mMyPermissionManager;
     ArrayList<MyPermissionBean> mPermissionList = new ArrayList<>();
@@ -47,6 +69,8 @@ public class StartLiveActivity extends BaseAcitivity implements View.OnClickList
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         ButterKnife.bind(this);
+
+        addLayoutListener(lyStartLive, tvStartLive);
     }
 
     @Override
@@ -67,6 +91,12 @@ public class StartLiveActivity extends BaseAcitivity implements View.OnClickList
 
     @Override
     protected void initData() {
+        // ***注册广播，接收 SDK 的回调信令*** 重要操作!加TODO高亮
+        enterLiveRoomReceiver = new EnterLiveRoomReceiver(getProgressDialog(), isLoging, this);
+        IntentFilter filter = new IntentFilter();
+        filter.addAction(MyTTTRtcEngineEventHandler.TAG);
+        registerReceiver(enterLiveRoomReceiver, filter);
+
         //权限设置
         mPermissionList.add(new MyPermissionBean(Manifest.permission.WRITE_EXTERNAL_STORAGE, getResources().getString(R.string.permission_write_external_storage)));
         mPermissionList.add(new MyPermissionBean(Manifest.permission.RECORD_AUDIO, getResources().getString(R.string.permission_record_audio)));
@@ -76,14 +106,13 @@ public class StartLiveActivity extends BaseAcitivity implements View.OnClickList
         if (checkPermission()) {
             //直播房间设置
             mustConfigSdk();
-            optConfigSdk();
         }
 
     }
 
     @Override
     protected View getStatusBarView() {
-        return null;
+        return statusBar;
     }
 
     @Override
@@ -150,7 +179,12 @@ public class StartLiveActivity extends BaseAcitivity implements View.OnClickList
                 break;
             //开始直播
             case R.id.tv_start_live:
-
+                showProgressDialog("正在进入房间");
+                if (isLoging) {
+                    return;
+                }
+                isLoging = true;
+                optConfigSdk();
                 break;
         }
     }
@@ -184,18 +218,18 @@ public class StartLiveActivity extends BaseAcitivity implements View.OnClickList
         mTTTEngine.enableVideo(); // 必须设置的 API
         // 4.设置推流地址，只有主播角色的用户设置有效。该推流地址仅供Demo运行演示使用，不可在正式环境中使用。
         // 必须设置的 API
-//        if (LocalConfig.mLocalRole == CLIENT_ROLE_ANCHOR) {
-//            String mPushUrlPrefix = "rtmp://push.3ttest.cn/sdk2/";
-//            String mPushUrl;
+        if (LocalConfig.mLocalRole == CLIENT_ROLE_ANCHOR) {
+            String mPushUrlPrefix = "rtmp://push.3ttest.cn/sdk2/";
+            String mPushUrl;
 //            if (mEncodeType == 0) {
-//                mPushUrl = mPushUrlPrefix + mRoomName; // H264视频推流格式，默认使用即可
+            mPushUrl = mPushUrlPrefix + roomName; // H264视频推流格式，默认使用即可
 //            } else {
 //                mPushUrl = mPushUrlPrefix + mRoomName + "?trans=1"; //H265视频推流格式
 //            }
-//            PublisherConfiguration mPublisherConfiguration = new PublisherConfiguration();
-//            mPublisherConfiguration.setPushUrl(mPushUrl);
-//            mTTTEngine.configPublisher(mPublisherConfiguration);
-//        }
+            PublisherConfiguration mPublisherConfiguration = new PublisherConfiguration();
+            mPublisherConfiguration.setPushUrl(mPushUrl);
+            mTTTEngine.configPublisher(mPublisherConfiguration);
+        }
     }
 
     /**
@@ -211,6 +245,47 @@ public class StartLiveActivity extends BaseAcitivity implements View.OnClickList
         // 2.设置视频编码参数，SDK 默认为 360P 质量等级。
         // 可选操作的 API
         mTTTEngine.setVideoProfile(Constants.TTTRTC_VIDEOPROFILE_1080P, false);
+        mTTTEngine.joinChannel("", roomName, LocalConfig.mLocalUserID, true, true);
     }
 
+
+    /**
+     * 软键盘动态上移
+     *
+     * @param main
+     * @param scroll
+     */
+    private void addLayoutListener(final View main, final View scroll) {
+
+        main.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+            @Override
+            public void onGlobalLayout() {
+                Rect rect = new Rect();
+                // 获取main 在窗体的可视区域
+                main.getWindowVisibleDisplayFrame(rect);
+                //获取main在窗体的不可视区域高度，在键盘没有弹起时，main.getRootView().getHeight()调节度应该和rect.bottom高度一样
+                int mainInvisibleHeight = main.getRootView().getHeight() - rect.bottom;
+                //屏幕高度
+                int screenHeight = main.getRootView().getHeight();
+                //不可见区域大于屏幕本身高度1/4：说明键盘弹起了
+                if (mainInvisibleHeight > screenHeight / 3) {
+                    int[] location = new int[2];
+                    scroll.getLocationInWindow(location);
+
+                    int scrollHeight = (location[1] + scroll.getHeight()) - rect.bottom;
+
+                    if (scrollHeight != 0) {
+                        //让界面整体上移键盘的高度
+                        main.scrollTo(0, scrollHeight);
+                    } else {
+                        return;
+                    }
+
+                } else {
+                    //不可见区域小于屏幕高度1/4时,说明键盘隐藏了，把界面下移，移回到原有高度
+                    main.scrollTo(0, 0);
+                }
+            }
+        });
+    }
 }

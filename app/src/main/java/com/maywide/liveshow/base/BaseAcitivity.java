@@ -40,10 +40,15 @@ public abstract class BaseAcitivity extends AppCompatActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        StatusBarUtils.statusTransparent(this);
+//        StatusBarUtils.statusTransparent(this);
 
         setContentView(getLayoutId());
         ButterKnife.bind(this);
+
+        //获取三体SDK实例对象
+        mTTTEngine = TTTRtcEngine.getInstance();
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON,
+                WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 
         sharedPreferencesUtils = SharedPreferencesUtils.getInstance(this);
 
@@ -53,10 +58,6 @@ public abstract class BaseAcitivity extends AppCompatActivity {
         initNetWorkChangReceiver();
         initChannelChangReceiver();
 
-        //获取三体SDK实例对象
-        mTTTEngine = TTTRtcEngine.getInstance();
-        getWindow().setFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON,
-                WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
     }
 
     protected abstract int getLayoutId();
@@ -95,6 +96,15 @@ public abstract class BaseAcitivity extends AppCompatActivity {
 
     protected void showToast(String msg) {
         Toast.makeText(this, msg, Toast.LENGTH_SHORT).show();
+    }
+
+    public ProgressDialog getProgressDialog() {
+        if (progressDialog == null) {
+            progressDialog = new ProgressDialog(this);
+            progressDialog.setCancelable(false);
+            progressDialog.setCanceledOnTouchOutside(false);
+        }
+        return progressDialog;
     }
 
     public void showProgressDialog(String msg) {

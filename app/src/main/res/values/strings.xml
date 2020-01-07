@@ -65,10 +65,12 @@
     <string name="start_live_text">开始直播</string>
 
     <!--Live-->
+    <string name="live_room">我的直播间</string>
     <string name="live_brodcast">公告栏</string>
     <string name="live_star">星钻</string>
     <string name="live_protect">守护</string>
     <string name="live_wait">虚位以待</string>
+    <string name="live_say_sth">说点什么...</string>
 
     <!-- manageKpi-->
     <string name="managekpi_title">全部指标</string>
@@ -86,6 +88,28 @@
     <string name="permission_camera">程序需要使用摄像头权限用来音视频通话，否则无法运行。</string>
     <string name="permission_record_audio">程序需要录音权限用来音视频通话，否则无法运行。</string>
     <string name="permission_read_phone_state">程序需要电话监听权限用来音视频通话，否则无法运行。</string>
+    <!-- 进房间错误码 -->
+    <string name="ttt_error_enterchannel_format">房间名不符合数字格式</string>
+    <string name="ttt_error_enterchannel_timeout">超时，10秒未收到服务器返回结果</string>
+    <string name="ttt_error_enterchannel_token_invaild">token 值无效</string>
+    <string name="ttt_error_enterchannel_version">版本错误</string>
+    <string name="ttt_error_enterchannel_unconnect">无法连接服务器</string>
+    <string name="ttt_error_enterchannel_room_no_exist">该房间不存在</string>
+    <string name="ttt_error_enterchannel_verification_failed">服务器验证错误</string>
+    <string name="ttt_error_enterchannel_unknow">进房间发生未知错误</string>
+
+    <!-- 异常退房间错误码 -->
+    <string name="ttt_error_exit_dialog_title">退出房间提示</string>
+    <string name="ttt_error_exit_dialog_prefix_msg">退出原因</string>
+    <string name="ttt_error_exit_kicked">被主播踢出</string>
+    <string name="ttt_error_exit_push_rtmp_failed">rtmp推流失败</string>
+    <string name="ttt_error_exit_server_overload">服务器过载</string>
+    <string name="ttt_error_exit_anchor_exited">主播已退出</string>
+    <string name="ttt_error_exit_relogin">重复登录</string>
+    <string name="ttt_error_exit_noaudio_upload">长时间没有上行音频数据</string>
+    <string name="ttt_error_exit_novideo_upload">长时间没有上行视频数据</string>
+    <string name="ttt_error_exit_other_anchor_enter">其他人以主播身份进入</string>
+    <string name="ttt_error_exit_token_expired">token 值已过期</string>
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
