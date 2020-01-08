@@ -23,6 +23,7 @@ import com.maywide.liveshow.base.MyApplication;
 import com.maywide.liveshow.utils.DataCleanManager;
 import com.maywide.liveshow.utils.EnterLiveRoomReceiver;
 import com.maywide.liveshow.utils.LiveShowReceiver;
+import com.maywide.liveshow.widget.BroadCastDialog;
 import com.maywide.liveshow.widget.ConfirmDialog;
 import com.wushuangtech.library.Constants;
 import com.wushuangtech.wstechapi.model.VideoCanvas;
@@ -105,6 +106,8 @@ public class LiveActivity extends BaseAcitivity implements View.OnClickListener 
     @Override
     protected void initView() {
 
+        ivLiveIcon.setOnClickListener(this);
+        tvBroad.setOnClickListener(this);
         ivBeauty.setOnClickListener(this);
         ivPhoto.setOnClickListener(this);
         ivShare.setOnClickListener(this);
@@ -141,10 +144,15 @@ public class LiveActivity extends BaseAcitivity implements View.OnClickListener 
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
+            //头像
+            case R.id.iv_live_icon:
+
+                break;
             //星钻
             case R.id.ly_star:
 
                 break;
+            //守护
             case R.id.ly_protect:
 
                 break;
@@ -155,6 +163,17 @@ public class LiveActivity extends BaseAcitivity implements View.OnClickListener 
             //分享
             case R.id.iv_share:
 
+                break;
+            //公告栏
+            case R.id.tv_broad:
+                final BroadCastDialog broadCastDialog = BroadCastDialog.getInstance("公告栏", "大大大大大大哥哥哥哥");
+                broadCastDialog.setOutCancel(true);
+                broadCastDialog.setOnLayOutClickListener(new BroadCastDialog.onLayOutClickListener() {
+                    @Override
+                    public void onLayOutClick() {
+                    }
+                });
+                broadCastDialog.show(getSupportFragmentManager());
                 break;
             //美颜
             case R.id.iv_beauty:
