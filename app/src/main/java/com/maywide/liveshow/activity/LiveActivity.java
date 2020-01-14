@@ -1,9 +1,7 @@
 package com.maywide.liveshow.activity;
 
-import android.content.IntentFilter;
 import android.graphics.Rect;
 import android.os.Bundle;
-import android.support.v4.app.FragmentManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.SurfaceView;
 import android.view.View;
@@ -11,20 +9,16 @@ import android.view.ViewTreeObserver;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.makeramen.roundedimageview.RoundedImageView;
-import com.maywide.liveshow.Handler.MyTTTRtcEngineEventHandler;
 import com.maywide.liveshow.LocalConfig;
 import com.maywide.liveshow.R;
 import com.maywide.liveshow.base.BaseAcitivity;
-import com.maywide.liveshow.base.MyApplication;
-import com.maywide.liveshow.utils.DataCleanManager;
-import com.maywide.liveshow.utils.EnterLiveRoomReceiver;
 import com.maywide.liveshow.utils.LiveShowReceiver;
 import com.maywide.liveshow.widget.BroadCastDialog;
 import com.maywide.liveshow.widget.ConfirmDialog;
+import com.maywide.liveshow.widget.ShareDialog;
 import com.wushuangtech.library.Constants;
 import com.wushuangtech.wstechapi.model.VideoCanvas;
 
@@ -166,11 +160,13 @@ public class LiveActivity extends BaseAcitivity implements View.OnClickListener 
                 break;
             //公告栏
             case R.id.tv_broad:
-                final BroadCastDialog broadCastDialog = BroadCastDialog.getInstance("公告栏", "大大大大大大哥哥哥哥");
-                broadCastDialog.setOutCancel(true);
+                BroadCastDialog broadCastDialog = BroadCastDialog.getInstance("公告栏", "大大大大大大哥哥哥哥");
+                broadCastDialog.setOutCancel(true)
+                        .setMargin(0);
                 broadCastDialog.setOnLayOutClickListener(new BroadCastDialog.onLayOutClickListener() {
                     @Override
                     public void onLayOutClick() {
+
                     }
                 });
                 broadCastDialog.show(getSupportFragmentManager());
@@ -315,5 +311,36 @@ public class LiveActivity extends BaseAcitivity implements View.OnClickListener 
             }
         });
         beautyDialog.show(getSupportFragmentManager());
+    }
+
+    /**
+     * 分享弹框
+     */
+    private void showShareDialog(){
+        ShareDialog shareDialog = ShareDialog.newInstance();
+        shareDialog.setOutCancel(true)
+                .setMargin(0);
+        //粉丝
+        shareDialog.setOnFensClickListener(new ShareDialog.onFensClickListener() {
+            @Override
+            public void onFensClick() {
+
+            }
+        });
+        //管理员
+        shareDialog.setOnManageClickListener(new ShareDialog.onManageClickListener() {
+            @Override
+            public void onManageClick() {
+
+            }
+        });
+        //分享链接
+        shareDialog.setOnShareClickListener(new ShareDialog.onShareClickListener() {
+            @Override
+            public void onShareClick() {
+
+            }
+        });
+        shareDialog.show(getSupportFragmentManager());
     }
 }

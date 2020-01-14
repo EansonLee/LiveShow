@@ -9,12 +9,12 @@ public class Config {
     /**
      * 外网地址
       */
-    //public static final String BASE_IP = "http://210.21.65.90:9093";
+    public static final String BASE_IP = "http://103.45.180.99:8001";
 
     /**
      * 本地地址
      */
-    public static final String BASE_IP = "http://180.200.0.70:8888";
-    public static final String BASE_URL = BASE_IP+"/jcy/";
+//    public static final String BASE_IP = "http://180.200.0.70:8888";
+    public static final String BASE_URL = BASE_IP+"/mini/anchor/";
     public static final long TIMEOUT = 1000;
 }

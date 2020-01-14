@@ -19,6 +19,7 @@ import com.maywide.liveshow.base.BaseAcitivity;
 import com.maywide.liveshow.net.req.LoginGetVerReq;
 import com.maywide.liveshow.net.req.LoginReq;
 import com.maywide.liveshow.net.resp.LoginResp;
+import com.maywide.liveshow.net.resp.ResponseList;
 import com.maywide.liveshow.net.resp.ResponseObj;
 import com.maywide.liveshow.net.retrofit.API;
 import com.maywide.liveshow.net.retrofit.RetrofitClient;
@@ -99,12 +100,9 @@ public class LoginActivity extends BaseAcitivity implements View.OnClickListener
         switch (view.getId()) {
 
             case R.id.tv_login:
-//                loginReq();
+                loginReq();
 //                Intent intent = new Intent(this, TcpService.class);
 //                bindService(intent, connection, BIND_AUTO_CREATE);
-                Intent intent = new Intent(this, StartLiveActivity.class);
-                startActivity(intent);
-                finish();
                 break;
         }
     }
@@ -113,25 +111,21 @@ public class LoginActivity extends BaseAcitivity implements View.OnClickListener
      * 登录请求
      */
     private void loginReq() {
-
+        //手机号
         phoneNum = etPhone.getText().toString();
+        //密码
         verCode = etVar.getText().toString();
-
         if (isCorrectPhoneNum(phoneNum)) {
-
-            loginReq.setMobile(phoneNum);
-
+            loginReq.setPhone(phoneNum);
         } else {
             return;
         }
 
         if (isHaveVerCode(verCode)) {
             loginReq.setPassword(verCode);
-            loginReq.setType("0");
         } else {
             return;
         }
-
 
         showProgressDialog("正在登录...");
 
@@ -142,20 +136,18 @@ public class LoginActivity extends BaseAcitivity implements View.OnClickListener
                 .enqueue(new Callback<ResponseObj<LoginResp>>() {
                     @Override
                     public void onResponse(Call<ResponseObj<LoginResp>> call, Response<ResponseObj<LoginResp>> response) {
-                        //
 
                         LoginResp resp = response.body().getData();
                         if ("0".equals(response.body().getCode()) && null != resp) {
-                            sharedPreferencesUtils.putString("phone", resp.getMobile());
-                            sharedPreferencesUtils.putString("password", "123456");
-                            sharedPreferencesUtils.putString("vercode", resp.getVerification());
-                            BaseAcitivity.mobile = resp.getMobile();
+                            sharedPreferencesUtils.putString("phone", loginReq.getPhone());
+                            sharedPreferencesUtils.putString("password", loginReq.getPassword());
+                            sharedPreferencesUtils.putString("token", resp.getToken());
+//                            BaseAcitivity.mobile = resp.getMobile();
 
                             Intent loginIntent = new Intent();
-                            loginIntent.setClass(LoginActivity.this, MainActivity.class);
+                            loginIntent.setClass(LoginActivity.this, StartLiveActivity.class);
                             startActivity(loginIntent);
                         } else {
-
                             showToast(response.body().getMsg());
                         }
                         dismissProgressDialog();

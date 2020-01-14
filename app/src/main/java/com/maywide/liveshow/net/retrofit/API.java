@@ -18,6 +18,7 @@ import com.maywide.liveshow.net.resp.ResponseObj;
 
 import retrofit2.Call;
 import retrofit2.http.Body;
+import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.Headers;
 import retrofit2.http.POST;
 
@@ -25,8 +26,9 @@ public interface API {
 
     //登录
     @Headers("Content-Type:application/json")
-    @POST("login")
+    @POST("login.html")
     Call<ResponseObj<LoginResp>> loginReq(@Body LoginReq loginReq);
+//    Call<ResponseList<LoginResp>> loginReq(@Body LoginReq loginReq);
 
     //获取验证码
     @Headers("Content-Type:application/json")

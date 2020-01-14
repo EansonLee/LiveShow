@@ -126,6 +126,18 @@
     <string name="dialog_open_locate">开启定位</string>
     <string name="dialog_check_locate">是否开启定位</string>
 
+    <!--个人信息弹框-infoDialog-->
+    <string name="dialog_focus">关注</string>
+    <string name="dialog_send_star">送出的星钻</string>
+    <string name="dialog_fans">粉丝</string>
+    <string name="dialog_get_star">收入的星钻</string>
+
+    <!--分享弹框-shareDialog-->
+    <string name="dialog_fens">我的粉丝</string>
+    <string name="dialog_manage">我的房管</string>
+    <string name="dialog_share">分享链接</string>
+
+
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
 

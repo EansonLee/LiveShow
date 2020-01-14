@@ -3,9 +3,13 @@ package com.maywide.liveshow.activity;
 import android.Manifest;
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.content.Intent;
 import android.content.IntentFilter;
 import android.graphics.Rect;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
+import android.support.annotation.Nullable;
 import android.view.View;
 import android.view.ViewTreeObserver;
 import android.widget.ImageView;
@@ -46,6 +50,8 @@ public class StartLiveActivity extends BaseAcitivity implements View.OnClickList
     ImageView ivPhoto;
     @BindView(R.id.iv_close)
     ImageView ivClose;
+    @BindView(R.id.iv_add)
+    ImageView ivAdd;
     @BindView(R.id.ly_share)
     LinearLayout lyShare;
     @BindView(R.id.ly_beauty)
@@ -84,6 +90,7 @@ public class StartLiveActivity extends BaseAcitivity implements View.OnClickList
         ivLocate.setOnClickListener(this);
         ivPhoto.setOnClickListener(this);
         ivClose.setOnClickListener(this);
+        ivAdd.setOnClickListener(this);
         lyShare.setOnClickListener(this);
         lyBeauty.setOnClickListener(this);
         tvStartLive.setOnClickListener(this);
@@ -155,6 +162,9 @@ public class StartLiveActivity extends BaseAcitivity implements View.OnClickList
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
+            case R.id.iv_add:
+                seleteLocalPhoto();
+                break;
             //定位
             case R.id.iv_locate:
 
@@ -321,5 +331,27 @@ public class StartLiveActivity extends BaseAcitivity implements View.OnClickList
                 }
             }
         });
+    }
+
+    /**
+     * 跳转本地相册获取照片
+     */
+    private void seleteLocalPhoto(){
+        Intent intent = new Intent(Intent.ACTION_PICK, null);
+        intent.setDataAndType(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, "image/*");
+        startActivityForResult(intent, 2);
+    }
+
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        if (requestCode == 2){
+            // 从相册返回的数据
+            if (data!=null){
+                // 得到图片的全路径
+                Uri uri = data.getData();
+                ivAdd.setImageURI(uri);
+            }
+        }
     }
 }

@@ -1,5 +1,9 @@
 package com.maywide.liveshow.widget;
 
+import android.os.Bundle;
+import android.support.annotation.Nullable;
+
+import com.maywide.liveshow.R;
 import com.shehuan.nicedialog.BaseNiceDialog;
 import com.shehuan.nicedialog.ViewHolder;
 
@@ -8,9 +12,23 @@ import com.shehuan.nicedialog.ViewHolder;
  */
 
 public class InfoDialog extends BaseNiceDialog{
+    //图片地址
+    private String imgUrl;
+
     @Override
     public int intLayoutId() {
-        return 0;
+        return R.layout.dialog_info;
+    }
+
+    public static InfoDialog newInstance( ){
+
+        InfoDialog infoDialog = new InfoDialog();
+        return infoDialog;
+    }
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
     }
 
     @Override

@@ -82,41 +82,15 @@ public class SplashActivity extends BaseAcitivity {
 
         if (!TextUtils.isEmpty(sharePhone) && !TextUtils.isEmpty(sharePwd)) {
 
-            loginReq.setType("1");
-            loginReq.setMobile(sharePhone);
+//            loginReq.setType("1");
+            loginReq.setPhone(sharePhone);
             loginReq.setPassword(sharePwd);
 
-            RetrofitClient
-                    .getInstance()
-                    .api(API.class)
-                    .loginReq(loginReq)
-                    .enqueue(new Callback<ResponseObj<LoginResp>>() {
-                        @Override
-                        public void onResponse(Call<ResponseObj<LoginResp>> call, Response<ResponseObj<LoginResp>> response) {
-
-                            if (response.body() == null) {
-                                return;
-                            }
-                            LoginResp resp = response.body().getData();
-                            if ("0".equals(response.body().getCode()) && null != resp) {
-
-                                sharedPreferencesUtils.putString("phone", resp.getMobile());
-                                sharedPreferencesUtils.putString("password", resp.getPassword());
-                                sharedPreferencesUtils.putString("vercode", resp.getVerification());
-                                BaseAcitivity.mobile = resp.getMobile();
-
-                                intent.setClass(SplashActivity.this, MainActivity.class);
-
-                            } else {
-                                showToast(getString(R.string.login_err));
-                            }
-                        }
-
-                        @Override
-                        public void onFailure(Call<ResponseObj<LoginResp>> call, Throwable t) {
-                            showToast(getString(R.string.login_err));
-                        }
-                    });
+//            RetrofitClient
+//                    .getInstance()
+//                    .api(API.class)
+//                    .loginReq(loginReq)
+//                    .enqueue();
 
         } else {
             //isFirstLogin = true;

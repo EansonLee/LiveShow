@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="horizontal">
+
+    <View
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_weight="1" />
+
+    <LinearLayout
+        android:layout_width="134dp"
+        android:layout_height="127dp"
+        android:layout_marginTop="70dp"
+        android:background="@color/black"
+        android:gravity="center"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:id="@+id/ly_fens"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:layout_marginLeft="22dp"
+                android:layout_marginRight="11dp"
+                android:src="@mipmap/fens_icon" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/dialog_fens"
+                android:textColor="@color/white"
+                android:textSize="@dimen/font14" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/ly_manage"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:layout_marginLeft="22dp"
+                android:layout_marginRight="11dp"
+                android:src="@mipmap/manage_icon" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/dialog_manage"
+                android:textColor="@color/white"
+                android:textSize="@dimen/font14" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/ly_share"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:layout_marginLeft="22dp"
+                android:layout_marginRight="11dp"
+                android:src="@mipmap/share_white_icon" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/dialog_share"
+                android:textColor="@color/white"
+                android:textSize="@dimen/font14" />
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+</LinearLayout>

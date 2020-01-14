@@ -10,6 +10,7 @@ import java.util.List;
 public class ResponseList<T> implements Serializable {
 	private String code;
 	private String msg;
+	private String result;
 	private List<T> data;
 
 	public String getCode() {
@@ -26,6 +27,14 @@ public class ResponseList<T> implements Serializable {
 
 	public void setMsg(String msg) {
 		this.msg = msg;
+	}
+
+	public String getResult() {
+		return result;
+	}
+
+	public void setResult(String result) {
+		this.result = result;
 	}
 
 	public List<T> getData() {

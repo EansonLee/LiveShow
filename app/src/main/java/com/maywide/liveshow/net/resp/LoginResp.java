@@ -7,34 +7,14 @@ import java.io.Serializable;
  */
 
 public class LoginResp implements Serializable{
-	//手机号
-	private String mobile;
-	//最后一次获得的动态密码
-	private String verification;
-	//用户密码
-	private String password;
 
-	public String getMobile() {
-		return mobile;
-	}
+	private String token;
 
-	public void setMobile(String mobile) {
-		this.mobile = mobile;
-	}
+    public String getToken() {
+        return token;
+    }
 
-	public String getVerification() {
-		return verification;
-	}
-
-	public void setVerification(String verification) {
-		this.verification = verification;
-	}
-
-	public String getPassword() {
-		return password;
-	}
-
-	public void setPassword(String password) {
-		this.password = password;
-	}
+    public void setToken(String token) {
+        this.token = token;
+    }
 }

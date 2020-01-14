@@ -118,7 +118,7 @@ public class KpiBoxReportActivity extends BaseAcitivity implements View.OnClickL
 
     private void reqKpi(String boxId) {
         DetailBoxKpiReq req = new DetailBoxKpiReq();
-        req.setMobile(BaseAcitivity.mobile);
+//        req.setPhone(BaseAcitivity.mobile);
         req.setBoxId(boxId);
         req.setCity("GD");
 

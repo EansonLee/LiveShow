@@ -6,25 +6,15 @@ package com.maywide.liveshow.net.req;
 
 public class LoginReq extends BaseReq{
 
-	//登录类型  0验证码 1密码
-	private String type;
 	//用户密码
 	private String password;
 
-	public String getMobile() {
-		return mobile;
+	public String getPhone() {
+		return phone;
 	}
 
-	public void setMobile(String mobile) {
-		this.mobile = mobile;
-	}
-
-	public String getType() {
-		return type;
-	}
-
-	public void setType(String type) {
-		this.type = type;
+	public void setPhone(String phone) {
+		this.phone = phone;
 	}
 
 	public String getPassword() {
