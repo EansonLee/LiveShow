@@ -161,6 +161,10 @@ public class LoginActivity extends BaseAcitivity implements View.OnClickListener
                 });
     }
 
+    private void baseInfoReq(){
+
+    }
+
     /**
      * 手机号是否正确
      *

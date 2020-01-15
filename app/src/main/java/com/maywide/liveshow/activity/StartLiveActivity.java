@@ -5,11 +5,13 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.database.Cursor;
 import android.graphics.Rect;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.annotation.Nullable;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewTreeObserver;
 import android.widget.ImageView;
@@ -23,7 +25,9 @@ import com.maywide.liveshow.base.BaseAcitivity;
 import com.maywide.liveshow.bean.MyPermissionBean;
 import com.maywide.liveshow.utils.EnterLiveRoomReceiver;
 import com.maywide.liveshow.utils.MyPermissionManager;
+import com.maywide.liveshow.utils.UpLoadUtils;
 import com.maywide.liveshow.widget.ConfirmDialog;
+import com.qiniu.android.http.ResponseInfo;
 import com.wushuangtech.library.Constants;
 import com.wushuangtech.wstechapi.model.PublisherConfiguration;
 
@@ -162,6 +166,7 @@ public class StartLiveActivity extends BaseAcitivity implements View.OnClickList
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
+            //选择本地照片
             case R.id.iv_add:
                 seleteLocalPhoto();
                 break;
@@ -175,17 +180,7 @@ public class StartLiveActivity extends BaseAcitivity implements View.OnClickList
                 break;
             //关闭
             case R.id.iv_close:
-                //弹框确定
-                ConfirmDialog confirmDialog = ConfirmDialog.newInstance(getString(R.string.dialog_exit_live), getString(R.string.dialog_check_live));
-                confirmDialog.setOutCancel(false);
-                confirmDialog.setMargin(70);
-                confirmDialog.setOnSureClickListener(new ConfirmDialog.OnSureClickListener() {
-                    @Override
-                    public void onSureClik() {
-                        finish();
-                    }
-                });
-                confirmDialog.show(getSupportFragmentManager());
+                showCloseDialog();
                 break;
             //分享
             case R.id.ly_share:
@@ -193,40 +188,11 @@ public class StartLiveActivity extends BaseAcitivity implements View.OnClickList
                 break;
             //美颜
             case R.id.ly_beauty:
-                //弹框确定
-                ConfirmDialog beautyDialog = ConfirmDialog.newInstance(getString(R.string.dialog_open_beauty), getString(R.string.dialog_check_beauty));
-                beautyDialog.setOutCancel(false);
-                beautyDialog.setMargin(70);
-                beautyDialog.setOnSureClickListener(new ConfirmDialog.OnSureClickListener() {
-                    @Override
-                    public void onSureClik() {
-                        int beautyCode = mTTTEngine.setBeautyFaceStatus(true, 0.5f, 0.5f);
-                        if (0 == beautyCode) {
-                            showToast("美颜开启成功");
-                        }
-                    }
-                });
-                beautyDialog.show(getSupportFragmentManager());
+                showBeautyDialog();
                 break;
-            //开始直播
+            //开始直
             case R.id.tv_start_live:
-                //弹框确定
-                ConfirmDialog liveDialog = ConfirmDialog.newInstance(getString(R.string.dialog_live_open), getString(R.string.dialog_check_live_open));
-                liveDialog.setOutCancel(false);
-                liveDialog.setMargin(70);
-                liveDialog.setOnSureClickListener(new ConfirmDialog.OnSureClickListener() {
-                    @Override
-                    public void onSureClik() {
-                        showProgressDialog("正在进入房间");
-                        if (isLoging) {
-                            return;
-                        }
-                        isLoging = true;
-                        mustConfigSdk();
-                        optConfigSdk();
-                    }
-                });
-                liveDialog.show(getSupportFragmentManager());
+                showStarLiveDialog();
                 break;
         }
     }
@@ -259,7 +225,7 @@ public class StartLiveActivity extends BaseAcitivity implements View.OnClickList
         // 3.启用视频模块功能
         mTTTEngine.enableVideo(); // 必须设置的 API
         // 关闭美颜
-        mTTTEngine.setBeautyFaceStatus(false,0.5f,0.5f);
+        mTTTEngine.setBeautyFaceStatus(false, 0.5f, 0.5f);
         // 4.设置推流地址，只有主播角色的用户设置有效。该推流地址仅供Demo运行演示使用，不可在正式环境中使用。
         // 必须设置的 API
         if (LocalConfig.mLocalRole == CLIENT_ROLE_ANCHOR) {
@@ -334,9 +300,69 @@ public class StartLiveActivity extends BaseAcitivity implements View.OnClickList
     }
 
     /**
+     * 开始直播弹框
+     */
+    private void showStarLiveDialog() {
+        //弹框确定
+        ConfirmDialog liveDialog = ConfirmDialog.newInstance(getString(R.string.dialog_live_open), getString(R.string.dialog_check_live_open));
+        liveDialog.setOutCancel(false);
+        liveDialog.setMargin(70);
+        liveDialog.setOnSureClickListener(new ConfirmDialog.OnSureClickListener() {
+            @Override
+            public void onSureClik() {
+                showProgressDialog("正在进入房间");
+                if (isLoging) {
+                    return;
+                }
+                isLoging = true;
+                mustConfigSdk();
+                optConfigSdk();
+            }
+        });
+        liveDialog.show(getSupportFragmentManager());
+    }
+
+    /**
+     * 美颜弹框
+     */
+    private void showBeautyDialog() {
+        //弹框确定
+        ConfirmDialog beautyDialog = ConfirmDialog.newInstance(getString(R.string.dialog_open_beauty), getString(R.string.dialog_check_beauty));
+        beautyDialog.setOutCancel(false);
+        beautyDialog.setMargin(70);
+        beautyDialog.setOnSureClickListener(new ConfirmDialog.OnSureClickListener() {
+            @Override
+            public void onSureClik() {
+                int beautyCode = mTTTEngine.setBeautyFaceStatus(true, 0.5f, 0.5f);
+                if (0 == beautyCode) {
+                    showToast("美颜开启成功");
+                }
+            }
+        });
+        beautyDialog.show(getSupportFragmentManager());
+    }
+
+    /**
+     * 关闭弹框
+     */
+    private void showCloseDialog() {
+        //弹框确定
+        ConfirmDialog confirmDialog = ConfirmDialog.newInstance(getString(R.string.dialog_exit_live), getString(R.string.dialog_check_live));
+        confirmDialog.setOutCancel(false);
+        confirmDialog.setMargin(70);
+        confirmDialog.setOnSureClickListener(new ConfirmDialog.OnSureClickListener() {
+            @Override
+            public void onSureClik() {
+                finish();
+            }
+        });
+        confirmDialog.show(getSupportFragmentManager());
+    }
+
+    /**
      * 跳转本地相册获取照片
      */
-    private void seleteLocalPhoto(){
+    private void seleteLocalPhoto() {
         Intent intent = new Intent(Intent.ACTION_PICK, null);
         intent.setDataAndType(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, "image/*");
         startActivityForResult(intent, 2);
@@ -345,13 +371,64 @@ public class StartLiveActivity extends BaseAcitivity implements View.OnClickList
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        if (requestCode == 2){
+        if (requestCode == 2) {
             // 从相册返回的数据
-            if (data!=null){
+            if (data != null) {
                 // 得到图片的全路径
                 Uri uri = data.getData();
                 ivAdd.setImageURI(uri);
+                upLoadImage(uri);
             }
         }
     }
+
+    /**
+     * 将本地图片上传到七牛云
+     *
+     * @param uri
+     */
+    private void upLoadImage(Uri uri) {
+        //将URI转换为路径：
+        String[] proj = {MediaStore.Images.Media.DATA};
+        Cursor cursor = managedQuery(uri, proj, null, null, null);
+        //这个是获得用户选择的图片的索引值
+        int column_index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
+        cursor.moveToFirst();
+        // 最后根据索引值获取图片路径
+        String photoPath = cursor.getString(column_index);
+        //获取文件名
+        String fileName = getFileName(photoPath);
+        //上传七牛云
+        UpLoadUtils.init();
+        UpLoadUtils.uploadPic(photoPath, fileName, new UpLoadUtils.UploadCallBack() {
+            @Override
+            public void success(String url) {
+                Log.e("---", "图片地址-" + url);
+            }
+
+            @Override
+            public void fail(String key, ResponseInfo info) {
+
+            }
+        });
+    }
+
+
+    /**
+     * huoqu
+     * 根据文件路径获取文件名
+     * @param pathandname
+     * @return
+     */
+    public String getFileName(String pathandname){
+        int start=pathandname.lastIndexOf("/");
+        int end=pathandname.lastIndexOf(".");
+        if (start!=-1 && end!=-1) {
+            return pathandname.substring(start+1, end);
+        }
+        else {
+            return null;
+        }
+    }
+
 }

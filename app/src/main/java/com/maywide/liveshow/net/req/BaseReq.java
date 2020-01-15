@@ -7,6 +7,8 @@ package com.maywide.liveshow.net.req;
 public class BaseReq {
 	//手机号
 	protected String phone;
+	//token
+	protected String token;
 
 	public String getPhone() {
 		return phone;
@@ -14,5 +16,13 @@ public class BaseReq {
 
 	public void setPhone(String phone) {
 		this.phone = phone;
+	}
+
+	public String getToken() {
+		return token;
+	}
+
+	public void setToken(String token) {
+		this.token = token;
 	}
 }
