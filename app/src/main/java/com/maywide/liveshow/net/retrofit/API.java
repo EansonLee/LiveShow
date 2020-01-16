@@ -9,6 +9,7 @@ import com.maywide.liveshow.net.req.HomeNewsReq;
 import com.maywide.liveshow.net.req.LoginGetVerReq;
 import com.maywide.liveshow.net.req.LoginReq;
 import com.maywide.liveshow.net.resp.BannerResp;
+import com.maywide.liveshow.net.resp.BroadCastInfoResp;
 import com.maywide.liveshow.net.resp.DetailBoxKpiResp;
 import com.maywide.liveshow.net.resp.HomeKpiResp;
 import com.maywide.liveshow.net.resp.HomeNewsResp;
@@ -18,7 +19,6 @@ import com.maywide.liveshow.net.resp.ResponseObj;
 
 import retrofit2.Call;
 import retrofit2.http.Body;
-import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.Headers;
 import retrofit2.http.POST;
 
@@ -28,12 +28,11 @@ public interface API {
     @Headers("Content-Type:application/json")
     @POST("login.html")
     Call<ResponseObj<LoginResp>> loginReq(@Body LoginReq loginReq);
-//    Call<ResponseList<LoginResp>> loginReq(@Body LoginReq loginReq);
 
-    //获取验证码
+    //主播基本信息
     @Headers("Content-Type:application/json")
-    @POST("sendverification")
-    Call<ResponseObj<LoginResp>> loginVerReq(@Body LoginGetVerReq baseReq);
+    @POST("base-info.html")
+    Call<ResponseObj<BroadCastInfoResp>> baseInfoReq(@Body BaseReq baseReq);
 
     //轮播图
     @Headers("Content-Type:application/json")

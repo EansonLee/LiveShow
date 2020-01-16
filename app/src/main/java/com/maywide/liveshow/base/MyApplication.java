@@ -45,10 +45,6 @@ public class MyApplication extends Application {
             System.exit(0);
             return;
         }
-        // ------ SDK初始化完成，以下为 Demo 逻辑或 SDK 的可选操作接口。
-        //生成一个随机的用户ID，Demo无需手动输入。
-        Random mRandom = new Random();
-        LocalConfig.mLocalUserID = mRandom.nextInt(999999);
     }
 
     @Override

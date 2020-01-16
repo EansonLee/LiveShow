@@ -1,5 +1,7 @@
 package com.maywide.liveshow;
 
+import java.nio.charset.Charset;
+
 /**
  * Created by wangzhiguo on 17/6/15.
  */
@@ -28,4 +30,6 @@ public class LocalConstans {
     public static final int CALL_BACK_ON_SPEAK_MUTE_AUDIO = 18;
     public static final int CALL_BACK_ON_USER_ROLE_CHANGED = 19;
     public static final int CALL_BACK_ON_USER_KICK = 20;
+
+    public static final Charset UTF_8 = Charset.forName("UTF-8");
 }

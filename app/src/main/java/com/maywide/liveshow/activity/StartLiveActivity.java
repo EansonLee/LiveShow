@@ -11,6 +11,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.annotation.Nullable;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewTreeObserver;
@@ -18,11 +19,17 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.maywide.liveshow.Handler.MyTTTRtcEngineEventHandler;
 import com.maywide.liveshow.LocalConfig;
 import com.maywide.liveshow.R;
 import com.maywide.liveshow.base.BaseAcitivity;
 import com.maywide.liveshow.bean.MyPermissionBean;
+import com.maywide.liveshow.net.req.BroadCastInfoReq;
+import com.maywide.liveshow.net.resp.BroadCastInfoResp;
+import com.maywide.liveshow.net.resp.ResponseObj;
+import com.maywide.liveshow.net.retrofit.API;
+import com.maywide.liveshow.net.retrofit.RetrofitClient;
 import com.maywide.liveshow.utils.EnterLiveRoomReceiver;
 import com.maywide.liveshow.utils.MyPermissionManager;
 import com.maywide.liveshow.utils.UpLoadUtils;
@@ -36,6 +43,9 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 import static com.wushuangtech.library.Constants.CLIENT_ROLE_ANCHOR;
 
@@ -64,13 +74,12 @@ public class StartLiveActivity extends BaseAcitivity implements View.OnClickList
     TextView tvStartLive;
 
     //房间名称
-    private String roomName = "123";
+    private String roomNum;
 
     //是否进入直播间标志位
     private boolean isLoging;
     //直播前广播消息用于接收sdk是否可以进入直播,
     private EnterLiveRoomReceiver enterLiveRoomReceiver;
-
 
     //权限
     private MyPermissionManager mMyPermissionManager;
@@ -103,19 +112,15 @@ public class StartLiveActivity extends BaseAcitivity implements View.OnClickList
 
     @Override
     protected void initData() {
+
+        baseInfoReq();
+
         //权限设置
         mPermissionList.add(new MyPermissionBean(Manifest.permission.WRITE_EXTERNAL_STORAGE, getResources().getString(R.string.permission_write_external_storage)));
         mPermissionList.add(new MyPermissionBean(Manifest.permission.RECORD_AUDIO, getResources().getString(R.string.permission_record_audio)));
         mPermissionList.add(new MyPermissionBean(Manifest.permission.CAMERA, getResources().getString(R.string.permission_camera)));
         mPermissionList.add(new MyPermissionBean(Manifest.permission.READ_PHONE_STATE, getResources().getString(R.string.permission_read_phone_state)));
-        //如果获得权限
-        if (checkPermission()) {
-            // ***注册广播，接收 SDK 的回调信令*** 重要操作!加TODO高亮
-            enterLiveRoomReceiver = new EnterLiveRoomReceiver(getProgressDialog(), isLoging, this);
-            IntentFilter filter = new IntentFilter();
-            filter.addAction(MyTTTRtcEngineEventHandler.TAG);
-            registerReceiver(enterLiveRoomReceiver, filter);
-        }
+
 
     }
 
@@ -127,6 +132,20 @@ public class StartLiveActivity extends BaseAcitivity implements View.OnClickList
     @Override
     protected View getNetErrView() {
         return lyShare;
+    }
+
+    /**
+     * 注册进入直播间广播
+     */
+    private void setReceiver(BroadCastInfoResp broadCastInfoResp){
+        //如果获得权限
+        if (checkPermission()) {
+            // ***注册广播，接收 SDK 的回调信令*** 重要操作!加TODO高亮
+            enterLiveRoomReceiver = new EnterLiveRoomReceiver(getProgressDialog(), isLoging, this,broadCastInfoResp);
+            IntentFilter filter = new IntentFilter();
+            filter.addAction(MyTTTRtcEngineEventHandler.TAG);
+            registerReceiver(enterLiveRoomReceiver, filter);
+        }
     }
 
     /**
@@ -232,7 +251,7 @@ public class StartLiveActivity extends BaseAcitivity implements View.OnClickList
             String mPushUrlPrefix = "rtmp://push.3ttest.cn/sdk2/";
             String mPushUrl;
 //            if (mEncodeType == 0) {
-            mPushUrl = mPushUrlPrefix + roomName; // H264视频推流格式，默认使用即可
+            mPushUrl = mPushUrlPrefix + roomNum; // H264视频推流格式，默认使用即可
 //            } else {
 //                mPushUrl = mPushUrlPrefix + mRoomName + "?trans=1"; //H265视频推流格式
 //            }
@@ -255,7 +274,53 @@ public class StartLiveActivity extends BaseAcitivity implements View.OnClickList
         // 2.设置视频编码参数，SDK 默认为 360P 质量等级。
         // 可选操作的 API
         mTTTEngine.setVideoProfile(Constants.TTTRTC_VIDEOPROFILE_1080P, false);
-        mTTTEngine.joinChannel("", roomName, LocalConfig.mLocalUserID, true, true);
+        mTTTEngine.joinChannel("", roomNum, LocalConfig.mLocalUserID, true, true);
+    }
+
+    /**
+     * 获取主播基本信息
+     */
+    private void baseInfoReq() {
+        String token = sharedPreferencesUtils.getString("token", "");
+
+        BroadCastInfoReq broadCastInfoReq = new BroadCastInfoReq();
+        broadCastInfoReq.setToken(token);
+
+        RetrofitClient
+                .getInstance()
+                .api(API.class)
+                .baseInfoReq(broadCastInfoReq)
+                .enqueue(new Callback<ResponseObj<BroadCastInfoResp>>() {
+                    @Override
+                    public void onResponse(Call<ResponseObj<BroadCastInfoResp>> call, Response<ResponseObj<BroadCastInfoResp>> response) {
+
+                        BroadCastInfoResp resp = response.body().getData();
+                        if ("0".equals(response.body().getCode()) && null != resp) {
+                            String bgUrl = resp.getBg_picture();
+                            if (!TextUtils.isEmpty(bgUrl)){
+                                //todo 显示在＋号
+//                                Glide.with(StartLiveActivity.this)
+//                                        .load(bgUrl)
+//                                        .error(R.mipmap.load_err)
+//                                        .into(ivAdd);
+                            }
+                            //获取用户id
+                            LocalConfig.mLocalUserID = resp.getUser_id();
+                            //获取房间号
+                            roomNum = resp.getAnchor_code();
+                            setReceiver(resp);
+                        } else {
+                            showToast(response.body().getMsg());
+                        }
+                        dismissProgressDialog();
+                    }
+
+                    @Override
+                    public void onFailure(Call<ResponseObj<BroadCastInfoResp>> call, Throwable t) {
+                        showToast(getString(R.string.net_err));
+                        dismissProgressDialog();
+                    }
+                });
     }
 
 
@@ -399,34 +464,23 @@ public class StartLiveActivity extends BaseAcitivity implements View.OnClickList
         //获取文件名
         String fileName = getFileName(photoPath);
         //上传七牛云
-        UpLoadUtils.init();
-        UpLoadUtils.uploadPic(photoPath, fileName, new UpLoadUtils.UploadCallBack() {
-            @Override
-            public void success(String url) {
-                Log.e("---", "图片地址-" + url);
-            }
-
-            @Override
-            public void fail(String key, ResponseInfo info) {
-
-            }
-        });
+        UpLoadUtils.uploadPic(photoPath, fileName);
     }
 
 
     /**
      * huoqu
      * 根据文件路径获取文件名
+     *
      * @param pathandname
      * @return
      */
-    public String getFileName(String pathandname){
-        int start=pathandname.lastIndexOf("/");
-        int end=pathandname.lastIndexOf(".");
-        if (start!=-1 && end!=-1) {
-            return pathandname.substring(start+1, end);
-        }
-        else {
+    public String getFileName(String pathandname) {
+        int start = pathandname.lastIndexOf("/");
+        int end = pathandname.lastIndexOf(".");
+        if (start != -1 && end != -1) {
+            return pathandname.substring(start + 1, end);
+        } else {
             return null;
         }
     }

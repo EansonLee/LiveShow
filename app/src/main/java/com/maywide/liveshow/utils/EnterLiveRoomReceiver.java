@@ -4,6 +4,7 @@ import android.app.ProgressDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Bundle;
 import android.widget.Toast;
 
 import com.maywide.liveshow.Handler.MyTTTRtcEngineEventHandler;
@@ -12,7 +13,10 @@ import com.maywide.liveshow.R;
 import com.maywide.liveshow.activity.LiveActivity;
 import com.maywide.liveshow.base.BaseAcitivity;
 import com.maywide.liveshow.bean.JniObjs;
+import com.maywide.liveshow.net.resp.BroadCastInfoResp;
 import com.wushuangtech.library.Constants;
+
+import java.io.Serializable;
 
 /**
  * 接收是否可以进入直播间广播
@@ -22,11 +26,13 @@ public class EnterLiveRoomReceiver extends BroadcastReceiver {
     private ProgressDialog progressDialog;
     private boolean isLoging;
     private BaseAcitivity acitivity;
+    private BroadCastInfoResp broadCastInfoResp;
 
-    public EnterLiveRoomReceiver(ProgressDialog progressDialog, boolean isLoging, BaseAcitivity acitivity) {
+    public EnterLiveRoomReceiver(ProgressDialog progressDialog, boolean isLoging, BaseAcitivity acitivity,BroadCastInfoResp broadCastInfoResp) {
         this.progressDialog = progressDialog;
         this.isLoging = isLoging;
         this.acitivity = acitivity;
+        this.broadCastInfoResp = broadCastInfoResp;
     }
 
     @Override
@@ -38,8 +44,10 @@ public class EnterLiveRoomReceiver extends BroadcastReceiver {
                 case LocalConstans.CALL_BACK_ON_ENTER_ROOM:
                     //界面跳转
                     Intent activityIntent = new Intent();
+                    Bundle bundle = new Bundle();
+                    bundle.putSerializable("broadCastInfo",broadCastInfoResp);
                     activityIntent.setClass(context, LiveActivity.class);
-                    context.startActivity(activityIntent);
+                    context.startActivity(activityIntent,bundle);
                     acitivity.finish();
                     isLoging = false;
                     break;

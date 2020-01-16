@@ -16,8 +16,10 @@ import android.widget.TextView;
 import com.maywide.liveshow.R;
 import com.maywide.liveshow.Service.TcpService;
 import com.maywide.liveshow.base.BaseAcitivity;
+import com.maywide.liveshow.net.req.BroadCastInfoReq;
 import com.maywide.liveshow.net.req.LoginGetVerReq;
 import com.maywide.liveshow.net.req.LoginReq;
+import com.maywide.liveshow.net.resp.BroadCastInfoResp;
 import com.maywide.liveshow.net.resp.LoginResp;
 import com.maywide.liveshow.net.resp.ResponseList;
 import com.maywide.liveshow.net.resp.ResponseObj;
@@ -142,7 +144,6 @@ public class LoginActivity extends BaseAcitivity implements View.OnClickListener
                             sharedPreferencesUtils.putString("phone", loginReq.getPhone());
                             sharedPreferencesUtils.putString("password", loginReq.getPassword());
                             sharedPreferencesUtils.putString("token", resp.getToken());
-//                            BaseAcitivity.mobile = resp.getMobile();
 
                             Intent loginIntent = new Intent();
                             loginIntent.setClass(LoginActivity.this, StartLiveActivity.class);
@@ -161,9 +162,6 @@ public class LoginActivity extends BaseAcitivity implements View.OnClickListener
                 });
     }
 
-    private void baseInfoReq(){
-
-    }
 
     /**
      * 手机号是否正确
