@@ -79,6 +79,9 @@ public class LiveActivity extends BaseAcitivity implements View.OnClickListener 
     //关闭
     @BindView(R.id.iv_close)
     ImageView ivClose;
+    //更多
+    @BindView(R.id.iv_more)
+    ImageView ivMore;
     //是否美颜标志位
     private boolean isBeauty = false;
 
@@ -195,6 +198,9 @@ public class LiveActivity extends BaseAcitivity implements View.OnClickListener 
                     }
                 });
                 confirmDialog.show(getSupportFragmentManager());
+                break;
+            case R.id.iv_more:
+                showShareDialog();
                 break;
         }
     }

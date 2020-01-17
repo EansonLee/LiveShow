@@ -201,7 +201,7 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener {
             @Override
             public void onRefresh() {
 
-                bannerReq();
+//                bannerReq();
                 getHomeKpiReq();
                 newsReq(1, mPageSize);
                 mPageIndex = 1;
@@ -237,7 +237,7 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener {
     @Override
     protected void initData() {
 
-        bannerReq();
+//        bannerReq();
         getHomeKpiReq();
         newsReq(1, mPageSize);
 
@@ -259,48 +259,48 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener {
     /**
      * 首页轮播请求
      */
-    private void bannerReq() {
-
-        BannerReq req = new BannerReq();
-        req.setPhone(BaseAcitivity.mobile);
-
-        RetrofitClient
-                .getInstance()
-                .api(API.class)
-                .bannerReq(req)
-                .enqueue(new Callback<ResponseList<BannerResp>>() {
-                    @Override
-                    public void onResponse(Call<ResponseList<BannerResp>> call, Response<ResponseList<BannerResp>> response) {
-                        if (response.body() == null) {
-                            showToast(getString(R.string.home_load_err));
-                            return;
-                        }
-
-                        if ("0".equals(response.body().getCode()) && null != response.body().getData()) {
-
-                            List<BannerResp> bannerRespList = response.body().getData();
-                            List<String> imgList = new ArrayList<>();
-                            List<String> titleList = new ArrayList<>();
-                            selectedImgUrls = new ArrayList<>();
-                            for (int i = 0; i < bannerRespList.size(); i++) {
-                                imgList.add(i, bannerRespList.get(i).getImg());
-                                titleList.add(i, bannerRespList.get(i).getTitle());
-                                selectedImgUrls.add(i, bannerRespList.get(i).getSelectedImgUrl());
-                            }
-
-                            banner.setImages(imgList);
-                            banner.setBannerTitles(titleList);
-                            banner.start();
-                        }
-                    }
-
-                    @Override
-                    public void onFailure(Call<ResponseList<BannerResp>> call, Throwable t) {
-                        showToast(getString(R.string.net_err));
-                    }
-                });
-
-    }
+//    private void bannerReq() {
+//
+//        BannerReq req = new BannerReq();
+//        req.setPhone(BaseAcitivity.mobile);
+//
+//        RetrofitClient
+//                .getInstance()
+//                .api(API.class)
+//                .bannerReq(req)
+//                .enqueue(new Callback<ResponseList<BannerResp>>() {
+//                    @Override
+//                    public void onResponse(Call<ResponseList<BannerResp>> call, Response<ResponseList<BannerResp>> response) {
+//                        if (response.body() == null) {
+//                            showToast(getString(R.string.home_load_err));
+//                            return;
+//                        }
+//
+//                        if ("0".equals(response.body().getCode()) && null != response.body().getData()) {
+//
+//                            List<BannerResp> bannerRespList = response.body().getData();
+//                            List<String> imgList = new ArrayList<>();
+//                            List<String> titleList = new ArrayList<>();
+//                            selectedImgUrls = new ArrayList<>();
+//                            for (int i = 0; i < bannerRespList.size(); i++) {
+//                                imgList.add(i, bannerRespList.get(i).getImg());
+//                                titleList.add(i, bannerRespList.get(i).getTitle());
+//                                selectedImgUrls.add(i, bannerRespList.get(i).getSelectedImgUrl());
+//                            }
+//
+//                            banner.setImages(imgList);
+//                            banner.setBannerTitles(titleList);
+//                            banner.start();
+//                        }
+//                    }
+//
+//                    @Override
+//                    public void onFailure(Call<ResponseList<BannerResp>> call, Throwable t) {
+//                        showToast(getString(R.string.net_err));
+//                    }
+//                });
+//
+//    }
 
 
     /**

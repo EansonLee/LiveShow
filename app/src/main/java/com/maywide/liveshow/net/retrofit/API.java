@@ -34,10 +34,10 @@ public interface API {
     @POST("base-info.html")
     Call<ResponseObj<BroadCastInfoResp>> baseInfoReq(@Body BaseReq baseReq);
 
-    //轮播图
+    //将开始直播信息回传后台
     @Headers("Content-Type:application/json")
-    @POST("homePage/image")
-    Call<ResponseList<BannerResp>> bannerReq(@Body BaseReq baseReq);
+    @POST("start-live-broadcast.html")
+    Call<ResponseObj<LoginResp>> liveBroadCastReq(@Body BaseReq baseReq);
 
     //首页KPI接口
     @Headers("Content-Type:application/json")

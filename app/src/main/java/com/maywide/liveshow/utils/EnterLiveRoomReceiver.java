@@ -14,6 +14,7 @@ import com.maywide.liveshow.activity.LiveActivity;
 import com.maywide.liveshow.base.BaseAcitivity;
 import com.maywide.liveshow.bean.JniObjs;
 import com.maywide.liveshow.net.resp.BroadCastInfoResp;
+import com.maywide.liveshow.net.resp.LoginResp;
 import com.wushuangtech.library.Constants;
 
 import java.io.Serializable;
@@ -26,9 +27,9 @@ public class EnterLiveRoomReceiver extends BroadcastReceiver {
     private ProgressDialog progressDialog;
     private boolean isLoging;
     private BaseAcitivity acitivity;
-    private BroadCastInfoResp broadCastInfoResp;
+    private LoginResp.baseDetail broadCastInfoResp;
 
-    public EnterLiveRoomReceiver(ProgressDialog progressDialog, boolean isLoging, BaseAcitivity acitivity,BroadCastInfoResp broadCastInfoResp) {
+    public EnterLiveRoomReceiver(ProgressDialog progressDialog, boolean isLoging, BaseAcitivity acitivity,LoginResp.baseDetail broadCastInfoResp) {
         this.progressDialog = progressDialog;
         this.isLoging = isLoging;
         this.acitivity = acitivity;

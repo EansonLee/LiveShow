@@ -4,6 +4,7 @@ import android.content.ComponentName;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.graphics.Rect;
+import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.os.IBinder;
 import android.text.TextUtils;
@@ -82,6 +83,9 @@ public class LoginActivity extends BaseAcitivity implements View.OnClickListener
     @Override
     protected void initData() {
 
+        phoneNum = sharedPreferencesUtils.getString("phone","");
+        verCode = sharedPreferencesUtils.getString("password","");
+
         getVerReq = new LoginGetVerReq();
         loginReq = new LoginReq();
 
@@ -113,10 +117,13 @@ public class LoginActivity extends BaseAcitivity implements View.OnClickListener
      * 登录请求
      */
     private void loginReq() {
-        //手机号
-        phoneNum = etPhone.getText().toString();
-        //密码
-        verCode = etVar.getText().toString();
+        //本地单点登录
+        if (TextUtils.isEmpty(phoneNum) || TextUtils.isEmpty(verCode)){
+            //手机号
+            phoneNum = etPhone.getText().toString();
+            //密码
+            verCode = etVar.getText().toString();
+        }
         if (isCorrectPhoneNum(phoneNum)) {
             loginReq.setPhone(phoneNum);
         } else {
@@ -145,7 +152,9 @@ public class LoginActivity extends BaseAcitivity implements View.OnClickListener
                             sharedPreferencesUtils.putString("password", loginReq.getPassword());
                             sharedPreferencesUtils.putString("token", resp.getToken());
 
+                            LoginResp.baseDetail baseDetail = resp.getAnchor();
                             Intent loginIntent = new Intent();
+                            loginIntent.putExtra("infoData",baseDetail);
                             loginIntent.setClass(LoginActivity.this, StartLiveActivity.class);
                             startActivity(loginIntent);
                         } else {

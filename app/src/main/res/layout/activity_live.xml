@@ -34,12 +34,22 @@
             android:src="@mipmap/finish_icon" />
 
         <TextView
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
+            android:layout_weight="1"
             android:layout_height="match_parent"
             android:gravity="center"
             android:text="@string/live_room"
             android:textColor="@color/black"
             android:textSize="17sp" />
+
+        <ImageView
+            android:id="@+id/iv_more"
+            android:layout_gravity="center"
+            android:layout_marginLeft="15dp"
+            android:layout_marginRight="15dp"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:src="@mipmap/more_icon"/>
 
     </LinearLayout>
 
