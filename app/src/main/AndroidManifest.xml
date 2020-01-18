@@ -30,7 +30,7 @@
         <activity android:name=".activity.ManageKpiActivity" />
         <activity android:name=".activity.SplashActivity" />
         <activity
-            android:name=".activity.LinkPerActivity"
+            android:name=".activity.LoginActivity"
             android:launchMode="singleTask">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -64,7 +64,7 @@
             android:name=".activity.LiveActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".activity.LoginActivity"
+            android:name=".activity.LinkPerActivity"
             android:screenOrientation="portrait"></activity>
     </application>
 
