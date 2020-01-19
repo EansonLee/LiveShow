@@ -54,7 +54,7 @@ public class TcpService extends Service{
                 try {
                     // 建立Socket连接
                     mSocket = new Socket();
-                    mSocket.connect(new InetSocketAddress("172.20.46.9", 8883), 10);
+                    mSocket.connect(new InetSocketAddress("ws://103.45.180.99", 7272), 10);
                     bis = new BufferedInputStream(mSocket.getInputStream());
                     bos = new BufferedOutputStream(mSocket.getOutputStream());
                     // 创建读取服务器心跳的线程

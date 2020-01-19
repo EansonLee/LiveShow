@@ -1,10 +1,18 @@
 package com.maywide.liveshow.fragment;
 
 import android.os.Bundle;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.View;
 
 import com.maywide.liveshow.R;
+import com.maywide.liveshow.adapter.LinkPerListAdapter;
 import com.maywide.liveshow.base.BaseFragment;
+import com.maywide.liveshow.net.resp.LinkPerResp;
+
+import java.util.List;
+
+import butterknife.BindView;
 
 /**
  * 房管
@@ -12,6 +20,13 @@ import com.maywide.liveshow.base.BaseFragment;
  */
 
 public class RoomManagerFragment extends BaseFragment {
+
+    @BindView(R.id.rcv_manage)
+    RecyclerView rcvManage;
+
+    private LinkPerListAdapter perListAdapter;
+    //列表数据
+    private List<LinkPerResp> linkPerRespList;
 
     public static RoomManagerFragment newInstance() {
         RoomManagerFragment fragment = new RoomManagerFragment();
@@ -27,7 +42,9 @@ public class RoomManagerFragment extends BaseFragment {
 
     @Override
     protected void initView() {
-
+        perListAdapter = new LinkPerListAdapter(R.layout.item_per_list,linkPerRespList);
+        rcvManage.setLayoutManager(new LinearLayoutManager(mContext));
+        rcvManage.setAdapter(perListAdapter);
     }
 
     @Override

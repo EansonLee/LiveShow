@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">直播秀</string>
+    <string name="app_name">粉涩直播</string>
 
     <string name="http_loading">加载中...</string>
     <string name="net_err">连接服务器失败，请检查网络...</string>

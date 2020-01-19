@@ -1,5 +1,6 @@
 package com.maywide.liveshow.activity;
 
+import android.content.Intent;
 import android.graphics.Rect;
 import android.os.Bundle;
 import android.support.v7.widget.RecyclerView;
@@ -15,6 +16,11 @@ import com.makeramen.roundedimageview.RoundedImageView;
 import com.maywide.liveshow.LocalConfig;
 import com.maywide.liveshow.R;
 import com.maywide.liveshow.base.BaseAcitivity;
+import com.maywide.liveshow.net.req.LoginReq;
+import com.maywide.liveshow.net.resp.LoginResp;
+import com.maywide.liveshow.net.resp.ResponseObj;
+import com.maywide.liveshow.net.retrofit.API;
+import com.maywide.liveshow.net.retrofit.RetrofitClient;
 import com.maywide.liveshow.utils.LiveShowReceiver;
 import com.maywide.liveshow.widget.BroadCastDialog;
 import com.maywide.liveshow.widget.ConfirmDialog;
@@ -24,6 +30,9 @@ import com.wushuangtech.wstechapi.model.VideoCanvas;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 import static com.wushuangtech.library.Constants.CLIENT_ROLE_ANCHOR;
 
@@ -109,6 +118,7 @@ public class LiveActivity extends BaseAcitivity implements View.OnClickListener 
         ivPhoto.setOnClickListener(this);
         ivShare.setOnClickListener(this);
         ivClose.setOnClickListener(this);
+        ivMore.setOnClickListener(this);
         lyStar.setOnClickListener(this);
         lyProtect.setOnClickListener(this);
     }
@@ -194,7 +204,7 @@ public class LiveActivity extends BaseAcitivity implements View.OnClickListener 
                 confirmDialog.setOnSureClickListener(new ConfirmDialog.OnSureClickListener() {
                     @Override
                     public void onSureClik() {
-                        finish();
+                        stopLiveReq();
                     }
                 });
                 confirmDialog.show(getSupportFragmentManager());
@@ -214,6 +224,37 @@ public class LiveActivity extends BaseAcitivity implements View.OnClickListener 
 //        filter.addAction(MyTTTRtcEngineEventHandler.TAG);
 //        registerReceiver(liveShowReceiver, filter);
 //        ((MyApplication) getApplicationContext()).mMyTTTRtcEngineEventHandler.setIsSaveCallBack(false);
+    }
+
+    /**
+     * 退出直播
+     */
+    private void stopLiveReq() {
+        LoginReq loginReq = new LoginReq();
+
+        loginReq.setToken(sharedPreferencesUtils.getString("token", ""));
+        RetrofitClient
+                .getInstance()
+                .api(API.class)
+                .stopLiveReq(loginReq)
+                .enqueue(new Callback<ResponseObj<LoginResp>>() {
+                    @Override
+                    public void onResponse(Call<ResponseObj<LoginResp>> call, Response<ResponseObj<LoginResp>> response) {
+//                        LoginResp resp = response.body().getData();
+                        if ("0".equals(response.body().getCode())) {
+                            finish();
+                        } else {
+                            showToast(response.body().getMsg());
+                        }
+                        dismissProgressDialog();
+                    }
+
+                    @Override
+                    public void onFailure(Call<ResponseObj<LoginResp>> call, Throwable t) {
+                        showToast(getString(R.string.net_err));
+                        dismissProgressDialog();
+                    }
+                });
     }
 
     /**
@@ -323,6 +364,8 @@ public class LiveActivity extends BaseAcitivity implements View.OnClickListener 
      * 分享弹框
      */
     private void showShareDialog(){
+
+
         ShareDialog shareDialog = ShareDialog.newInstance();
         shareDialog.setOutCancel(true)
                 .setMargin(0);
@@ -330,14 +373,20 @@ public class LiveActivity extends BaseAcitivity implements View.OnClickListener 
         shareDialog.setOnFensClickListener(new ShareDialog.onFensClickListener() {
             @Override
             public void onFensClick() {
-
+                Intent intent = new Intent();
+                intent.setClass(LiveActivity.this,LinkPerActivity.class);
+                intent.putExtra("showFragment","fens");
+                startActivity(intent);
             }
         });
         //管理员
         shareDialog.setOnManageClickListener(new ShareDialog.onManageClickListener() {
             @Override
             public void onManageClick() {
-
+                Intent intent = new Intent();
+                intent.setClass(LiveActivity.this,LinkPerActivity.class);
+                intent.putExtra("showFragment","manage");
+                startActivity(intent);
             }
         });
         //分享链接

@@ -1,19 +1,28 @@
 package com.maywide.liveshow.base;
 
 import android.app.ProgressDialog;
+import android.content.ComponentName;
+import android.content.Context;
+import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.ServiceConnection;
+import android.content.res.Configuration;
+import android.content.res.Resources;
 import android.net.ConnectivityManager;
 import android.net.wifi.WifiManager;
 import android.os.Bundle;
+import android.os.IBinder;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Toast;
 
 import com.maywide.liveshow.R;
-import com.maywide.liveshow.Service.TcpService;
+import com.maywide.liveshow.Service.JWebSocketClient;
+import com.maywide.liveshow.Service.JWebSocketClientService;
 import com.maywide.liveshow.utils.ChannelChangReceiver;
 import com.maywide.liveshow.utils.NetWorkChangReceiver;
 import com.maywide.liveshow.utils.SharedPreferencesUtils;
@@ -35,7 +44,6 @@ public abstract class BaseAcitivity extends AppCompatActivity {
     protected SharedPreferencesUtils sharedPreferencesUtils;
     private ProgressDialog progressDialog;
     private NetWorkChangReceiver netWorkChangReceiver;
-    private ChannelChangReceiver channelChangReceiver;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -56,7 +64,6 @@ public abstract class BaseAcitivity extends AppCompatActivity {
         initView();
         initData();
         initNetWorkChangReceiver();
-        initChannelChangReceiver();
 
     }
 
@@ -82,16 +89,6 @@ public abstract class BaseAcitivity extends AppCompatActivity {
         filter.addAction(WifiManager.NETWORK_STATE_CHANGED_ACTION);
         filter.addAction(ConnectivityManager.CONNECTIVITY_ACTION);
         registerReceiver(netWorkChangReceiver, filter);
-    }
-
-    /**
-     * 初始化公告监听广播
-     */
-    private void initChannelChangReceiver() {
-        channelChangReceiver = new ChannelChangReceiver();
-        IntentFilter filter = new IntentFilter();
-        filter.addAction(TcpService.class.getSimpleName());
-        registerReceiver(channelChangReceiver, filter);
     }
 
     protected void showToast(String msg) {
@@ -128,6 +125,15 @@ public abstract class BaseAcitivity extends AppCompatActivity {
         if (progressDialog != null && progressDialog.isShowing()) {
             progressDialog.dismiss();
         }
+    }
+
+    @Override
+    public Resources getResources() {
+        Resources res = super.getResources();
+        Configuration configuration = new Configuration();
+        configuration.setToDefaults();
+        res.updateConfiguration(configuration, res.getDisplayMetrics());
+        return res;
     }
 
 

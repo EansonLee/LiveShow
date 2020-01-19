@@ -14,6 +14,12 @@
     <uses-permission android:name="android.permission.CAMERA" />
     <uses-permission android:name="android.permission.MOUNT_UNMOUNT_FILESYSTEMS" />
     <uses-permission android:name="com.miui.whetstone.permission.ACCESS_PROVIDER" />
+    <!-- 解锁屏幕需要的权限 -->
+    <uses-permission android:name="android.permission.DISABLE_KEYGUARD" />
+    <!-- 申请电源锁需要的权限 -->
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <!--震动权限-->
+    <uses-permission android:name="android.permission.VIBRATE" />
 
     <uses-feature android:name="android.hardware.camera.autofocus" />
 
@@ -53,6 +59,16 @@
             android:name=".Service.TcpService"
             android:enabled="true"
             android:exported="true" />
+
+        <service
+            android:name=".Service.JWebSocketClientService"
+            android:enabled="true"
+            android:exported="true" />
+        <service
+            android:name=".Service.JWebSocketClientService$GrayInnerService"
+            android:enabled="true"
+            android:exported="false"
+            android:process=":gray" />
 
         <activity
             android:name=".activity.RegistActivity"

@@ -15,6 +15,6 @@ public class Config {
      * 本地地址
      */
 //    public static final String BASE_IP = "http://180.200.0.70:8888";
-    public static final String BASE_URL = BASE_IP+"/mini/anchor/";
+    public static final String BASE_URL = BASE_IP+"/mini/";
     public static final long TIMEOUT = 1000;
 }

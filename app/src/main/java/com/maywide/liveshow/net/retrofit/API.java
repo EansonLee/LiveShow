@@ -6,6 +6,7 @@ import com.maywide.liveshow.net.req.DetailBoxKpiReq;
 import com.maywide.liveshow.net.req.EditIndexReq;
 import com.maywide.liveshow.net.req.HomeKpiReq;
 import com.maywide.liveshow.net.req.HomeNewsReq;
+import com.maywide.liveshow.net.req.LiveBroadCastReq;
 import com.maywide.liveshow.net.req.LoginGetVerReq;
 import com.maywide.liveshow.net.req.LoginReq;
 import com.maywide.liveshow.net.resp.BannerResp;
@@ -13,6 +14,7 @@ import com.maywide.liveshow.net.resp.BroadCastInfoResp;
 import com.maywide.liveshow.net.resp.DetailBoxKpiResp;
 import com.maywide.liveshow.net.resp.HomeKpiResp;
 import com.maywide.liveshow.net.resp.HomeNewsResp;
+import com.maywide.liveshow.net.resp.LinkPerResp;
 import com.maywide.liveshow.net.resp.LoginResp;
 import com.maywide.liveshow.net.resp.ResponseList;
 import com.maywide.liveshow.net.resp.ResponseObj;
@@ -26,7 +28,7 @@ public interface API {
 
     //登录
     @Headers("Content-Type:application/json")
-    @POST("login.html")
+    @POST("anchor/login.html")
     Call<ResponseObj<LoginResp>> loginReq(@Body LoginReq loginReq);
 
     //主播基本信息
@@ -37,7 +39,17 @@ public interface API {
     //将开始直播信息回传后台
     @Headers("Content-Type:application/json")
     @POST("start-live-broadcast.html")
-    Call<ResponseObj<LoginResp>> liveBroadCastReq(@Body BaseReq baseReq);
+    Call<ResponseObj<LoginResp>> liveBroadCastReq(@Body LiveBroadCastReq liveBroadCastReq);
+
+    //退出直播
+    @Headers("Content-Type:application/json")
+    @POST("stop-live-broadcast.html")
+    Call<ResponseObj<LoginResp>> stopLiveReq(@Body BaseReq baseReq);
+
+    //粉丝或者房管列表
+    @Headers("Content-Type:application/json")
+    @POST("live-broadcast/fans-list.html")
+    Call<ResponseObj<LinkPerResp>> linkePerListReq(@Body BaseReq baseReq);
 
     //首页KPI接口
     @Headers("Content-Type:application/json")

@@ -75,4 +75,6 @@ dependencies {
     //七牛上传图片
     implementation 'com.qiniu:qiniu-android-sdk:7.3.3'
     implementation 'com.qiniu:happy-dns:0.2.10'
+    //webSocket
+    implementation "org.java-websocket:Java-WebSocket:1.4.0"
 }

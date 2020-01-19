@@ -26,6 +26,7 @@ import com.maywide.liveshow.base.BaseAcitivity;
 import com.maywide.liveshow.bean.MyPermissionBean;
 import com.maywide.liveshow.net.req.BroadCastInfoReq;
 import com.maywide.liveshow.net.req.LiveBroadCastReq;
+import com.maywide.liveshow.net.req.LoginReq;
 import com.maywide.liveshow.net.resp.BroadCastInfoResp;
 import com.maywide.liveshow.net.resp.LoginResp;
 import com.maywide.liveshow.net.resp.ResponseObj;
@@ -131,7 +132,7 @@ public class StartLiveActivity extends BaseAcitivity implements View.OnClickList
             //获取房间号
             roomNum = baseDetail.getAnchor_code();
             //推流地址
-            mPushUrl = "rtmp://push.3ttest.cn/sdk2/"+roomNum;
+            mPushUrl = "rtmp://push.3ttest.cn/sdk2/" + roomNum;
         }
 
 //        if (!TextUtils.isEmpty(photoPath)) {
@@ -332,7 +333,8 @@ public class StartLiveActivity extends BaseAcitivity implements View.OnClickList
         liveBroadCastReq.setToken(sharedPreferencesUtils.getString("token", ""));
         liveBroadCastReq.setPicture(photoPath);
         liveBroadCastReq.setTitle(etTitle.getText().toString());
-        liveBroadCastReq.setUrl(mPushUrl);
+        liveBroadCastReq.setUrl("sadasdasd");
+
         RetrofitClient
                 .getInstance()
                 .api(API.class)
@@ -362,6 +364,38 @@ public class StartLiveActivity extends BaseAcitivity implements View.OnClickList
                     }
                 });
     }
+
+    /**
+     * 退出直播
+     */
+    private void stopLiveReq() {
+        LoginReq loginReq = new LoginReq();
+
+        loginReq.setToken(sharedPreferencesUtils.getString("token", ""));
+        RetrofitClient
+                .getInstance()
+                .api(API.class)
+                .stopLiveReq(loginReq)
+                .enqueue(new Callback<ResponseObj<LoginResp>>() {
+                    @Override
+                    public void onResponse(Call<ResponseObj<LoginResp>> call, Response<ResponseObj<LoginResp>> response) {
+//                        LoginResp resp = response.body().getData();
+                        if ("0".equals(response.body().getCode())) {
+                            finish();
+                        } else {
+                            showToast(response.body().getMsg());
+                        }
+                        dismissProgressDialog();
+                    }
+
+                    @Override
+                    public void onFailure(Call<ResponseObj<LoginResp>> call, Throwable t) {
+                        showToast(getString(R.string.net_err));
+                        dismissProgressDialog();
+                    }
+                });
+    }
+
 
     /**
      * 软键盘动态上移
@@ -453,7 +487,7 @@ public class StartLiveActivity extends BaseAcitivity implements View.OnClickList
         confirmDialog.setOnSureClickListener(new ConfirmDialog.OnSureClickListener() {
             @Override
             public void onSureClik() {
-                finish();
+                stopLiveReq();
             }
         });
         confirmDialog.show(getSupportFragmentManager());
