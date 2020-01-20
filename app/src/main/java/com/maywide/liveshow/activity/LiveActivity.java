@@ -24,6 +24,8 @@ import com.maywide.liveshow.net.retrofit.RetrofitClient;
 import com.maywide.liveshow.utils.LiveShowReceiver;
 import com.maywide.liveshow.widget.BroadCastDialog;
 import com.maywide.liveshow.widget.ConfirmDialog;
+import com.maywide.liveshow.widget.InfoDialog;
+import com.maywide.liveshow.widget.MarqueeTextView;
 import com.maywide.liveshow.widget.ShareDialog;
 import com.wushuangtech.library.Constants;
 import com.wushuangtech.wstechapi.model.VideoCanvas;
@@ -66,7 +68,7 @@ public class LiveActivity extends BaseAcitivity implements View.OnClickListener 
     LinearLayout lyProtect;
     //滚动公告
     @BindView(R.id.tv_broadcast)
-    TextView tvBroadcast;
+    MarqueeTextView tvBroadcast;
     //聊天recycleView
     @BindView(R.id.rcv_talk)
     RecyclerView rcvTalk;
@@ -96,12 +98,15 @@ public class LiveActivity extends BaseAcitivity implements View.OnClickListener 
 
     private LiveShowReceiver liveShowReceiver;
 
+    //主播个人信息
+    private LoginResp.baseDetail baseDetail;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         ButterKnife.bind(this);
         //动态弹起布局
-        addLayoutListener(lyLiveShow, lyBottom);
+//        addLayoutListener(lyLiveShow, lyBottom);
     }
 
     @Override
@@ -111,6 +116,13 @@ public class LiveActivity extends BaseAcitivity implements View.OnClickListener 
 
     @Override
     protected void initView() {
+
+        baseDetail = (LoginResp.baseDetail) getIntent().getSerializableExtra("infoData");
+        if (baseDetail!=null){
+            tvId.setText(baseDetail.getId());
+            tvName.setText(baseDetail.getNickname());
+            tvBroadcast.setText(baseDetail.getNotice());
+        }
 
         ivLiveIcon.setOnClickListener(this);
         tvBroad.setOnClickListener(this);
@@ -153,7 +165,7 @@ public class LiveActivity extends BaseAcitivity implements View.OnClickListener 
         switch (v.getId()) {
             //头像
             case R.id.iv_live_icon:
-
+                showInfoDialog();
                 break;
             //星钻
             case R.id.ly_star:
@@ -173,21 +185,13 @@ public class LiveActivity extends BaseAcitivity implements View.OnClickListener 
                 break;
             //公告栏
             case R.id.tv_broad:
-                BroadCastDialog broadCastDialog = BroadCastDialog.getInstance("公告栏", "大大大大大大哥哥哥哥");
+                BroadCastDialog broadCastDialog = BroadCastDialog.getInstance("公告栏", baseDetail.getNotice());
                 broadCastDialog.setOutCancel(true)
                         .setMargin(0);
-                broadCastDialog.setOnLayOutClickListener(new BroadCastDialog.onLayOutClickListener() {
-                    @Override
-                    public void onLayOutClick() {
-
-                    }
-                });
                 broadCastDialog.show(getSupportFragmentManager());
                 break;
             //美颜
             case R.id.iv_beauty:
-                //弹框确定
-                ConfirmDialog beautyDialog = ConfirmDialog.newInstance(getString(R.string.dialog_open_beauty), getString(R.string.dialog_check_beauty));
                 //如果没开美颜提示开美颜
                 if (!isBeauty) {
                     showBeautyDialog(getString(R.string.dialog_open_beauty), getString(R.string.dialog_check_beauty));
@@ -257,47 +261,6 @@ public class LiveActivity extends BaseAcitivity implements View.OnClickListener 
                 });
     }
 
-    /**
-     * 软键盘动态上移
-     *
-     * @param main
-     * @param scroll
-     */
-    private void addLayoutListener(final View main, final View scroll) {
-
-        main.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
-            @Override
-            public void onGlobalLayout() {
-                Rect rect = new Rect();
-                // 获取main 在窗体的可视区域
-                main.getWindowVisibleDisplayFrame(rect);
-                //获取main在窗体的不可视区域高度，在键盘没有弹起时，main.getRootView().getHeight()调节度应该和rect.bottom高度一样
-                int mainInvisibleHeight = main.getRootView().getHeight() - rect.bottom;
-                //屏幕高度
-                int screenHeight = main.getRootView().getHeight();
-                //不可见区域大于屏幕本身高度1/4：说明键盘弹起了
-                if (mainInvisibleHeight > screenHeight / 3) {
-                    int[] location = new int[2];
-                    scroll.getLocationInWindow(location);
-
-                    int scrollHeight = (location[1] + scroll.getHeight()) - rect.bottom;
-
-                    if (scrollHeight != 0) {
-                        //让界面整体上移键盘的高度
-                        main.scrollTo(0, scrollHeight);
-                    } else {
-                        return;
-                    }
-
-                } else {
-                    //不可见区域小于屏幕高度1/4时,说明键盘隐藏了，把界面下移，移回到原有高度
-                    main.scrollTo(0, 0);
-                }
-            }
-        });
-    }
-
-
     @Override
     protected void onDestroy() {
 
@@ -365,7 +328,6 @@ public class LiveActivity extends BaseAcitivity implements View.OnClickListener 
      */
     private void showShareDialog(){
 
-
         ShareDialog shareDialog = ShareDialog.newInstance();
         shareDialog.setOutCancel(true)
                 .setMargin(0);
@@ -397,5 +359,16 @@ public class LiveActivity extends BaseAcitivity implements View.OnClickListener 
             }
         });
         shareDialog.show(getSupportFragmentManager());
+    }
+
+    /**
+     * 个人信息弹框
+     */
+    private void showInfoDialog(){
+        InfoDialog infoDialog = InfoDialog.newInstance(baseDetail);
+        infoDialog.setOutCancel(true)
+                .setMargin(27);
+
+        infoDialog.show(getSupportFragmentManager());
     }
 }

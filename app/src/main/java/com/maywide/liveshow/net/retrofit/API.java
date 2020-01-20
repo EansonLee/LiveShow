@@ -9,6 +9,7 @@ import com.maywide.liveshow.net.req.HomeNewsReq;
 import com.maywide.liveshow.net.req.LiveBroadCastReq;
 import com.maywide.liveshow.net.req.LoginGetVerReq;
 import com.maywide.liveshow.net.req.LoginReq;
+import com.maywide.liveshow.net.req.UpGradeReq;
 import com.maywide.liveshow.net.resp.BannerResp;
 import com.maywide.liveshow.net.resp.BroadCastInfoResp;
 import com.maywide.liveshow.net.resp.DetailBoxKpiResp;
@@ -38,18 +39,23 @@ public interface API {
 
     //将开始直播信息回传后台
     @Headers("Content-Type:application/json")
-    @POST("start-live-broadcast.html")
+    @POST("anchor/start-live-broadcast.html")
     Call<ResponseObj<LoginResp>> liveBroadCastReq(@Body LiveBroadCastReq liveBroadCastReq);
 
     //退出直播
     @Headers("Content-Type:application/json")
-    @POST("stop-live-broadcast.html")
+    @POST("anchor/stop-live-broadcast.html")
     Call<ResponseObj<LoginResp>> stopLiveReq(@Body BaseReq baseReq);
 
     //粉丝或者房管列表
     @Headers("Content-Type:application/json")
     @POST("live-broadcast/fans-list.html")
     Call<ResponseObj<LinkPerResp>> linkePerListReq(@Body BaseReq baseReq);
+
+    //设置房管或者降级粉丝
+    @Headers("Content-Type:application/json")
+    @POST("anchor/set-housing-management.html")
+    Call<ResponseObj<LoginResp>> upGradeReq(@Body UpGradeReq upGradeReq);
 
     //首页KPI接口
     @Headers("Content-Type:application/json")

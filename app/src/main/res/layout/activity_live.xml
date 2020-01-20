@@ -35,8 +35,8 @@
 
         <TextView
             android:layout_width="wrap_content"
-            android:layout_weight="1"
             android:layout_height="match_parent"
+            android:layout_weight="1"
             android:gravity="center"
             android:text="@string/live_room"
             android:textColor="@color/black"
@@ -44,12 +44,12 @@
 
         <ImageView
             android:id="@+id/iv_more"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
             android:layout_gravity="center"
             android:layout_marginLeft="15dp"
             android:layout_marginRight="15dp"
-            android:layout_width="20dp"
-            android:layout_height="20dp"
-            android:src="@mipmap/more_icon"/>
+            android:src="@mipmap/more_icon" />
 
     </LinearLayout>
 
@@ -59,8 +59,8 @@
         android:layout_width="match_parent"
         android:layout_height="40dp"
         android:layout_below="@+id/ly_title_bar"
-        android:layout_marginTop="10dp"
         android:layout_marginBottom="13dp"
+        android:layout_marginTop="10dp"
         android:gravity="center_vertical">
 
         <com.makeramen.roundedimageview.RoundedImageView
@@ -204,11 +204,13 @@
             android:layout_marginRight="6dp"
             android:src="@mipmap/broad_icon" />
 
-        <TextView
+        <com.maywide.liveshow.widget.MarqueeTextView
             android:id="@+id/tv_broadcast"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:gravity="center_vertical"
+            android:gravity="center"
+            android:focusable="true"
+            android:singleLine="true"
             android:text="--"
             android:textColor="@color/main_color"
             android:textSize="@dimen/font12" />
@@ -237,7 +239,7 @@
             android:layout_width="wrap_content"
             android:layout_height="40dp"
             android:layout_marginLeft="15dp"
-            android:background="@mipmap/talk_bg"
+            android:background="@drawable/talk_bg"
             android:hint="@string/live_say_sth"
             android:minWidth="100dp"
             android:paddingLeft="6dp"

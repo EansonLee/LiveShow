@@ -15,6 +15,7 @@ public class ShareDialog extends BaseNiceDialog {
     private onFensClickListener onFensClickListener;
     private onManageClickListener onManageClickListener;
     private onShareClickListener onShareClickListener;
+    private onLayOutClickListener onLayOutClickListener;
 
     public void setOnFensClickListener(ShareDialog.onFensClickListener onFensClickListener) {
         this.onFensClickListener = onFensClickListener;
@@ -26,6 +27,10 @@ public class ShareDialog extends BaseNiceDialog {
 
     public void setOnShareClickListener(ShareDialog.onShareClickListener onShareClickListener) {
         this.onShareClickListener = onShareClickListener;
+    }
+
+    public void setOnLayOutClickListener(ShareDialog.onLayOutClickListener onLayOutClickListener) {
+        this.onLayOutClickListener = onLayOutClickListener;
     }
 
     public static ShareDialog newInstance() {
@@ -70,8 +75,21 @@ public class ShareDialog extends BaseNiceDialog {
                 dialog.dismiss();
             }
         });
+        //整个界面点击
+        holder.setOnClickListener(R.id.ly_dialog, new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (null != onLayOutClickListener) {
+                    onLayOutClickListener.onLayOutClick();
+                }
+                dialog.dismiss();
+            }
+        });
     }
 
+    public interface onLayOutClickListener {
+        void onLayOutClick();
+    }
 
     public interface onFensClickListener {
         void onFensClick();

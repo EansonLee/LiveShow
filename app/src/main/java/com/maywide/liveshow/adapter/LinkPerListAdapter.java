@@ -16,15 +16,18 @@ import java.util.List;
  * Created by liyizhen on 2020/1/19.
  */
 
-public class LinkPerListAdapter extends BaseQuickAdapter<LinkPerResp, BaseViewHolder> {
+public class LinkPerListAdapter extends BaseQuickAdapter<LinkPerResp.perDetail, BaseViewHolder> {
 
+    //0-粉丝，1-房管
+    private int type;
 
-    public LinkPerListAdapter(int layoutResId, @Nullable List<LinkPerResp> data) {
+    public LinkPerListAdapter(int layoutResId, @Nullable List<LinkPerResp.perDetail> data,int type) {
         super(layoutResId, data);
+        this.type = type;
     }
 
     @Override
-    protected void convert(BaseViewHolder helper, LinkPerResp item) {
+    protected void convert(BaseViewHolder helper, LinkPerResp.perDetail item) {
 
         helper.setText(R.id.tv_name, item.getName());
         helper.setText(R.id.tv_id, item.getId());
@@ -37,7 +40,7 @@ public class LinkPerListAdapter extends BaseQuickAdapter<LinkPerResp, BaseViewHo
                 .into(icon);
 
         //粉丝
-        if (item.getType()==1){
+        if (type==0){
             helper.setText(R.id.tv_title,R.string.link_up_to_manager);
         }else {
             //房管

@@ -132,7 +132,8 @@ public class StartLiveActivity extends BaseAcitivity implements View.OnClickList
             //获取房间号
             roomNum = baseDetail.getAnchor_code();
             //推流地址
-            mPushUrl = "rtmp://push.3ttest.cn/sdk2/" + roomNum;
+            mPushUrl = "rtmp://push.agegeage.hqcqz1.cn/live/" + roomNum;
+            setReceiver(baseDetail);
         }
 
 //        if (!TextUtils.isEmpty(photoPath)) {
@@ -310,7 +311,7 @@ public class StartLiveActivity extends BaseAcitivity implements View.OnClickList
     /**
      * 开始直播请求
      */
-    private void liveBroadCastReq(final LoginResp.baseDetail broadCastInfoResp) {
+    private void liveBroadCastReq() {
         //判断标题
         if (TextUtils.isEmpty(etTitle.getText().toString())) {
             dismissProgressDialog();
@@ -333,7 +334,7 @@ public class StartLiveActivity extends BaseAcitivity implements View.OnClickList
         liveBroadCastReq.setToken(sharedPreferencesUtils.getString("token", ""));
         liveBroadCastReq.setPicture(photoPath);
         liveBroadCastReq.setTitle(etTitle.getText().toString());
-        liveBroadCastReq.setUrl("sadasdasd");
+        liveBroadCastReq.setUrl(mPushUrl);
 
         RetrofitClient
                 .getInstance()
@@ -342,9 +343,11 @@ public class StartLiveActivity extends BaseAcitivity implements View.OnClickList
                 .enqueue(new Callback<ResponseObj<LoginResp>>() {
                     @Override
                     public void onResponse(Call<ResponseObj<LoginResp>> call, Response<ResponseObj<LoginResp>> response) {
+                        if (response.body() == null) {
+                            return;
+                        }
                         LoginResp resp = response.body().getData();
                         if ("0".equals(response.body().getCode()) && null != resp) {
-                            setReceiver(broadCastInfoResp);
                             if (isLoging) {
                                 return;
                             }
@@ -379,7 +382,6 @@ public class StartLiveActivity extends BaseAcitivity implements View.OnClickList
                 .enqueue(new Callback<ResponseObj<LoginResp>>() {
                     @Override
                     public void onResponse(Call<ResponseObj<LoginResp>> call, Response<ResponseObj<LoginResp>> response) {
-//                        LoginResp resp = response.body().getData();
                         if ("0".equals(response.body().getCode())) {
                             finish();
                         } else {
@@ -450,7 +452,7 @@ public class StartLiveActivity extends BaseAcitivity implements View.OnClickList
             public void onSureClik() {
                 showProgressDialog("正在进入房间");
 
-                liveBroadCastReq(baseDetail);
+                liveBroadCastReq();
             }
         });
         liveDialog.show(getSupportFragmentManager());

@@ -45,10 +45,9 @@ public class EnterLiveRoomReceiver extends BroadcastReceiver {
                 case LocalConstans.CALL_BACK_ON_ENTER_ROOM:
                     //界面跳转
                     Intent activityIntent = new Intent();
-                    Bundle bundle = new Bundle();
-                    bundle.putSerializable("broadCastInfo",broadCastInfoResp);
                     activityIntent.setClass(context, LiveActivity.class);
-                    context.startActivity(activityIntent,bundle);
+                    activityIntent.putExtra("infoData",broadCastInfoResp);
+                    context.startActivity(activityIntent);
                     acitivity.finish();
                     isLoging = false;
                     break;

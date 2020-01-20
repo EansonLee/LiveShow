@@ -41,7 +41,7 @@ public class BroadCastDialog extends BaseNiceDialog {
             return;
         }
         title = bundle.getString("title");
-        content = bundle.getString("content", "");
+        content = bundle.getString("content");
     }
 
     @Override

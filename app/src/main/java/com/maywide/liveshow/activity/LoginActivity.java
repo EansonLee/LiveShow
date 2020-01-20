@@ -145,7 +145,10 @@ public class LoginActivity extends BaseAcitivity implements View.OnClickListener
                 .enqueue(new Callback<ResponseObj<LoginResp>>() {
                     @Override
                     public void onResponse(Call<ResponseObj<LoginResp>> call, Response<ResponseObj<LoginResp>> response) {
-
+                        if (response.body() == null) {
+                            showToast(getString(R.string.net_err));
+                            return;
+                        }
                         LoginResp resp = response.body().getData();
                         if ("0".equals(response.body().getCode()) && null != resp) {
                             sharedPreferencesUtils.putString("phone", loginReq.getPhone());
