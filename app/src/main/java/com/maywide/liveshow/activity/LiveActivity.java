@@ -246,6 +246,7 @@ public class LiveActivity extends BaseAcitivity implements View.OnClickListener 
                     public void onResponse(Call<ResponseObj<LoginResp>> call, Response<ResponseObj<LoginResp>> response) {
 //                        LoginResp resp = response.body().getData();
                         if ("0".equals(response.body().getCode())) {
+                            mTTTEngine.leaveChannel();
                             finish();
                         } else {
                             showToast(response.body().getMsg());
@@ -282,7 +283,7 @@ public class LiveActivity extends BaseAcitivity implements View.OnClickListener 
         confirmDialog.setOnSureClickListener(new ConfirmDialog.OnSureClickListener() {
             @Override
             public void onSureClik() {
-                finish();
+                stopLiveReq();
             }
         });
         confirmDialog.show(getSupportFragmentManager());

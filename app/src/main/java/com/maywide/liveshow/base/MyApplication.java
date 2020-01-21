@@ -7,6 +7,7 @@ import android.content.IntentFilter;
 import android.content.ServiceConnection;
 import android.content.res.Configuration;
 import android.content.res.Resources;
+import android.os.Build;
 import android.os.Environment;
 import android.os.IBinder;
 import android.util.Log;
@@ -92,7 +93,11 @@ public class MyApplication extends Application {
      */
     private void startJWebSClientService() {
         Intent intent = new Intent(this, JWebSocketClientService.class);
-        startService(intent);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            startForegroundService(intent);
+        }else {
+            startService(intent);
+        }
     }
 
     /**

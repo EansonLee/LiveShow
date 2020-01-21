@@ -3,11 +3,13 @@ package com.maywide.liveshow.Service;
 import android.annotation.SuppressLint;
 import android.app.KeyguardManager;
 import android.app.Notification;
+import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Binder;
 import android.os.Build;
 import android.os.Handler;
@@ -29,8 +31,19 @@ public class JWebSocketClientService extends Service {
     public JWebSocketClient client;
     private JWebSocketClientBinder mBinder = new JWebSocketClientBinder();
     private final static int GRAY_SERVICE_ID = 1001;
+    //以下为适配8.0版本
+    private NotificationManager notificationManager;
+    private String notificationId = "channelId";
+    private String notificationName = "channelName";
+
     //灰色保活
     public static class GrayInnerService extends Service {
+
+        @Override
+        public void onCreate() {
+            super.onCreate();
+
+        }
 
         @Override
         public int onStartCommand(Intent intent, int flags, int startId) {
@@ -39,22 +52,22 @@ public class JWebSocketClientService extends Service {
             stopSelf();
             return super.onStartCommand(intent, flags, startId);
         }
+
         @Override
         public IBinder onBind(Intent intent) {
             return null;
         }
     }
+
     PowerManager.WakeLock wakeLock;//锁屏唤醒
+
     //获取电源锁，保持该服务在屏幕熄灭时仍然获取CPU时，保持运行
     @SuppressLint("InvalidWakeLockTag")
-    private void acquireWakeLock()
-    {
-        if (null == wakeLock)
-        {
-            PowerManager pm = (PowerManager)this.getSystemService(Context.POWER_SERVICE);
-            wakeLock = pm.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK|PowerManager.ON_AFTER_RELEASE, "PostLocationService");
-            if (null != wakeLock)
-            {
+    private void acquireWakeLock() {
+        if (null == wakeLock) {
+            PowerManager pm = (PowerManager) this.getSystemService(Context.POWER_SERVICE);
+            wakeLock = pm.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK | PowerManager.ON_AFTER_RELEASE, "PostLocationService");
+            if (null != wakeLock) {
                 wakeLock.acquire();
             }
         }
@@ -75,6 +88,26 @@ public class JWebSocketClientService extends Service {
     @Override
     public void onCreate() {
         super.onCreate();
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+            NotificationChannel channel = new NotificationChannel(notificationId, notificationName, NotificationManager.IMPORTANCE_HIGH);
+            notificationManager.createNotificationChannel(channel);
+            startForeground(1,getNotification());
+        }
+    }
+
+    private Notification getNotification() {
+        Notification.Builder builder = new Notification.Builder(this)
+                .setSmallIcon(R.mipmap.app_icon)
+                .setContentTitle("测试服务")
+                .setContentText("我正在运行")
+                .setAutoCancel(true);
+        //设置Notification的ChannelID,否则不能正常显示
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            builder.setChannelId(notificationId);
+        }
+        Notification notification = builder.build();
+        return notification;
     }
 
     @Override
@@ -87,14 +120,14 @@ public class JWebSocketClientService extends Service {
         if (Build.VERSION.SDK_INT < 18) {
             //Android4.3以下 ，隐藏Notification上的图标
             startForeground(GRAY_SERVICE_ID, new Notification());
-        } else if(Build.VERSION.SDK_INT>18 && Build.VERSION.SDK_INT<25){
+        } else if (Build.VERSION.SDK_INT > 18 && Build.VERSION.SDK_INT < 25) {
             //Android4.3 - Android7.0，隐藏Notification上的图标
             Intent innerIntent = new Intent(this, GrayInnerService.class);
             startService(innerIntent);
             startForeground(GRAY_SERVICE_ID, new Notification());
-        }else{
+        } else {
             //Android7.0以上app启动后通知栏会出现一条"正在运行"的通知
-            startForeground(GRAY_SERVICE_ID, new Notification());
+            startForeground(GRAY_SERVICE_ID, getNotification());
         }
 
         acquireWakeLock();
