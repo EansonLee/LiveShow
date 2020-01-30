@@ -101,6 +101,9 @@ public class LiveActivity extends BaseAcitivity implements View.OnClickListener 
     //主播个人信息
     private LoginResp.baseDetail baseDetail;
 
+    // 点击退出时记录时间
+    private long firstTime = 0;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -118,7 +121,7 @@ public class LiveActivity extends BaseAcitivity implements View.OnClickListener 
     protected void initView() {
 
         baseDetail = (LoginResp.baseDetail) getIntent().getSerializableExtra("infoData");
-        if (baseDetail!=null){
+        if (baseDetail != null) {
             tvId.setText(baseDetail.getId());
             tvName.setText(baseDetail.getNickname());
             tvBroadcast.setText(baseDetail.getNotice());
@@ -276,17 +279,25 @@ public class LiveActivity extends BaseAcitivity implements View.OnClickListener 
 
     @Override
     public void onBackPressed() {
-        //弹框确定
-        ConfirmDialog confirmDialog = ConfirmDialog.newInstance(getString(R.string.dialog_exit_live), getString(R.string.dialog_check_live));
-        confirmDialog.setOutCancel(false);
-        confirmDialog.setMargin(60);
-        confirmDialog.setOnSureClickListener(new ConfirmDialog.OnSureClickListener() {
-            @Override
-            public void onSureClik() {
-                stopLiveReq();
-            }
-        });
-        confirmDialog.show(getSupportFragmentManager());
+        //super.onBackPressed();
+        long secondTime = System.currentTimeMillis();
+        // 如果两次按键时间间隔大于1000毫秒，则不退出
+        if (secondTime - firstTime > 1000) {
+            showToast("再按一次退出应用");
+            firstTime = secondTime;// 更新firstTime
+        } else {
+            //弹框确定
+            ConfirmDialog confirmDialog = ConfirmDialog.newInstance(getString(R.string.dialog_exit_live), getString(R.string.dialog_check_live));
+            confirmDialog.setOutCancel(false);
+            confirmDialog.setMargin(60);
+            confirmDialog.setOnSureClickListener(new ConfirmDialog.OnSureClickListener() {
+                @Override
+                public void onSureClik() {
+                    stopLiveReq();
+                }
+            });
+            confirmDialog.show(getSupportFragmentManager());
+        }
     }
 
     /**
@@ -327,7 +338,7 @@ public class LiveActivity extends BaseAcitivity implements View.OnClickListener 
     /**
      * 分享弹框
      */
-    private void showShareDialog(){
+    private void showShareDialog() {
 
         ShareDialog shareDialog = ShareDialog.newInstance();
         shareDialog.setOutCancel(true)
@@ -337,8 +348,8 @@ public class LiveActivity extends BaseAcitivity implements View.OnClickListener 
             @Override
             public void onFensClick() {
                 Intent intent = new Intent();
-                intent.setClass(LiveActivity.this,LinkPerActivity.class);
-                intent.putExtra("showFragment","fens");
+                intent.setClass(LiveActivity.this, LinkPerActivity.class);
+                intent.putExtra("showFragment", "fens");
                 startActivity(intent);
             }
         });
@@ -347,8 +358,8 @@ public class LiveActivity extends BaseAcitivity implements View.OnClickListener 
             @Override
             public void onManageClick() {
                 Intent intent = new Intent();
-                intent.setClass(LiveActivity.this,LinkPerActivity.class);
-                intent.putExtra("showFragment","manage");
+                intent.setClass(LiveActivity.this, LinkPerActivity.class);
+                intent.putExtra("showFragment", "manage");
                 startActivity(intent);
             }
         });
@@ -365,11 +376,10 @@ public class LiveActivity extends BaseAcitivity implements View.OnClickListener 
     /**
      * 个人信息弹框
      */
-    private void showInfoDialog(){
+    private void showInfoDialog() {
         InfoDialog infoDialog = InfoDialog.newInstance(baseDetail);
         infoDialog.setOutCancel(true)
                 .setMargin(27);
-
         infoDialog.show(getSupportFragmentManager());
     }
 }
