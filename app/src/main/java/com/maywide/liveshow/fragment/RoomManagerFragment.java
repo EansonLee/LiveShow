@@ -9,13 +9,16 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.maywide.liveshow.R;
 import com.maywide.liveshow.adapter.LinkPerListAdapter;
 import com.maywide.liveshow.base.BaseFragment;
 import com.maywide.liveshow.net.req.LinkPerReq;
+import com.maywide.liveshow.net.req.UpGradeReq;
 import com.maywide.liveshow.net.resp.LinkPerResp;
+import com.maywide.liveshow.net.resp.LoginResp;
 import com.maywide.liveshow.net.resp.ResponseObj;
 import com.maywide.liveshow.net.retrofit.API;
 import com.maywide.liveshow.net.retrofit.RetrofitClient;
@@ -51,6 +54,8 @@ public class RoomManagerFragment extends BaseFragment {
     private LinkPerListAdapter perListAdapter;
     //列表数据
     private List<LinkPerResp.perDetail> linkPerRespList = new ArrayList<>();
+
+    private boolean isPrepared = false;
 
     public static RoomManagerFragment newInstance() {
         RoomManagerFragment fragment = new RoomManagerFragment();
@@ -109,14 +114,21 @@ public class RoomManagerFragment extends BaseFragment {
                     @Override
                     public void run() {
                         swipeRefreshLayout.setRefreshing(false);//取消刷新
-
                     }
                 }, 1500);
-
-
             }
         });
 
+        perListAdapter.setOnItemChildClickListener(new BaseQuickAdapter.OnItemChildClickListener() {
+            @Override
+            public void onItemChildClick(BaseQuickAdapter adapter, View view, int position) {
+                if (view.getId() == R.id.tv_title) {
+                    //用户id
+                    String id = linkPerRespList.get(position).getId();
+                    upGradeReq(id);
+                }
+            }
+        });
     }
 
     @Override
@@ -128,6 +140,17 @@ public class RoomManagerFragment extends BaseFragment {
     protected void initData() {
         linkePerListReq(1, mPageSize);
     }
+
+    @Override
+    public void setUserVisibleHint(boolean isVisibleToUser) {
+        super.setUserVisibleHint(isVisibleToUser);
+        if (isPrepared&& isVisibleToUser){
+            linkePerListReq(1, mPageSize);
+            mPageIndex = 1;
+            linkPerRespList.clear();
+        }
+    }
+
     /**
      * 房管列表请求
      *
@@ -159,7 +182,6 @@ public class RoomManagerFragment extends BaseFragment {
 
                             if (resp.getList().size() != 0) {
                                 mPageIndex++;
-//                                linkPerRespList = resp.getList();
                                 perListAdapter.addData(resp.getList());
 
                                 perListAdapter.loadMoreComplete();
@@ -185,11 +207,52 @@ public class RoomManagerFragment extends BaseFragment {
     }
 
 
+    /**
+     * 降级粉丝
+     */
+    private void upGradeReq(String id) {
+
+        UpGradeReq upGradeReq = new UpGradeReq();
+        upGradeReq.setToken(sharedPreferencesUtils.getString("token", ""));
+        upGradeReq.setSetted_user_id(id);
+        upGradeReq.setIs_cancel(1);
+
+        RetrofitClient
+                .getInstance()
+                .api(API.class)
+                .upGradeReq(upGradeReq)
+                .enqueue(new Callback<ResponseObj<LoginResp>>() {
+                    @Override
+                    public void onResponse(Call<ResponseObj<LoginResp>> call, Response<ResponseObj<LoginResp>> response) {
+                        if (response.body() == null) {
+                            showToast(getString(R.string.net_err));
+                            return;
+                        }
+                        LoginResp resp = response.body().getData();
+                        if ("0".equals(response.body().getCode())) {
+                            linkePerListReq(1, mPageSize);
+                            mPageIndex = 1;
+                            linkPerRespList.clear();
+                        } else {
+                            showToast(response.body().getMsg());
+                        }
+                        dismissProgressDialog();
+                    }
+
+                    @Override
+                    public void onFailure(Call<ResponseObj<LoginResp>> call, Throwable t) {
+
+                    }
+                });
+    }
+
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // TODO: inflate a fragment view
         View rootView = super.onCreateView(inflater, container, savedInstanceState);
         unbinder = ButterKnife.bind(this, rootView);
+        isPrepared = true;
         return rootView;
     }
 

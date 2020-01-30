@@ -1,5 +1,8 @@
 package com.maywide.liveshow.activity;
 
+import android.Manifest;
+import android.app.AlertDialog;
+import android.app.Dialog;
 import android.content.ComponentName;
 import android.content.Intent;
 import android.content.ServiceConnection;
@@ -17,6 +20,7 @@ import android.widget.TextView;
 import com.maywide.liveshow.R;
 import com.maywide.liveshow.Service.TcpService;
 import com.maywide.liveshow.base.BaseAcitivity;
+import com.maywide.liveshow.bean.MyPermissionBean;
 import com.maywide.liveshow.net.req.BroadCastInfoReq;
 import com.maywide.liveshow.net.req.LoginGetVerReq;
 import com.maywide.liveshow.net.req.LoginReq;
@@ -26,6 +30,10 @@ import com.maywide.liveshow.net.resp.ResponseList;
 import com.maywide.liveshow.net.resp.ResponseObj;
 import com.maywide.liveshow.net.retrofit.API;
 import com.maywide.liveshow.net.retrofit.RetrofitClient;
+import com.maywide.liveshow.utils.MyPermissionManager;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import butterknife.BindView;
 import retrofit2.Call;
@@ -62,6 +70,10 @@ public class LoginActivity extends BaseAcitivity implements View.OnClickListener
     private String password;
     private String verCode;
 
+    //权限
+    private MyPermissionManager mMyPermissionManager;
+    ArrayList<MyPermissionBean> mPermissionList = new ArrayList<>();
+
     @Override
     protected int getLayoutId() {
         return R.layout.activity_login;
@@ -83,12 +95,19 @@ public class LoginActivity extends BaseAcitivity implements View.OnClickListener
     @Override
     protected void initData() {
 
-        phoneNum = sharedPreferencesUtils.getString("phone","");
-        verCode = sharedPreferencesUtils.getString("password","");
+        //权限设置
+        mPermissionList.add(new MyPermissionBean(Manifest.permission.WRITE_EXTERNAL_STORAGE, getResources().getString(R.string.permission_write_external_storage)));
+        mPermissionList.add(new MyPermissionBean(Manifest.permission.RECORD_AUDIO, getResources().getString(R.string.permission_record_audio)));
+        mPermissionList.add(new MyPermissionBean(Manifest.permission.CAMERA, getResources().getString(R.string.permission_camera)));
+        mPermissionList.add(new MyPermissionBean(Manifest.permission.READ_PHONE_STATE, getResources().getString(R.string.permission_read_phone_state)));
 
-        getVerReq = new LoginGetVerReq();
-        loginReq = new LoginReq();
+        if (checkPermission()){
+            phoneNum = sharedPreferencesUtils.getString("phone", "");
+            verCode = sharedPreferencesUtils.getString("password", "");
 
+            getVerReq = new LoginGetVerReq();
+            loginReq = new LoginReq();
+        }
     }
 
     @Override
@@ -113,12 +132,47 @@ public class LoginActivity extends BaseAcitivity implements View.OnClickListener
         }
     }
 
+
+    /**
+     * 检查所需权限
+     */
+    private boolean checkPermission() {
+        mMyPermissionManager = new MyPermissionManager(this, new MyPermissionManager.PermissionUtilsInter() {
+            @Override
+            public List<MyPermissionBean> getApplyPermissions() {
+                return mPermissionList;
+            }
+
+            @Override
+            public AlertDialog.Builder getTipAlertDialog() {
+                return null;
+            }
+
+            @Override
+            public Dialog getTipDialog() {
+                return null;
+            }
+
+            @Override
+            public AlertDialog.Builder getTipAppSettingAlertDialog() {
+                return null;
+            }
+
+            @Override
+            public Dialog getTipAppSettingDialog() {
+                return null;
+            }
+        });
+        boolean isOk = mMyPermissionManager.checkPermission();
+        return isOk;
+    }
+
     /**
      * 登录请求
      */
     private void loginReq() {
         //本地单点登录
-        if (TextUtils.isEmpty(phoneNum) || TextUtils.isEmpty(verCode)){
+        if (TextUtils.isEmpty(phoneNum) || TextUtils.isEmpty(verCode)) {
             //手机号
             phoneNum = etPhone.getText().toString();
             //密码
@@ -157,7 +211,7 @@ public class LoginActivity extends BaseAcitivity implements View.OnClickListener
 
                             LoginResp.baseDetail baseDetail = resp.getAnchor();
                             Intent loginIntent = new Intent();
-                            loginIntent.putExtra("infoData",baseDetail);
+                            loginIntent.putExtra("infoData", baseDetail);
                             loginIntent.setClass(LoginActivity.this, StartLiveActivity.class);
                             startActivity(loginIntent);
                         } else {

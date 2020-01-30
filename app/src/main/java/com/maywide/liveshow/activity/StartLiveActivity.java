@@ -88,10 +88,6 @@ public class StartLiveActivity extends BaseAcitivity implements View.OnClickList
     //直播前广播消息用于接收sdk是否可以进入直播,
     private EnterLiveRoomReceiver enterLiveRoomReceiver;
 
-    //权限
-    private MyPermissionManager mMyPermissionManager;
-    ArrayList<MyPermissionBean> mPermissionList = new ArrayList<>();
-
     //主播个人信息
     private LoginResp.baseDetail baseDetail;
 
@@ -145,13 +141,6 @@ public class StartLiveActivity extends BaseAcitivity implements View.OnClickList
 //                    .into(ivAdd);
 //        }
 
-        //权限设置
-        mPermissionList.add(new MyPermissionBean(Manifest.permission.WRITE_EXTERNAL_STORAGE, getResources().getString(R.string.permission_write_external_storage)));
-        mPermissionList.add(new MyPermissionBean(Manifest.permission.RECORD_AUDIO, getResources().getString(R.string.permission_record_audio)));
-        mPermissionList.add(new MyPermissionBean(Manifest.permission.CAMERA, getResources().getString(R.string.permission_camera)));
-        mPermissionList.add(new MyPermissionBean(Manifest.permission.READ_PHONE_STATE, getResources().getString(R.string.permission_read_phone_state)));
-
-
     }
 
     @Override
@@ -168,48 +157,11 @@ public class StartLiveActivity extends BaseAcitivity implements View.OnClickList
      * 注册进入直播间广播
      */
     private void setReceiver(LoginResp.baseDetail broadCastInfoResp) {
-        //如果获得权限
-        if (checkPermission()) {
-            // ***注册广播，接收 SDK 的回调信令*** 重要操作!加TODO高亮
-            enterLiveRoomReceiver = new EnterLiveRoomReceiver(getProgressDialog(), isLoging, this, broadCastInfoResp);
-            IntentFilter filter = new IntentFilter();
-            filter.addAction(MyTTTRtcEngineEventHandler.TAG);
-            registerReceiver(enterLiveRoomReceiver, filter);
-        }
-    }
-
-    /**
-     * 检查所需权限
-     */
-    private boolean checkPermission() {
-        mMyPermissionManager = new MyPermissionManager(this, new MyPermissionManager.PermissionUtilsInter() {
-            @Override
-            public List<MyPermissionBean> getApplyPermissions() {
-                return mPermissionList;
-            }
-
-            @Override
-            public AlertDialog.Builder getTipAlertDialog() {
-                return null;
-            }
-
-            @Override
-            public Dialog getTipDialog() {
-                return null;
-            }
-
-            @Override
-            public AlertDialog.Builder getTipAppSettingAlertDialog() {
-                return null;
-            }
-
-            @Override
-            public Dialog getTipAppSettingDialog() {
-                return null;
-            }
-        });
-        boolean isOk = mMyPermissionManager.checkPermission();
-        return isOk;
+        // ***注册广播，接收 SDK 的回调信令*** 重要操作!加TODO高亮
+        enterLiveRoomReceiver = new EnterLiveRoomReceiver(getProgressDialog(), isLoging, this, broadCastInfoResp);
+        IntentFilter filter = new IntentFilter();
+        filter.addAction(MyTTTRtcEngineEventHandler.TAG);
+        registerReceiver(enterLiveRoomReceiver, filter);
     }
 
     @Override

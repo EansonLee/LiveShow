@@ -21,7 +21,7 @@ public class LinkPerListAdapter extends BaseQuickAdapter<LinkPerResp.perDetail, 
     //0-粉丝，1-房管
     private int type;
 
-    public LinkPerListAdapter(int layoutResId, @Nullable List<LinkPerResp.perDetail> data,int type) {
+    public LinkPerListAdapter(int layoutResId, @Nullable List<LinkPerResp.perDetail> data, int type) {
         super(layoutResId, data);
         this.type = type;
     }
@@ -40,11 +40,13 @@ public class LinkPerListAdapter extends BaseQuickAdapter<LinkPerResp.perDetail, 
                 .into(icon);
 
         //粉丝
-        if (type==0){
-            helper.setText(R.id.tv_title,R.string.link_up_to_manager);
-        }else {
+        if (type == 0) {
+            helper.setText(R.id.tv_title, R.string.link_up_to_manager);
+        } else {
             //房管
-            helper.setText(R.id.tv_title,R.string.link_decend_to_fens);
+            helper.setText(R.id.tv_title, R.string.link_decend_to_fens);
         }
+
+        helper.addOnClickListener(R.id.tv_title);
     }
 }

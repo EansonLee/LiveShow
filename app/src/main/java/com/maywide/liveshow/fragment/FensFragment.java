@@ -57,6 +57,8 @@ public class FensFragment extends BaseFragment {
     private int mPageSize = 20;
     private int mPageIndex = 1;
 
+    private boolean isPrepared = false;
+
     public static FensFragment newInstance() {
         FensFragment fragment = new FensFragment();
         Bundle args = new Bundle();
@@ -115,7 +117,6 @@ public class FensFragment extends BaseFragment {
                     @Override
                     public void run() {
                         swipeRefreshLayout.setRefreshing(false);//取消刷新
-
                     }
                 }, 1500);
             }
@@ -125,7 +126,9 @@ public class FensFragment extends BaseFragment {
             @Override
             public void onItemChildClick(BaseQuickAdapter adapter, View view, int position) {
                 if (view.getId() == R.id.tv_title) {
-                    Log.e("---",linkPerRespList.get(position).getId());
+                    //用户id
+                    String id = linkPerRespList.get(position).getId();
+                    upGradeReq(id);
                 }
             }
         });
@@ -139,6 +142,16 @@ public class FensFragment extends BaseFragment {
     @Override
     protected void initData() {
         linkePerListReq(1, mPageSize);
+    }
+
+    @Override
+    public void setUserVisibleHint(boolean isVisibleToUser) {
+        super.setUserVisibleHint(isVisibleToUser);
+        if (isPrepared && isVisibleToUser){
+            linkePerListReq(1, mPageSize);
+            mPageIndex = 1;
+            linkPerRespList.clear();
+        }
     }
 
     /**
@@ -172,7 +185,6 @@ public class FensFragment extends BaseFragment {
 
                             if (resp.getList().size() != 0) {
                                 mPageIndex++;
-//                                linkPerRespList = resp.getList();
                                 perListAdapter.addData(resp.getList());
 
                                 perListAdapter.loadMoreComplete();
@@ -201,12 +213,12 @@ public class FensFragment extends BaseFragment {
     /**
      * 升级房管
      */
-    private void upGradeReq() {
+    private void upGradeReq(String id) {
 
         UpGradeReq upGradeReq = new UpGradeReq();
         upGradeReq.setToken(sharedPreferencesUtils.getString("token", ""));
+        upGradeReq.setSetted_user_id(id);
         upGradeReq.setIs_cancel(0);
-
 
         RetrofitClient
                 .getInstance()
@@ -215,7 +227,19 @@ public class FensFragment extends BaseFragment {
                 .enqueue(new Callback<ResponseObj<LoginResp>>() {
                     @Override
                     public void onResponse(Call<ResponseObj<LoginResp>> call, Response<ResponseObj<LoginResp>> response) {
-
+                        if (response.body() == null) {
+                            showToast(getString(R.string.net_err));
+                            return;
+                        }
+                        LoginResp resp = response.body().getData();
+                        if ("0".equals(response.body().getCode())) {
+                            linkePerListReq(1, mPageSize);
+                            mPageIndex = 1;
+                            linkPerRespList.clear();
+                        } else {
+                            showToast(response.body().getMsg());
+                        }
+                        dismissProgressDialog();
                     }
 
                     @Override
@@ -230,6 +254,7 @@ public class FensFragment extends BaseFragment {
         // TODO: inflate a fragment view
         View rootView = super.onCreateView(inflater, container, savedInstanceState);
         unbinder = ButterKnife.bind(this, rootView);
+        isPrepared = true;
         return rootView;
     }
 
