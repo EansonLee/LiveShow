@@ -57,11 +57,12 @@ public interface API {
     @POST("anchor/set-housing-management.html")
     Call<ResponseObj<LoginResp>> upGradeReq(@Body UpGradeReq upGradeReq);
 
+
+
     //首页KPI接口
     @Headers("Content-Type:application/json")
     @POST("homePage/homePageBiIndex")
     Call<ResponseList<HomeKpiResp>> getHomeKpi(@Body HomeKpiReq req);
-
 
     //首页新闻列表接口
     @Headers("Content-Type:application/json")
