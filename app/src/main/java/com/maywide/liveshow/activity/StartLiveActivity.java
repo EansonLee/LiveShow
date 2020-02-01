@@ -1,8 +1,6 @@
 package com.maywide.liveshow.activity;
 
-import android.Manifest;
-import android.app.AlertDialog;
-import android.app.Dialog;
+
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.database.Cursor;
@@ -23,24 +21,20 @@ import com.maywide.liveshow.Handler.MyTTTRtcEngineEventHandler;
 import com.maywide.liveshow.LocalConfig;
 import com.maywide.liveshow.R;
 import com.maywide.liveshow.base.BaseAcitivity;
-import com.maywide.liveshow.bean.MyPermissionBean;
-import com.maywide.liveshow.net.req.BroadCastInfoReq;
+
 import com.maywide.liveshow.net.req.LiveBroadCastReq;
 import com.maywide.liveshow.net.req.LoginReq;
-import com.maywide.liveshow.net.resp.BroadCastInfoResp;
+
 import com.maywide.liveshow.net.resp.LoginResp;
 import com.maywide.liveshow.net.resp.ResponseObj;
 import com.maywide.liveshow.net.retrofit.API;
 import com.maywide.liveshow.net.retrofit.RetrofitClient;
 import com.maywide.liveshow.utils.EnterLiveRoomReceiver;
-import com.maywide.liveshow.utils.MyPermissionManager;
 import com.maywide.liveshow.utils.UpLoadUtils;
 import com.maywide.liveshow.widget.ConfirmDialog;
 import com.wushuangtech.library.Constants;
 import com.wushuangtech.wstechapi.model.PublisherConfiguration;
 
-import java.util.ArrayList;
-import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -507,5 +501,4 @@ public class StartLiveActivity extends BaseAcitivity implements View.OnClickList
             return null;
         }
     }
-
 }

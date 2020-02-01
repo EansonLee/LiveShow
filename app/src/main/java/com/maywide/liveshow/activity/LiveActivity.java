@@ -1,26 +1,44 @@
 package com.maywide.liveshow.activity;
 
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.graphics.Rect;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.Editable;
+import android.text.TextUtils;
+import android.text.TextWatcher;
+import android.util.Log;
+import android.view.KeyEvent;
 import android.view.SurfaceView;
 import android.view.View;
 import android.view.ViewTreeObserver;
+import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.google.gson.Gson;
 import com.makeramen.roundedimageview.RoundedImageView;
 import com.maywide.liveshow.LocalConfig;
 import com.maywide.liveshow.R;
+import com.maywide.liveshow.adapter.TalkAdapter;
 import com.maywide.liveshow.base.BaseAcitivity;
+import com.maywide.liveshow.base.MyApplication;
+import com.maywide.liveshow.net.req.ChatSocketReq;
 import com.maywide.liveshow.net.req.LoginReq;
+import com.maywide.liveshow.net.req.SocketBaseReq;
+import com.maywide.liveshow.net.resp.ChatSocketResp;
 import com.maywide.liveshow.net.resp.LoginResp;
 import com.maywide.liveshow.net.resp.ResponseObj;
+import com.maywide.liveshow.net.resp.SocketBaseResp;
 import com.maywide.liveshow.net.retrofit.API;
 import com.maywide.liveshow.net.retrofit.RetrofitClient;
+import com.maywide.liveshow.utils.ChannelChangReceiver;
 import com.maywide.liveshow.utils.LiveShowReceiver;
 import com.maywide.liveshow.widget.BroadCastDialog;
 import com.maywide.liveshow.widget.ConfirmDialog;
@@ -30,12 +48,24 @@ import com.maywide.liveshow.widget.ShareDialog;
 import com.wushuangtech.library.Constants;
 import com.wushuangtech.wstechapi.model.VideoCanvas;
 
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.ArrayList;
+import java.util.List;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+import static com.maywide.liveshow.base.MyApplication.channelChangReceiver;
+import static com.maywide.liveshow.base.MyApplication.jWebSClientService;
+import static com.maywide.liveshow.base.MyApplication.serviceConnection;
 import static com.wushuangtech.library.Constants.CLIENT_ROLE_ANCHOR;
 
 /**
@@ -93,10 +123,17 @@ public class LiveActivity extends BaseAcitivity implements View.OnClickListener 
     //更多
     @BindView(R.id.iv_more)
     ImageView ivMore;
+    //    //发送
+//    @BindView(R.id.tv_send)
+//    TextView tvSend;
     //是否美颜标志位
     private boolean isBeauty = false;
 
     private LiveShowReceiver liveShowReceiver;
+
+    //聊天
+    private TalkAdapter talkAdapter;
+    private List<ChatSocketResp> chatList = new ArrayList<>();
 
     //主播个人信息
     private LoginResp.baseDetail baseDetail;
@@ -127,6 +164,35 @@ public class LiveActivity extends BaseAcitivity implements View.OnClickListener 
             tvBroadcast.setText(baseDetail.getNotice());
         }
 
+        EventBus.getDefault().register(this);
+
+        talkAdapter = new TalkAdapter(chatList);
+        rcvTalk.setLayoutManager(new LinearLayoutManager(this));
+        rcvTalk.setAdapter(talkAdapter);
+
+        etTalk.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                if (actionId == EditorInfo.IME_ACTION_SEND) {
+                    String sendData = etTalk.getText().toString();
+                    if (TextUtils.isEmpty(sendData)) {
+                        showToast("发送消息不能为空哦~");
+                        return true;
+                    }
+                    if (MyApplication.client != null && MyApplication.client.isOpen()) {
+                        ChatSocketReq chatSocketReq = new ChatSocketReq();
+                        chatSocketReq.setContent(sendData);
+                        SocketBaseReq<ChatSocketReq> socketBaseReq = new SocketBaseReq<>();
+                        socketBaseReq.setData(chatSocketReq);
+                        socketBaseReq.setType("chat");
+                        String msg = new Gson().toJson(socketBaseReq);
+                        jWebSClientService.sendMsg(msg);
+                    }
+                }
+                return true;
+            }
+        });
+
         ivLiveIcon.setOnClickListener(this);
         tvBroad.setOnClickListener(this);
         ivBeauty.setOnClickListener(this);
@@ -140,6 +206,7 @@ public class LiveActivity extends BaseAcitivity implements View.OnClickListener 
 
     @Override
     protected void initData() {
+
         // 如果角色是主播，打开自己的本地视频
         if (LocalConfig.mLocalRole == CLIENT_ROLE_ANCHOR) {
             // 打开本地预览视频，并开始推流
@@ -251,6 +318,9 @@ public class LiveActivity extends BaseAcitivity implements View.OnClickListener 
                         if ("0".equals(response.body().getCode())) {
                             mTTTEngine.leaveChannel();
                             finish();
+                            if (EventBus.getDefault().isRegistered(this)) {
+                                EventBus.getDefault().unregister(this);
+                            }
                         } else {
                             showToast(response.body().getMsg());
                         }
@@ -269,10 +339,9 @@ public class LiveActivity extends BaseAcitivity implements View.OnClickListener 
     protected void onDestroy() {
 
         //解绑广播
-        try {
-            unregisterReceiver(liveShowReceiver);
-        } catch (Exception e) {
-            e.printStackTrace();
+//        unregisterReceiver(liveShowReceiver);
+        if (EventBus.getDefault().isRegistered(this)) {
+            EventBus.getDefault().unregister(this);
         }
         super.onDestroy();
     }
@@ -286,17 +355,29 @@ public class LiveActivity extends BaseAcitivity implements View.OnClickListener 
             showToast("再按一次退出应用");
             firstTime = secondTime;// 更新firstTime
         } else {
-            //弹框确定
-            ConfirmDialog confirmDialog = ConfirmDialog.newInstance(getString(R.string.dialog_exit_live), getString(R.string.dialog_check_live));
-            confirmDialog.setOutCancel(false);
-            confirmDialog.setMargin(60);
-            confirmDialog.setOnSureClickListener(new ConfirmDialog.OnSureClickListener() {
-                @Override
-                public void onSureClik() {
-                    stopLiveReq();
-                }
-            });
-            confirmDialog.show(getSupportFragmentManager());
+            stopLiveReq();
+        }
+    }
+
+    /**
+     * 聊天
+     * @param data
+     */
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void Event(String data) {
+        String type = null;
+        String chatData = null;
+        try {
+            JSONObject jsonObject = new JSONObject(data);
+            type = jsonObject.getString("type");
+            chatData = jsonObject.getString("data");
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        if (!TextUtils.isEmpty(type) && type.equals("chat")) {
+            ChatSocketResp chatResp = new Gson().fromJson(chatData, ChatSocketResp.class);
+            chatList.add(chatResp);
+            talkAdapter.notifyDataSetChanged();
         }
     }
 

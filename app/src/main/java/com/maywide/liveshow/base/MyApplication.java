@@ -8,22 +8,17 @@ import android.content.ServiceConnection;
 import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.os.Build;
-import android.os.Environment;
 import android.os.IBinder;
 import android.util.Log;
 
 import com.maywide.liveshow.Handler.MyTTTRtcEngineEventHandler;
-import com.maywide.liveshow.LocalConfig;
 import com.maywide.liveshow.Service.JWebSocketClient;
 import com.maywide.liveshow.Service.JWebSocketClientService;
 import com.maywide.liveshow.net.retrofit.RetrofitClient;
 import com.maywide.liveshow.utils.ChannelChangReceiver;
 import com.maywide.liveshow.utils.ScreenAdapter;
-import com.wushuangtech.utils.PviewLog;
 import com.wushuangtech.wstechapi.TTTRtcEngine;
 
-import java.io.File;
-import java.util.Random;
 
 /**
  * Created by heyongbiao-pc on 2018/11/13.
@@ -36,17 +31,17 @@ public class MyApplication extends Application {
      */
     public MyTTTRtcEngineEventHandler mMyTTTRtcEngineEventHandler;
 
-    private ChannelChangReceiver channelChangReceiver;
+    public static ChannelChangReceiver channelChangReceiver;
     //webSocket
-    private JWebSocketClient client;
-    private JWebSocketClientService.JWebSocketClientBinder binder;
-    private JWebSocketClientService jWebSClientService;
+    public static JWebSocketClient client;
+    private static JWebSocketClientService.JWebSocketClientBinder binder;
+    public static JWebSocketClientService jWebSClientService;
 
     @Override
     public void onCreate() {
         super.onCreate();
 
-		RetrofitClient.init(this);
+        RetrofitClient.init(this);
 
         //屏幕适配
         ScreenAdapter.setup(this);
@@ -95,7 +90,7 @@ public class MyApplication extends Application {
         Intent intent = new Intent(this, JWebSocketClientService.class);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             startForegroundService(intent);
-        }else {
+        } else {
             startService(intent);
         }
     }
@@ -103,7 +98,7 @@ public class MyApplication extends Application {
     /**
      * 服务连接器
      */
-    private ServiceConnection serviceConnection = new ServiceConnection() {
+    public static ServiceConnection serviceConnection = new ServiceConnection() {
         @Override
         public void onServiceConnected(ComponentName componentName, IBinder iBinder) {
             Log.e("BaseActivity", "服务与活动成功绑定");
@@ -118,23 +113,12 @@ public class MyApplication extends Application {
         }
     };
 
-    /**
-     * 结束
-     */
-    @Override
-    public void onTerminate() {
-        Log.e("----","finish");
-        unregisterReceiver(channelChangReceiver);
-        unbindService(serviceConnection);
-        super.onTerminate();
-    }
-
     @Override
     public Resources getResources() {
         Resources res = super.getResources();
-        Configuration configuration =new Configuration();
+        Configuration configuration = new Configuration();
         configuration.setToDefaults();
-        res.updateConfiguration(configuration,res.getDisplayMetrics());
+        res.updateConfiguration(configuration, res.getDisplayMetrics());
         return res;
     }
 }

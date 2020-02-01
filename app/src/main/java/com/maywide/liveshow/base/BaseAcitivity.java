@@ -1,35 +1,34 @@
 package com.maywide.liveshow.base;
 
 import android.app.ProgressDialog;
-import android.content.ComponentName;
-import android.content.Context;
-import android.content.Intent;
+
 import android.content.IntentFilter;
-import android.content.ServiceConnection;
+
 import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.net.ConnectivityManager;
 import android.net.wifi.WifiManager;
 import android.os.Bundle;
-import android.os.IBinder;
+
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
-import android.util.Log;
+
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Toast;
 
 import com.maywide.liveshow.R;
-import com.maywide.liveshow.Service.JWebSocketClient;
-import com.maywide.liveshow.Service.JWebSocketClientService;
-import com.maywide.liveshow.utils.ChannelChangReceiver;
 import com.maywide.liveshow.utils.NetWorkChangReceiver;
 import com.maywide.liveshow.utils.SharedPreferencesUtils;
 import com.maywide.liveshow.utils.StatusBarUtils;
 import com.wushuangtech.wstechapi.TTTRtcEngine;
 
 import butterknife.ButterKnife;
+
+import static com.maywide.liveshow.base.MyApplication.channelChangReceiver;
+import static com.maywide.liveshow.base.MyApplication.jWebSClientService;
+import static com.maywide.liveshow.base.MyApplication.serviceConnection;
 
 /**
  * Created by heyongbiao-pc on 2018/11/13.
@@ -147,5 +146,7 @@ public abstract class BaseAcitivity extends AppCompatActivity {
     protected void onDestroy() {
         super.onDestroy();
         unregisterReceiver(netWorkChangReceiver);
+        unregisterReceiver(channelChangReceiver);
+        unbindService(serviceConnection);
     }
 }

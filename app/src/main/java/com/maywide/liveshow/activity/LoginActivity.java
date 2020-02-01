@@ -4,6 +4,7 @@ import android.Manifest;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.ComponentName;
+import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.graphics.Rect;
@@ -13,24 +14,26 @@ import android.os.IBinder;
 import android.text.TextUtils;
 import android.view.View;
 import android.view.ViewTreeObserver;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.google.gson.Gson;
 import com.maywide.liveshow.R;
-import com.maywide.liveshow.Service.TcpService;
 import com.maywide.liveshow.base.BaseAcitivity;
+import com.maywide.liveshow.base.MyApplication;
 import com.maywide.liveshow.bean.MyPermissionBean;
-import com.maywide.liveshow.net.req.BroadCastInfoReq;
-import com.maywide.liveshow.net.req.LoginGetVerReq;
 import com.maywide.liveshow.net.req.LoginReq;
-import com.maywide.liveshow.net.resp.BroadCastInfoResp;
+import com.maywide.liveshow.net.req.LoginSocketReq;
+import com.maywide.liveshow.net.req.SocketBaseReq;
 import com.maywide.liveshow.net.resp.LoginResp;
-import com.maywide.liveshow.net.resp.ResponseList;
+
 import com.maywide.liveshow.net.resp.ResponseObj;
 import com.maywide.liveshow.net.retrofit.API;
 import com.maywide.liveshow.net.retrofit.RetrofitClient;
 import com.maywide.liveshow.utils.MyPermissionManager;
+
 
 import java.util.ArrayList;
 import java.util.List;
@@ -39,6 +42,10 @@ import butterknife.BindView;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+
+import static com.maywide.liveshow.base.MyApplication.channelChangReceiver;
+import static com.maywide.liveshow.base.MyApplication.jWebSClientService;
+import static com.maywide.liveshow.base.MyApplication.serviceConnection;
 
 
 /**
@@ -64,7 +71,6 @@ public class LoginActivity extends BaseAcitivity implements View.OnClickListener
 //    private TimeCount timeCount;
     //请求体
     private LoginReq loginReq;
-    private LoginGetVerReq getVerReq;
 
     private String phoneNum;
     private String password;
@@ -95,18 +101,17 @@ public class LoginActivity extends BaseAcitivity implements View.OnClickListener
     @Override
     protected void initData() {
 
+        loginReq = new LoginReq();
+
         //权限设置
         mPermissionList.add(new MyPermissionBean(Manifest.permission.WRITE_EXTERNAL_STORAGE, getResources().getString(R.string.permission_write_external_storage)));
         mPermissionList.add(new MyPermissionBean(Manifest.permission.RECORD_AUDIO, getResources().getString(R.string.permission_record_audio)));
         mPermissionList.add(new MyPermissionBean(Manifest.permission.CAMERA, getResources().getString(R.string.permission_camera)));
         mPermissionList.add(new MyPermissionBean(Manifest.permission.READ_PHONE_STATE, getResources().getString(R.string.permission_read_phone_state)));
 
-        if (checkPermission()){
+        if (checkPermission()) {
             phoneNum = sharedPreferencesUtils.getString("phone", "");
             verCode = sharedPreferencesUtils.getString("password", "");
-
-            getVerReq = new LoginGetVerReq();
-            loginReq = new LoginReq();
         }
     }
 
@@ -125,6 +130,11 @@ public class LoginActivity extends BaseAcitivity implements View.OnClickListener
         switch (view.getId()) {
 
             case R.id.tv_login:
+
+                //隐藏输入键盘
+                InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+
                 loginReq();
 //                Intent intent = new Intent(this, TcpService.class);
 //                bindService(intent, connection, BIND_AUTO_CREATE);
@@ -208,12 +218,31 @@ public class LoginActivity extends BaseAcitivity implements View.OnClickListener
                             sharedPreferencesUtils.putString("phone", loginReq.getPhone());
                             sharedPreferencesUtils.putString("password", loginReq.getPassword());
                             sharedPreferencesUtils.putString("token", resp.getToken());
-
+                            //主播基本信息
                             LoginResp.baseDetail baseDetail = resp.getAnchor();
+                            //webScocket 发送消息
+                            if (MyApplication.client != null && MyApplication.client.isOpen()) {
+
+                                LoginSocketReq loginSocketReq = new LoginSocketReq();
+                                loginSocketReq.setAnchor_code(baseDetail.getAnchor_code());
+                                loginSocketReq.setAvatar(baseDetail.getHeadimgurl());
+                                loginSocketReq.setName(baseDetail.getNickname());
+                                loginSocketReq.setUser_id(baseDetail.getUser_id());
+                                //主播才传，否则不传
+                                loginSocketReq.setIs_anchor(1);
+
+                                SocketBaseReq<LoginSocketReq> socketBaseReq = new SocketBaseReq<>();
+                                socketBaseReq.setData(loginSocketReq);
+                                socketBaseReq.setType("login");
+                                String msg = new Gson().toJson(socketBaseReq);
+                                jWebSClientService.sendMsg(msg);
+                            }
+
                             Intent loginIntent = new Intent();
                             loginIntent.putExtra("infoData", baseDetail);
                             loginIntent.setClass(LoginActivity.this, StartLiveActivity.class);
                             startActivity(loginIntent);
+                            finish();
                         } else {
                             showToast(response.body().getMsg());
                         }
@@ -308,51 +337,5 @@ public class LoginActivity extends BaseAcitivity implements View.OnClickListener
             }
         });
     }
-
-
-    /**
-     * 实现验证码倒计时
-     */
-    class TimeCount extends CountDownTimer {
-
-        /**
-         * @param millisInFuture    The number of millis in the future from the call
-         *                          to {@link #start()} until the countdown is done and {@link #onFinish()}
-         *                          is called.
-         * @param countDownInterval The interval along the way to receive
-         *                          {@link #onTick(long)} callbacks.
-         */
-        public TimeCount(long millisInFuture, long countDownInterval) {
-            super(millisInFuture, countDownInterval);
-        }
-
-        @Override
-        public void onTick(long millisUntilFinished) {
-//            tvVar.setClickable(false);
-//            tvVar.setText(millisUntilFinished / 1000 + "秒重新发送");
-        }
-
-        @Override
-        public void onFinish() {
-//            tvVar.setText(R.string.login_get_vercoed_text);
-//            tvVar.setClickable(true);
-        }
-    }
-
-    /**
-     * 长连接服务
-     */
-    ServiceConnection connection = new ServiceConnection() {
-        @Override
-        public void onServiceConnected(ComponentName name, IBinder service) {
-            TcpService.ClientBinder clientBinder = (TcpService.ClientBinder) service;
-            clientBinder.startConnect();
-        }
-
-        @Override
-        public void onServiceDisconnected(ComponentName name) {
-        }
-    };
-
 
 }

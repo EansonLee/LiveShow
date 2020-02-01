@@ -59,8 +59,8 @@
         android:layout_width="match_parent"
         android:layout_height="40dp"
         android:layout_below="@+id/ly_title_bar"
-        android:layout_marginBottom="13dp"
         android:layout_marginTop="10dp"
+        android:layout_marginBottom="13dp"
         android:gravity="center_vertical">
 
         <com.makeramen.roundedimageview.RoundedImageView
@@ -126,7 +126,8 @@
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_marginRight="25dp"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:visibility="gone">
 
             <TextView
                 android:layout_width="wrap_content"
@@ -208,8 +209,8 @@
             android:id="@+id/tv_broadcast"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:gravity="center"
             android:focusable="true"
+            android:gravity="center"
             android:singleLine="true"
             android:text="--"
             android:textColor="@color/main_color"
@@ -236,13 +237,15 @@
 
         <EditText
             android:id="@+id/et_talk"
-            android:layout_width="wrap_content"
+            android:layout_width="100dp"
             android:layout_height="40dp"
             android:layout_marginLeft="15dp"
-            android:background="@drawable/talk_bg"
+            android:layout_marginRight="5dp"
+            android:background="@drawable/shape_net_err"
             android:hint="@string/live_say_sth"
-            android:minWidth="100dp"
-            android:paddingLeft="6dp"
+            android:imeOptions="actionSend"
+            android:inputType="text"
+            android:paddingLeft="8dp"
             android:paddingRight="6dp"
             android:textColor="@color/white"
             android:textColorHint="@color/white"

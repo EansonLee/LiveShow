@@ -21,6 +21,7 @@ import android.util.Log;
 import com.maywide.liveshow.R;
 import com.maywide.liveshow.activity.MainActivity;
 
+import org.greenrobot.eventbus.EventBus;
 import org.java_websocket.handshake.ServerHandshake;
 
 import java.net.URI;
@@ -159,6 +160,8 @@ public class JWebSocketClientService extends Service {
                 intent.setAction("com.xch.servicecallback.content");
                 intent.putExtra("message", message);
                 sendBroadcast(intent);
+                //利用eventBus传递数据
+                EventBus.getDefault().post(message);
 
                 checkLockAndShowNotification(message);
             }
