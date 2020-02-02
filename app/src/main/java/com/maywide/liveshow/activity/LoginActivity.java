@@ -3,14 +3,10 @@ package com.maywide.liveshow.activity;
 import android.Manifest;
 import android.app.AlertDialog;
 import android.app.Dialog;
-import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
-import android.content.ServiceConnection;
 import android.graphics.Rect;
-import android.os.Bundle;
-import android.os.CountDownTimer;
-import android.os.IBinder;
+import android.text.InputType;
 import android.text.TextUtils;
 import android.view.View;
 import android.view.ViewTreeObserver;
@@ -35,6 +31,12 @@ import com.maywide.liveshow.net.retrofit.RetrofitClient;
 import com.maywide.liveshow.utils.MyPermissionManager;
 
 
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -43,10 +45,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-import static com.maywide.liveshow.base.MyApplication.channelChangReceiver;
 import static com.maywide.liveshow.base.MyApplication.jWebSClientService;
-import static com.maywide.liveshow.base.MyApplication.serviceConnection;
-
 
 /**
  * Created by user on 2018/11/13.
@@ -91,11 +90,15 @@ public class LoginActivity extends BaseAcitivity implements View.OnClickListener
 //        StatusBarUtils.setStatusWhite(this, getStatusBarView());
 
         tvLogin.setOnClickListener(this);
+        //设置输入模式
+        etPhone.setInputType(InputType.TYPE_CLASS_PHONE);
+        etVar.setInputType(InputType.TYPE_TEXT_VARIATION_PASSWORD);
 
 //        timeCount = new TimeCount(60000, 1000);
 
         addLayoutListener(layoutLogin, tvLogin);
 
+        EventBus.getDefault().register(this);
     }
 
     @Override
@@ -112,6 +115,12 @@ public class LoginActivity extends BaseAcitivity implements View.OnClickListener
         if (checkPermission()) {
             phoneNum = sharedPreferencesUtils.getString("phone", "");
             verCode = sharedPreferencesUtils.getString("password", "");
+        }
+        //单点登录
+        if (!TextUtils.isEmpty(phoneNum) && (!TextUtils.isEmpty(verCode))) {
+            etPhone.setText(phoneNum);
+            etVar.setText(verCode);
+            loginReq();
         }
     }
 
@@ -338,4 +347,28 @@ public class LoginActivity extends BaseAcitivity implements View.OnClickListener
         });
     }
 
+    /**
+     * ping-webSocket(要求)
+     *
+     * @param data
+     */
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void Event(String data) {
+        String type = null;
+        String content = null;
+        try {
+            JSONObject jsonObject = new JSONObject(data);
+            type = jsonObject.getString("type");
+            content = jsonObject.getString("data");
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        if (type.equals("ping")) {
+            SocketBaseReq<LoginSocketReq> socketBaseReq = new SocketBaseReq<>();
+            socketBaseReq.setType("pong");
+            String sendData = new Gson().toJson(socketBaseReq);
+            jWebSClientService.sendMsg(sendData);
+        }
+
+    }
 }

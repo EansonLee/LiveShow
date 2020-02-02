@@ -146,7 +146,5 @@ public abstract class BaseAcitivity extends AppCompatActivity {
     protected void onDestroy() {
         super.onDestroy();
         unregisterReceiver(netWorkChangReceiver);
-        unregisterReceiver(channelChangReceiver);
-        unbindService(serviceConnection);
     }
 }

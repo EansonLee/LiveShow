@@ -9,6 +9,7 @@ import com.maywide.liveshow.net.req.HomeNewsReq;
 import com.maywide.liveshow.net.req.LiveBroadCastReq;
 import com.maywide.liveshow.net.req.LoginGetVerReq;
 import com.maywide.liveshow.net.req.LoginReq;
+import com.maywide.liveshow.net.req.NoticeReq;
 import com.maywide.liveshow.net.req.UpGradeReq;
 import com.maywide.liveshow.net.resp.BannerResp;
 import com.maywide.liveshow.net.resp.BroadCastInfoResp;
@@ -57,7 +58,10 @@ public interface API {
     @POST("anchor/set-housing-management.html")
     Call<ResponseObj<LoginResp>> upGradeReq(@Body UpGradeReq upGradeReq);
 
-
+    //修改公告
+    @Headers("Content-Type:application/json")
+    @POST("anchor/update-notice.html")
+    Call<ResponseObj<LoginResp>> updateNoticeReq(@Body NoticeReq noticeReq);
 
     //首页KPI接口
     @Headers("Content-Type:application/json")

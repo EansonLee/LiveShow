@@ -12,7 +12,7 @@
 
     <LinearLayout
         android:layout_width="134dp"
-        android:layout_height="127dp"
+        android:layout_height="137dp"
         android:layout_marginTop="30dp"
         android:background="@mipmap/dialog_bg"
         android:gravity="center"
@@ -70,6 +70,7 @@
             android:id="@+id/ly_share"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
             android:gravity="center_vertical"
             android:orientation="horizontal">
 
@@ -84,6 +85,29 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/dialog_share"
+                android:textColor="@color/white"
+                android:textSize="@dimen/font14" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/ly_logout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:layout_marginLeft="22dp"
+                android:layout_marginRight="11dp"
+                android:src="@mipmap/share_white_icon" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/dialog_out"
                 android:textColor="@color/white"
                 android:textSize="@dimen/font14" />
 

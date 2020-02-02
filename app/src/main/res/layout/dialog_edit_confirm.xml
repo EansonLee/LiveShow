@@ -16,15 +16,16 @@
         android:textColor="@color/black"
         android:textSize="@dimen/font16" />
 
-    <TextView
+    <EditText
         android:id="@+id/message"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="15dp"
+        android:background="@drawable/shap_news"
         android:gravity="center"
         android:text="@string/my_checkcatche"
         android:textColor="@color/black"
-        android:textSize="@dimen/font14" />
+        android:textSize="@dimen/font18" />
 
     <View
         android:layout_width="match_parent"

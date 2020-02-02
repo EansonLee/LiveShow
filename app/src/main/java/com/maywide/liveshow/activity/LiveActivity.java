@@ -31,6 +31,7 @@ import com.maywide.liveshow.base.BaseAcitivity;
 import com.maywide.liveshow.base.MyApplication;
 import com.maywide.liveshow.net.req.ChatSocketReq;
 import com.maywide.liveshow.net.req.LoginReq;
+import com.maywide.liveshow.net.req.NoticeReq;
 import com.maywide.liveshow.net.req.SocketBaseReq;
 import com.maywide.liveshow.net.resp.ChatSocketResp;
 import com.maywide.liveshow.net.resp.LoginResp;
@@ -42,6 +43,7 @@ import com.maywide.liveshow.utils.ChannelChangReceiver;
 import com.maywide.liveshow.utils.LiveShowReceiver;
 import com.maywide.liveshow.widget.BroadCastDialog;
 import com.maywide.liveshow.widget.ConfirmDialog;
+import com.maywide.liveshow.widget.EditConfirmDialog;
 import com.maywide.liveshow.widget.InfoDialog;
 import com.maywide.liveshow.widget.MarqueeTextView;
 import com.maywide.liveshow.widget.ShareDialog;
@@ -140,6 +142,9 @@ public class LiveActivity extends BaseAcitivity implements View.OnClickListener 
 
     // 点击退出时记录时间
     private long firstTime = 0;
+
+    //公告栏弹框
+    private BroadCastDialog broadCastDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -255,7 +260,7 @@ public class LiveActivity extends BaseAcitivity implements View.OnClickListener 
                 break;
             //公告栏
             case R.id.tv_broad:
-                BroadCastDialog broadCastDialog = BroadCastDialog.getInstance("公告栏", baseDetail.getNotice());
+                broadCastDialog = BroadCastDialog.getInstance("公告栏", baseDetail.getNotice());
                 broadCastDialog.setOutCancel(true)
                         .setMargin(0);
                 broadCastDialog.show(getSupportFragmentManager());
@@ -284,7 +289,13 @@ public class LiveActivity extends BaseAcitivity implements View.OnClickListener 
                 confirmDialog.show(getSupportFragmentManager());
                 break;
             case R.id.iv_more:
+                //右上角三个点
                 showShareDialog();
+                break;
+            case R.id.tv_broadcast:
+                //公告
+                String notice = tvBroadcast.getText().toString();
+                showNotictDialog(notice);
                 break;
         }
     }
@@ -335,6 +346,38 @@ public class LiveActivity extends BaseAcitivity implements View.OnClickListener 
                 });
     }
 
+    /**
+     * 修改直播间公告
+     *
+     * @param notice 新的公告
+     */
+    private void updateNoticeReq(final String notice) {
+        NoticeReq noticeReq = new NoticeReq();
+        noticeReq.setName(notice);
+        RetrofitClient.getInstance()
+                .api(API.class)
+                .updateNoticeReq(noticeReq)
+                .enqueue(new Callback<ResponseObj<LoginResp>>() {
+                    @Override
+                    public void onResponse(Call<ResponseObj<LoginResp>> call, Response<ResponseObj<LoginResp>> response) {
+                        if ("0".equals(response.body().getCode())) {
+                            tvBroadcast.setText(notice);
+                            broadCastDialog = BroadCastDialog.getInstance("公告栏", notice);
+                            showToast("公告修改成功");
+                        } else {
+                            showToast(response.body().getMsg());
+                        }
+                        dismissProgressDialog();
+                    }
+
+                    @Override
+                    public void onFailure(Call<ResponseObj<LoginResp>> call, Throwable t) {
+                        showToast(getString(R.string.net_err));
+                        dismissProgressDialog();
+                    }
+                });
+    }
+
     @Override
     protected void onDestroy() {
 
@@ -361,6 +404,7 @@ public class LiveActivity extends BaseAcitivity implements View.OnClickListener 
 
     /**
      * 聊天
+     *
      * @param data
      */
     @Subscribe(threadMode = ThreadMode.MAIN)
@@ -451,6 +495,16 @@ public class LiveActivity extends BaseAcitivity implements View.OnClickListener 
 
             }
         });
+        //退出登录
+        shareDialog.setOnLogoutClickListener(new ShareDialog.onLogoutClickListener() {
+            @Override
+            public void onLogoutClick() {
+                Intent intent = new Intent();
+                intent.setClass(LiveActivity.this, LoginActivity.class);
+                startActivity(intent);
+                finish();
+            }
+        });
         shareDialog.show(getSupportFragmentManager());
     }
 
@@ -462,5 +516,27 @@ public class LiveActivity extends BaseAcitivity implements View.OnClickListener 
         infoDialog.setOutCancel(true)
                 .setMargin(27);
         infoDialog.show(getSupportFragmentManager());
+    }
+
+    /**
+     * 修改公告弹框
+     *
+     * @param notice 原来的公告
+     */
+    private void showNotictDialog(String notice) {
+        EditConfirmDialog editConfirmDialog = EditConfirmDialog.newInstance(getString(R.string.notice_title), notice);
+        editConfirmDialog.setOutCancel(true);
+        editConfirmDialog.setMargin(40);
+        editConfirmDialog.setOnSureClickListener(new EditConfirmDialog.OnSureClickListener() {
+            @Override
+            public void onSureClik(String notice) {
+                if (TextUtils.isEmpty(notice)) {
+                    showToast("新公告不能为空哦");
+                } else {
+                    updateNoticeReq(notice);
+                }
+            }
+        });
+        editConfirmDialog.show(getSupportFragmentManager());
     }
 }

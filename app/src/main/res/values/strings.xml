@@ -143,12 +143,16 @@
     <string name="dialog_fens">我的粉丝</string>
     <string name="dialog_manage">我的房管</string>
     <string name="dialog_share">分享链接</string>
+    <string name="dialog_out">退出登录</string>
 
     <!--忘记密码-->
     <string name="pwd_title">忘记密码</string>
     <string name="pwd_hint">请填写密码</string>
     <string name="pwd_confirm_hint">请确认密码</string>
     <string name="pwd_find_back">立即找回</string>
+    
+    <!--修改公告-->
+    <string name="notice_title">点击下方修改公告</string>
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
