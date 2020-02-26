@@ -3,7 +3,7 @@ package com.maywide.liveshow.net.req;
 /**
  * 直播间公告
  */
-public class NoticeReq {
+public class NoticeReq extends BaseReq{
 
     private String name;
 

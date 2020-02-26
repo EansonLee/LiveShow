@@ -30,10 +30,13 @@ import com.maywide.liveshow.adapter.TalkAdapter;
 import com.maywide.liveshow.base.BaseAcitivity;
 import com.maywide.liveshow.base.MyApplication;
 import com.maywide.liveshow.net.req.ChatSocketReq;
+import com.maywide.liveshow.net.req.LiveBroadCastReq;
+import com.maywide.liveshow.net.req.LiveRecordReq;
 import com.maywide.liveshow.net.req.LoginReq;
 import com.maywide.liveshow.net.req.NoticeReq;
 import com.maywide.liveshow.net.req.SocketBaseReq;
 import com.maywide.liveshow.net.resp.ChatSocketResp;
+import com.maywide.liveshow.net.resp.LiveRecordResp;
 import com.maywide.liveshow.net.resp.LoginResp;
 import com.maywide.liveshow.net.resp.ResponseObj;
 import com.maywide.liveshow.net.resp.SocketBaseResp;
@@ -146,6 +149,10 @@ public class LiveActivity extends BaseAcitivity implements View.OnClickListener 
     //公告栏弹框
     private BroadCastDialog broadCastDialog;
 
+    //拉流地址
+    private String pullUrl;
+    //
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -167,6 +174,13 @@ public class LiveActivity extends BaseAcitivity implements View.OnClickListener 
             tvId.setText(baseDetail.getId());
             tvName.setText(baseDetail.getNickname());
             tvBroadcast.setText(baseDetail.getNotice());
+
+            String roomNum = baseDetail.getAnchor_code();
+            pullUrl = "rtmp://pull.agegeage.hqcqz1.cn/live/"+roomNum;
+            if (TextUtils.isEmpty(roomNum)){
+                //开始录播
+                liveRecordReq(pullUrl,"start");
+            }
         }
 
         EventBus.getDefault().register(this);
@@ -283,7 +297,8 @@ public class LiveActivity extends BaseAcitivity implements View.OnClickListener 
                 confirmDialog.setOnSureClickListener(new ConfirmDialog.OnSureClickListener() {
                     @Override
                     public void onSureClik() {
-                        stopLiveReq();
+//                        stopLiveReq();
+                        liveRecordReq(pullUrl,"stop");
                     }
                 });
                 confirmDialog.show(getSupportFragmentManager());
@@ -315,13 +330,15 @@ public class LiveActivity extends BaseAcitivity implements View.OnClickListener 
      * 退出直播
      */
     private void stopLiveReq() {
-        LoginReq loginReq = new LoginReq();
+        LiveBroadCastReq liveBroadCastReq = new LiveBroadCastReq();
 
-        loginReq.setToken(sharedPreferencesUtils.getString("token", ""));
+        liveBroadCastReq.setToken(sharedPreferencesUtils.getString("token", ""));
+        liveBroadCastReq.setVideo_url("888");
+
         RetrofitClient
                 .getInstance()
                 .api(API.class)
-                .stopLiveReq(loginReq)
+                .stopLiveReq(liveBroadCastReq)
                 .enqueue(new Callback<ResponseObj<LoginResp>>() {
                     @Override
                     public void onResponse(Call<ResponseObj<LoginResp>> call, Response<ResponseObj<LoginResp>> response) {
@@ -353,6 +370,7 @@ public class LiveActivity extends BaseAcitivity implements View.OnClickListener 
      */
     private void updateNoticeReq(final String notice) {
         NoticeReq noticeReq = new NoticeReq();
+        noticeReq.setToken(sharedPreferencesUtils.getString("token", ""));
         noticeReq.setName(notice);
         RetrofitClient.getInstance()
                 .api(API.class)
@@ -378,6 +396,68 @@ public class LiveActivity extends BaseAcitivity implements View.OnClickListener 
                 });
     }
 
+    /**
+     * 开始(结束)录播
+     */
+    private void liveRecordReq(String url, final String action){
+        LiveRecordReq liveRecordReq = new LiveRecordReq();
+        liveRecordReq.setToken(sharedPreferencesUtils.getString("token", ""));
+        liveRecordReq.setAction(action);
+        liveRecordReq.setUrl(url);
+
+        RetrofitClient.getInstance("http://saury.api.baishan.com/api")
+                      .api(API.class)
+                      .recordLive(liveRecordReq)
+                      .enqueue(new Callback<ResponseObj<LiveRecordResp>>() {
+                          @Override
+                          public void onResponse(Call<ResponseObj<LiveRecordResp>> call, Response<ResponseObj<LiveRecordResp>> response) {
+//                              if ("200".equals(response.body().getCode())) {
+//                                    if (action.equals("stop")){
+                                        getRecordUrlReq(pullUrl);
+//                                    }
+//                              } else {
+//                                  showToast(response.body().getMsg());
+//                              }
+                              dismissProgressDialog();
+                          }
+
+                          @Override
+                          public void onFailure(Call<ResponseObj<LiveRecordResp>> call, Throwable t) {
+
+                          }
+                      });
+    }
+
+    /**
+     * 获取录播url
+     */
+    private void getRecordUrlReq(String url){
+        LiveRecordReq liveRecordReq = new LiveRecordReq();
+        liveRecordReq.setToken(sharedPreferencesUtils.getString("token", ""));
+        liveRecordReq.setUrl(url);
+
+        RetrofitClient.getInstance("http://saury.api.baishan.com/api")
+                .api(API.class)
+                .recordUrlLive(liveRecordReq)
+                .enqueue(new Callback<ResponseObj<LiveRecordResp>>() {
+                    @Override
+                    public void onResponse(Call<ResponseObj<LiveRecordResp>> call, Response<ResponseObj<LiveRecordResp>> response) {
+//                        if ("200".equals(response.body().getCode())) {
+
+                            stopLiveReq();
+//                        } else {
+//                            showToast(response.body().getMsg());
+//                        }
+                        dismissProgressDialog();
+                    }
+
+                    @Override
+                    public void onFailure(Call<ResponseObj<LiveRecordResp>> call, Throwable t) {
+
+                    }
+                });
+    }
+
     @Override
     protected void onDestroy() {
 
@@ -398,7 +478,8 @@ public class LiveActivity extends BaseAcitivity implements View.OnClickListener 
             showToast("再按一次退出应用");
             firstTime = secondTime;// 更新firstTime
         } else {
-            stopLiveReq();
+//            stopLiveReq();
+            liveRecordReq(pullUrl,"stop");
         }
     }
 

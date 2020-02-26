@@ -7,6 +7,7 @@ import com.maywide.liveshow.net.req.EditIndexReq;
 import com.maywide.liveshow.net.req.HomeKpiReq;
 import com.maywide.liveshow.net.req.HomeNewsReq;
 import com.maywide.liveshow.net.req.LiveBroadCastReq;
+import com.maywide.liveshow.net.req.LiveRecordReq;
 import com.maywide.liveshow.net.req.LoginGetVerReq;
 import com.maywide.liveshow.net.req.LoginReq;
 import com.maywide.liveshow.net.req.NoticeReq;
@@ -17,6 +18,7 @@ import com.maywide.liveshow.net.resp.DetailBoxKpiResp;
 import com.maywide.liveshow.net.resp.HomeKpiResp;
 import com.maywide.liveshow.net.resp.HomeNewsResp;
 import com.maywide.liveshow.net.resp.LinkPerResp;
+import com.maywide.liveshow.net.resp.LiveRecordResp;
 import com.maywide.liveshow.net.resp.LoginResp;
 import com.maywide.liveshow.net.resp.ResponseList;
 import com.maywide.liveshow.net.resp.ResponseObj;
@@ -46,7 +48,7 @@ public interface API {
     //退出直播
     @Headers("Content-Type:application/json")
     @POST("anchor/stop-live-broadcast.html")
-    Call<ResponseObj<LoginResp>> stopLiveReq(@Body BaseReq baseReq);
+    Call<ResponseObj<LoginResp>> stopLiveReq(@Body LiveBroadCastReq liveBroadCastReq);
 
     //粉丝或者房管列表
     @Headers("Content-Type:application/json")
@@ -84,4 +86,13 @@ public interface API {
     Call<ResponseObj<DetailBoxKpiResp>> detailBoxKpi(@Body DetailBoxKpiReq req);
 
 
+    //录播开始和结束
+    @Headers("Content-Type:application/json")
+    @POST("/record/ctrl")
+    Call<ResponseObj<LiveRecordResp>> recordLive(@Body LiveRecordReq req);
+
+    //获取录播url
+    @Headers("Content-Type:application/json")
+    @POST("/record/query")
+    Call<ResponseObj<LiveRecordResp>> recordUrlLive(@Body LiveRecordReq req);
 }

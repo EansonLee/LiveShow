@@ -11,6 +11,8 @@ public class LiveBroadCastReq extends BaseReq{
     private String title;
     //直播背景图
     private String picture;
+    //录播url
+    private String video_url;
 
     public String getUrl() {
         return url;
@@ -34,5 +36,13 @@ public class LiveBroadCastReq extends BaseReq{
 
     public void setPicture(String picture) {
         this.picture = picture;
+    }
+
+    public String getVideo_url() {
+        return video_url;
+    }
+
+    public void setVideo_url(String video_url) {
+        this.video_url = video_url;
     }
 }

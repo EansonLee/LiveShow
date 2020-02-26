@@ -2,6 +2,7 @@ package com.maywide.liveshow.net.retrofit;
 
 
 import android.content.Context;
+import android.text.TextUtils;
 
 
 import com.maywide.liveshow.net.retrofit.cookie.CookieJarImpl;
@@ -50,10 +51,43 @@ public class RetrofitClient {
                 .hostnameVerifier(SSLSocketClient.getHostnameVerifier())
                 .build();
 
-
         retrofit = new Retrofit.Builder()
                 .client(client)
                 .baseUrl(Config.BASE_URL)
+                .addConverterFactory(GsonConverterFactory.create())
+                .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
+                .build();
+
+    }
+
+    private RetrofitClient(String url) {
+
+        if (mContext == null) {
+            throw new RuntimeException("RetrofitClient must call init() first");
+        }
+        cookieStore = new PersistentCookieStore(mContext);
+        client = new OkHttpClient.Builder()
+                .addInterceptor(
+                        new HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BODY))
+                .addInterceptor(new HeaderAddInterceptor(addHeaders()))
+                //.cookieJar(new CookieJarImpl(new MemoryCookieStore()))
+                .cookieJar(new CookieJarImpl(cookieStore))
+                .retryOnConnectionFailure(true)
+                .connectTimeout(DEFAULT_TIMEOUT, TimeUnit.SECONDS)
+                .readTimeout(20, TimeUnit.SECONDS)
+                .writeTimeout(20, TimeUnit.SECONDS)
+                .cache(new Cache(mContext.getCacheDir(), MAX_SIZE))
+                .sslSocketFactory(SSLSocketClient.getSSLSocketFactory())
+                .hostnameVerifier(SSLSocketClient.getHostnameVerifier())
+                .build();
+
+        String baseUrl = url;
+        if (TextUtils.isEmpty(url)){
+            baseUrl = Config.BASE_URL;
+        }
+        retrofit = new Retrofit.Builder()
+                .client(client)
+                .baseUrl(baseUrl)
                 .addConverterFactory(GsonConverterFactory.create())
                 .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
                 .build();
@@ -87,6 +121,18 @@ public class RetrofitClient {
             synchronized (RetrofitClient.class) {
                 if (singleton == null) {
                     singleton = new RetrofitClient();
+                }
+            }
+        }
+        return singleton;
+    }
+
+    //含参数单例
+    public static RetrofitClient getInstance(String url) {
+        if (singleton == null) {
+            synchronized (RetrofitClient.class) {
+                if (singleton == null) {
+                    singleton = new RetrofitClient(url);
                 }
             }
         }

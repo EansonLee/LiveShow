@@ -74,8 +74,12 @@ public class StartLiveActivity extends BaseAcitivity implements View.OnClickList
     private String roomNum;
     //推流地址
     private String mPushUrl;
+    //传给后台地址
+    private String sendUrl;
     //图片地址
     private String photoPath;
+    //本地图片文件名
+    private String fileName;
 
     //是否进入直播间标志位
     private boolean isLoging;
@@ -123,6 +127,7 @@ public class StartLiveActivity extends BaseAcitivity implements View.OnClickList
             roomNum = baseDetail.getAnchor_code();
             //推流地址
             mPushUrl = "rtmp://push.agegeage.hqcqz1.cn/live/" + roomNum;
+            sendUrl = "m3u8://push.agegeage.hqcqz1.cn/live/" + roomNum;
             setReceiver(baseDetail);
         }
 
@@ -278,9 +283,15 @@ public class StartLiveActivity extends BaseAcitivity implements View.OnClickList
         }
         LiveBroadCastReq liveBroadCastReq = new LiveBroadCastReq();
         liveBroadCastReq.setToken(sharedPreferencesUtils.getString("token", ""));
-        liveBroadCastReq.setPicture(photoPath);
+        //判断是否选择本地图片
+        if (!TextUtils.isEmpty(fileName)){
+            String sendImgUrl = "http://images.fensemall.com/" + fileName;
+            liveBroadCastReq.setPicture(sendImgUrl);
+        }else {
+            liveBroadCastReq.setPicture(photoPath);
+        }
         liveBroadCastReq.setTitle(etTitle.getText().toString());
-        liveBroadCastReq.setUrl(mPushUrl);
+        liveBroadCastReq.setUrl(sendUrl);
 
         RetrofitClient
                 .getInstance()
@@ -318,13 +329,14 @@ public class StartLiveActivity extends BaseAcitivity implements View.OnClickList
      * 退出直播
      */
     private void stopLiveReq() {
-        LoginReq loginReq = new LoginReq();
+        LiveBroadCastReq liveBroadCastReq = new LiveBroadCastReq();
 
-        loginReq.setToken(sharedPreferencesUtils.getString("token", ""));
+        liveBroadCastReq.setToken(sharedPreferencesUtils.getString("token", ""));
+        liveBroadCastReq.setVideo_url("888");
         RetrofitClient
                 .getInstance()
                 .api(API.class)
-                .stopLiveReq(loginReq)
+                .stopLiveReq(liveBroadCastReq)
                 .enqueue(new Callback<ResponseObj<LoginResp>>() {
                     @Override
                     public void onResponse(Call<ResponseObj<LoginResp>> call, Response<ResponseObj<LoginResp>> response) {
@@ -479,7 +491,7 @@ public class StartLiveActivity extends BaseAcitivity implements View.OnClickList
         // 最后根据索引值获取图片路径
         photoPath = cursor.getString(column_index);
         //获取文件名
-        String fileName = getFileName(photoPath);
+        fileName = getFileName(photoPath);
         //上传七牛云
         UpLoadUtils.uploadPic(photoPath, fileName);
     }
