@@ -24,6 +24,7 @@ public class RetrofitClient {
 
     private static final int DEFAULT_TIMEOUT = 10;
     private static volatile RetrofitClient singleton;
+    private static volatile RetrofitClient singletonWithUrl;
     private static Context mContext;
     private OkHttpClient client;
     private Retrofit retrofit;
@@ -129,14 +130,14 @@ public class RetrofitClient {
 
     //含参数单例
     public static RetrofitClient getInstance(String url) {
-        if (singleton == null) {
+        if (singletonWithUrl == null) {
             synchronized (RetrofitClient.class) {
-                if (singleton == null) {
-                    singleton = new RetrofitClient(url);
+                if (singletonWithUrl == null) {
+                    singletonWithUrl = new RetrofitClient(url);
                 }
             }
         }
-        return singleton;
+        return singletonWithUrl;
     }
 
     public PersistentCookieStore getCookieStore() {

@@ -1,5 +1,7 @@
 package com.maywide.liveshow.net.resp;
 
+import java.util.List;
+
 public class LiveRecordResp {
     //接口回调
     private String msg;
@@ -9,7 +11,7 @@ public class LiveRecordResp {
     // 录制任务当前的状态(1-录制中,2-已停⽌止 (未收到回调数据),3-已停⽌止 (已收到回调数据),5-录制失败,6-定时录制)
     private int status;
     //录播内容
-    private Detail callbacks;
+    private List<Detail> callbacks;
 
     public String getMsg() {
         return msg;
@@ -35,15 +37,15 @@ public class LiveRecordResp {
         this.status = status;
     }
 
-    public Detail getCallbacks() {
+    public List<Detail> getCallbacks() {
         return callbacks;
     }
 
-    public void setCallbacks(Detail callbacks) {
+    public void setCallbacks(List<Detail> callbacks) {
         this.callbacks = callbacks;
     }
 
-    static class Detail{
+    public static class Detail{
         //录播地址
         private String key;
 

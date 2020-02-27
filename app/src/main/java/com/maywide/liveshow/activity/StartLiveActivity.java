@@ -127,7 +127,8 @@ public class StartLiveActivity extends BaseAcitivity implements View.OnClickList
             roomNum = baseDetail.getAnchor_code();
             //推流地址
             mPushUrl = "rtmp://push.agegeage.hqcqz1.cn/live/" + roomNum;
-            sendUrl = "m3u8://push.agegeage.hqcqz1.cn/live/" + roomNum;
+
+            sendUrl = "http://m3u8.agegeage.hqcqz1.cn/live/" + roomNum + "/playlist.m3u8";
             setReceiver(baseDetail);
         }
 
@@ -284,10 +285,10 @@ public class StartLiveActivity extends BaseAcitivity implements View.OnClickList
         LiveBroadCastReq liveBroadCastReq = new LiveBroadCastReq();
         liveBroadCastReq.setToken(sharedPreferencesUtils.getString("token", ""));
         //判断是否选择本地图片
-        if (!TextUtils.isEmpty(fileName)){
+        if (!TextUtils.isEmpty(fileName)) {
             String sendImgUrl = "http://images.fensemall.com/" + fileName;
             liveBroadCastReq.setPicture(sendImgUrl);
-        }else {
+        } else {
             liveBroadCastReq.setPicture(photoPath);
         }
         liveBroadCastReq.setTitle(etTitle.getText().toString());
@@ -448,6 +449,7 @@ public class StartLiveActivity extends BaseAcitivity implements View.OnClickList
             @Override
             public void onSureClik() {
                 stopLiveReq();
+//                finish();
             }
         });
         confirmDialog.show(getSupportFragmentManager());

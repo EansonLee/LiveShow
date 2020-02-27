@@ -25,8 +25,10 @@ import com.maywide.liveshow.net.resp.ResponseObj;
 
 import retrofit2.Call;
 import retrofit2.http.Body;
+import retrofit2.http.GET;
 import retrofit2.http.Headers;
 import retrofit2.http.POST;
+import retrofit2.http.Query;
 
 public interface API {
 
@@ -88,11 +90,11 @@ public interface API {
 
     //录播开始和结束
     @Headers("Content-Type:application/json")
-    @POST("/record/ctrl")
+    @POST("record/ctrl")
     Call<ResponseObj<LiveRecordResp>> recordLive(@Body LiveRecordReq req);
 
     //获取录播url
     @Headers("Content-Type:application/json")
-    @POST("/record/query")
-    Call<ResponseObj<LiveRecordResp>> recordUrlLive(@Body LiveRecordReq req);
+    @GET("record/query")
+    Call<ResponseList<LiveRecordResp>> recordUrlLive(@Query("token")String token,@Query("url")String url);
 }
