@@ -16,6 +16,7 @@ import android.view.KeyEvent;
 import android.view.SurfaceView;
 import android.view.View;
 import android.view.ViewTreeObserver;
+import android.view.WindowManager;
 import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -129,7 +130,7 @@ public class LiveActivity extends BaseAcitivity implements View.OnClickListener 
     //更多
     @BindView(R.id.iv_more)
     ImageView ivMore;
-    //    //发送
+        //发送
 //    @BindView(R.id.tv_send)
 //    TextView tvSend;
     //是否美颜标志位
@@ -150,13 +151,12 @@ public class LiveActivity extends BaseAcitivity implements View.OnClickListener 
     //公告栏弹框
     private BroadCastDialog broadCastDialog;
 
-    //拉流地址
-    private String pullUrl;
-    //
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN|
+                WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
         super.onCreate(savedInstanceState);
+
         ButterKnife.bind(this);
         //动态弹起布局
 //        addLayoutListener(lyLiveShow, lyBottom);
@@ -176,8 +176,7 @@ public class LiveActivity extends BaseAcitivity implements View.OnClickListener 
             tvName.setText(baseDetail.getNickname());
             tvBroadcast.setText(baseDetail.getNotice());
 
-            String roomNum = baseDetail.getAnchor_code();
-            pullUrl = "rtmp://pull.agegeage.hqcqz1.cn/live/"+roomNum;
+
 //            if (TextUtils.isEmpty(roomNum)){
 //                //开始录播
 //                liveRecordReq(pullUrl,"start");
@@ -207,6 +206,7 @@ public class LiveActivity extends BaseAcitivity implements View.OnClickListener 
                         socketBaseReq.setType("chat");
                         String msg = new Gson().toJson(socketBaseReq);
                         jWebSClientService.sendMsg(msg);
+                        etTalk.setText("");
                     }
                 }
                 return true;
@@ -298,9 +298,9 @@ public class LiveActivity extends BaseAcitivity implements View.OnClickListener 
                 confirmDialog.setOnSureClickListener(new ConfirmDialog.OnSureClickListener() {
                     @Override
                     public void onSureClik() {
-//                        stopLiveReq();
+                        stopLiveReq();
 //                        liveRecordReq(pullUrl,"stop");
-                        getRecordUrlReq(pullUrl);
+//                        getRecordUrlReq(pullUrl);
                     }
                 });
                 confirmDialog.show(getSupportFragmentManager());
@@ -331,11 +331,11 @@ public class LiveActivity extends BaseAcitivity implements View.OnClickListener 
     /**
      * 退出直播
      */
-    private void stopLiveReq(String recordUrl) {
+    private void stopLiveReq() {
         LiveBroadCastReq liveBroadCastReq = new LiveBroadCastReq();
 
         liveBroadCastReq.setToken(sharedPreferencesUtils.getString("token", ""));
-        liveBroadCastReq.setVideo_url(recordUrl);
+//        liveBroadCastReq.setVideo_url(recordUrl);
 
         RetrofitClient
                 .getInstance()
@@ -398,39 +398,6 @@ public class LiveActivity extends BaseAcitivity implements View.OnClickListener 
                 });
     }
 
-    /**
-     * 获取录播url
-     */
-    private void getRecordUrlReq(String url){
-        //退出直播
-        mTTTEngine.leaveChannel();
-
-        LiveRecordReq liveRecordReq = new LiveRecordReq();
-        String recordToken = "8564a540f6b96491dcabbe199fac9d4c";
-        String recordUrl = url;
-
-        RetrofitClient.getInstance("https://saury.api.baishan.com/api/")
-                .api(API.class)
-                .recordUrlLive(recordToken,recordUrl)
-                .enqueue(new Callback<ResponseList<LiveRecordResp>>() {
-                    @Override
-                    public void onResponse(Call<ResponseList<LiveRecordResp>> call, Response<ResponseList<LiveRecordResp>> response) {
-                        if ("200".equals(response.body().getCode())) {
-                            String recordUrl = response.body().getData().get(0).getCallbacks().get(0).getKey();
-                            stopLiveReq(recordUrl);
-                        } else {
-                            showToast(response.body().getMsg());
-                        }
-                        dismissProgressDialog();
-                    }
-
-                    @Override
-                    public void onFailure(Call<ResponseList<LiveRecordResp>> call, Throwable t) {
-
-                    }
-                });
-    }
-
     @Override
     protected void onDestroy() {
 
@@ -451,9 +418,9 @@ public class LiveActivity extends BaseAcitivity implements View.OnClickListener 
             showToast("再按一次退出应用");
             firstTime = secondTime;// 更新firstTime
         } else {
-//            stopLiveReq();
+            stopLiveReq();
 //            liveRecordReq(pullUrl,"stop");
-            getRecordUrlReq(pullUrl);
+//            getRecordUrlReq(pullUrl);
         }
     }
 

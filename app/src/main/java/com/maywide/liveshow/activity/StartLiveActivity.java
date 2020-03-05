@@ -25,7 +25,9 @@ import com.maywide.liveshow.base.BaseAcitivity;
 import com.maywide.liveshow.net.req.LiveBroadCastReq;
 import com.maywide.liveshow.net.req.LoginReq;
 
+import com.maywide.liveshow.net.resp.LiveRecordResp;
 import com.maywide.liveshow.net.resp.LoginResp;
+import com.maywide.liveshow.net.resp.ResponseList;
 import com.maywide.liveshow.net.resp.ResponseObj;
 import com.maywide.liveshow.net.retrofit.API;
 import com.maywide.liveshow.net.retrofit.RetrofitClient;
@@ -80,6 +82,8 @@ public class StartLiveActivity extends BaseAcitivity implements View.OnClickList
     private String photoPath;
     //本地图片文件名
     private String fileName;
+    //拉流地址
+    private String pullUrl;
 
     //是否进入直播间标志位
     private boolean isLoging;
@@ -94,7 +98,7 @@ public class StartLiveActivity extends BaseAcitivity implements View.OnClickList
         super.onCreate(savedInstanceState);
         ButterKnife.bind(this);
 
-        addLayoutListener(lyStartLive, tvStartLive);
+//        addLayoutListener(lyStartLive, tvStartLive);
     }
 
     @Override
@@ -129,6 +133,8 @@ public class StartLiveActivity extends BaseAcitivity implements View.OnClickList
             mPushUrl = "rtmp://push.agegeage.hqcqz1.cn/live/" + roomNum;
 
             sendUrl = "http://m3u8.agegeage.hqcqz1.cn/live/" + roomNum + "/playlist.m3u8";
+
+            pullUrl = "rtmp://pull.agegeage.hqcqz1.cn/live/" + roomNum;
             setReceiver(baseDetail);
         }
 
@@ -263,7 +269,7 @@ public class StartLiveActivity extends BaseAcitivity implements View.OnClickList
     /**
      * 开始直播请求
      */
-    private void liveBroadCastReq() {
+    private void liveBroadCastReq(String recordUrl) {
         //判断标题
         if (TextUtils.isEmpty(etTitle.getText().toString())) {
             dismissProgressDialog();
@@ -284,6 +290,7 @@ public class StartLiveActivity extends BaseAcitivity implements View.OnClickList
         }
         LiveBroadCastReq liveBroadCastReq = new LiveBroadCastReq();
         liveBroadCastReq.setToken(sharedPreferencesUtils.getString("token", ""));
+        liveBroadCastReq.setVideo_url(recordUrl);
         //判断是否选择本地图片
         if (!TextUtils.isEmpty(fileName)) {
             String sendImgUrl = "http://images.fensemall.com/" + fileName;
@@ -359,6 +366,40 @@ public class StartLiveActivity extends BaseAcitivity implements View.OnClickList
 
 
     /**
+     * 获取录播url
+     */
+    private void getRecordUrlReq(String url) {
+        //退出直播
+        mTTTEngine.leaveChannel();
+
+        String recordToken = "8564a540f6b96491dcabbe199fac9d4c";
+        String recordUrl = url;
+
+        RetrofitClient.getInstance("https://saury.api.baishan.com/api/")
+                .api(API.class)
+                .recordUrlLive(recordToken, recordUrl)
+                .enqueue(new Callback<ResponseList<LiveRecordResp>>() {
+                    @Override
+                    public void onResponse(Call<ResponseList<LiveRecordResp>> call, Response<ResponseList<LiveRecordResp>> response) {
+                        if ("200".equals(response.body().getCode())) {
+                            String recordUrl = response.body().getData().get(0).getCallbacks().get(0).getKey();
+//                            stopLiveReq();
+                            liveBroadCastReq(recordUrl);
+                        } else {
+                            showToast(response.body().getMsg());
+                        }
+                        dismissProgressDialog();
+                    }
+
+                    @Override
+                    public void onFailure(Call<ResponseList<LiveRecordResp>> call, Throwable t) {
+
+                    }
+                });
+    }
+
+
+    /**
      * 软键盘动态上移
      *
      * @param main
@@ -410,8 +451,8 @@ public class StartLiveActivity extends BaseAcitivity implements View.OnClickList
             @Override
             public void onSureClik() {
                 showProgressDialog("正在进入房间");
-
-                liveBroadCastReq();
+                getRecordUrlReq(pullUrl);
+//                liveBroadCastReq();
             }
         });
         liveDialog.show(getSupportFragmentManager());
