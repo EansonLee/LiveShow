@@ -440,10 +440,12 @@ public class LiveActivity extends BaseAcitivity implements View.OnClickListener 
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        if (!TextUtils.isEmpty(type) && type.equals("chat")) {
-            ChatSocketResp chatResp = new Gson().fromJson(chatData, ChatSocketResp.class);
-            chatList.add(chatResp);
-            talkAdapter.notifyDataSetChanged();
+        if (!TextUtils.isEmpty(type)) {
+            if (type.equals("chat")||type.equals("login")){
+                ChatSocketResp chatResp = new Gson().fromJson(chatData, ChatSocketResp.class);
+                chatList.add(chatResp);
+                talkAdapter.notifyDataSetChanged();
+            }
         }
     }
 

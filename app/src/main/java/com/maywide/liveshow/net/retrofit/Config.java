@@ -9,7 +9,7 @@ public class Config {
     /**
      * 外网地址
       */
-    public static final String BASE_IP = "http://103.45.180.99:8001";
+    public static final String BASE_IP = "http://47.103.157.220:8001";
 
     /**
      * 本地地址

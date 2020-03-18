@@ -150,7 +150,7 @@ public class JWebSocketClientService extends Service {
      * 初始化websocket连接
      */
     private void initSocketClient() {
-        URI uri = URI.create("ws://103.45.180.99:7272");
+        URI uri = URI.create("ws://47.103.157.220:7272");
         client = new JWebSocketClient(uri) {
             @Override
             public void onMessage(String message) {
