@@ -130,7 +130,7 @@ public class LiveActivity extends BaseAcitivity implements View.OnClickListener 
     //更多
     @BindView(R.id.iv_more)
     ImageView ivMore;
-        //发送
+    //发送
 //    @BindView(R.id.tv_send)
 //    TextView tvSend;
     //是否美颜标志位
@@ -153,7 +153,7 @@ public class LiveActivity extends BaseAcitivity implements View.OnClickListener 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN|
+        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN |
                 WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
         super.onCreate(savedInstanceState);
 
@@ -441,8 +441,11 @@ public class LiveActivity extends BaseAcitivity implements View.OnClickListener 
             e.printStackTrace();
         }
         if (!TextUtils.isEmpty(type)) {
-            if (type.equals("chat")||type.equals("login")){
+            if (type.equals("chat") || type.equals("login")) {
                 ChatSocketResp chatResp = new Gson().fromJson(chatData, ChatSocketResp.class);
+                if (type.equals("login")) {
+                    chatResp.setContent("进入房间");
+                }
                 chatList.add(chatResp);
                 talkAdapter.notifyDataSetChanged();
             }
