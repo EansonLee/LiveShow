@@ -7,7 +7,7 @@
     android:orientation="vertical"
     tools:context=".activity.LiveActivity">
 
-    <LinearLayout
+    <com.netease.vcloud.video.render.NeteaseView
         android:id="@+id/ly_live_show"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -15,7 +15,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"></LinearLayout>
+        app:layout_constraintTop_toTopOf="parent"></com.netease.vcloud.video.render.NeteaseView>
 
     <LinearLayout
         android:id="@+id/ly_title_bar"

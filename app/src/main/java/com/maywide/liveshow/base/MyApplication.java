@@ -11,13 +11,11 @@ import android.os.Build;
 import android.os.IBinder;
 import android.util.Log;
 
-import com.maywide.liveshow.Handler.MyTTTRtcEngineEventHandler;
 import com.maywide.liveshow.Service.JWebSocketClient;
 import com.maywide.liveshow.Service.JWebSocketClientService;
 import com.maywide.liveshow.net.retrofit.RetrofitClient;
 import com.maywide.liveshow.utils.ChannelChangReceiver;
 import com.maywide.liveshow.utils.ScreenAdapter;
-import com.wushuangtech.wstechapi.TTTRtcEngine;
 
 
 /**
@@ -26,10 +24,6 @@ import com.wushuangtech.wstechapi.TTTRtcEngine;
 
 public class MyApplication extends Application {
 
-    /**
-     * 回调类引用，用于接收SDK各种回调信令。
-     */
-    public MyTTTRtcEngineEventHandler mMyTTTRtcEngineEventHandler;
 
     public static ChannelChangReceiver channelChangReceiver;
     //webSocket
@@ -46,16 +40,6 @@ public class MyApplication extends Application {
         //屏幕适配
         ScreenAdapter.setup(this);
         ScreenAdapter.register(this, 375, ScreenAdapter.MATCH_BASE_WIDTH, ScreenAdapter.MATCH_UNIT_DP);
-
-        //1.创建自定义的 SDK 的回调接收类，继承自SDK的回调基类 TTTRtcEngineEventHandler
-        mMyTTTRtcEngineEventHandler = new MyTTTRtcEngineEventHandler(getApplicationContext());
-        //2.创建SDK的实例对象，APPID需要去官网上申请获取。
-        TTTRtcEngine mTTTEngine = TTTRtcEngine.create(getApplicationContext(), "1b25d805f99393bad26c3642096b93e6",
-                false, mMyTTTRtcEngineEventHandler);
-        if (mTTTEngine == null) {
-            System.exit(0);
-            return;
-        }
 
         initChannelChangReceiver();
         //启动服务

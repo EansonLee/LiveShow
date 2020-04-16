@@ -22,7 +22,6 @@ import com.maywide.liveshow.R;
 import com.maywide.liveshow.utils.NetWorkChangReceiver;
 import com.maywide.liveshow.utils.SharedPreferencesUtils;
 import com.maywide.liveshow.utils.StatusBarUtils;
-import com.wushuangtech.wstechapi.TTTRtcEngine;
 
 import butterknife.ButterKnife;
 
@@ -36,9 +35,6 @@ import static com.maywide.liveshow.base.MyApplication.serviceConnection;
 
 public abstract class BaseAcitivity extends AppCompatActivity {
 
-    public static String mobile = "17017300910";
-    //三体sdk引擎
-    protected TTTRtcEngine mTTTEngine;
 
     protected SharedPreferencesUtils sharedPreferencesUtils;
     private ProgressDialog progressDialog;
@@ -52,8 +48,7 @@ public abstract class BaseAcitivity extends AppCompatActivity {
         setContentView(getLayoutId());
         ButterKnife.bind(this);
 
-        //获取三体SDK实例对象
-        mTTTEngine = TTTRtcEngine.getInstance();
+
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON,
                 WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 

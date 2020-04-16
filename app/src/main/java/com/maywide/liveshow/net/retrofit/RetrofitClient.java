@@ -61,7 +61,7 @@ public class RetrofitClient {
 
     }
 
-    private RetrofitClient(String url) {
+    private RetrofitClient(String url, Map<String, String> map) {
 
         if (mContext == null) {
             throw new RuntimeException("RetrofitClient must call init() first");
@@ -70,7 +70,7 @@ public class RetrofitClient {
         client = new OkHttpClient.Builder()
                 .addInterceptor(
                         new HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BODY))
-                .addInterceptor(new HeaderAddInterceptor(addHeaders()))
+                .addInterceptor(new HeaderAddInterceptor(map))
                 //.cookieJar(new CookieJarImpl(new MemoryCookieStore()))
                 .cookieJar(new CookieJarImpl(cookieStore))
                 .retryOnConnectionFailure(true)
@@ -83,7 +83,7 @@ public class RetrofitClient {
                 .build();
 
         String baseUrl = url;
-        if (TextUtils.isEmpty(url)){
+        if (TextUtils.isEmpty(url)) {
             baseUrl = Config.BASE_URL;
         }
         retrofit = new Retrofit.Builder()
@@ -129,11 +129,11 @@ public class RetrofitClient {
     }
 
     //含参数单例
-    public static RetrofitClient getInstance(String url) {
+    public static RetrofitClient getInstance(String url, Map<String, String> map) {
         if (singletonWithUrl == null) {
             synchronized (RetrofitClient.class) {
                 if (singletonWithUrl == null) {
-                    singletonWithUrl = new RetrofitClient(url);
+                    singletonWithUrl = new RetrofitClient(url, map);
                 }
             }
         }

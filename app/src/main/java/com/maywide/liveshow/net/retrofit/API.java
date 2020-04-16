@@ -4,6 +4,7 @@ package com.maywide.liveshow.net.retrofit;
 import com.maywide.liveshow.net.req.BaseReq;
 import com.maywide.liveshow.net.req.DetailBoxKpiReq;
 import com.maywide.liveshow.net.req.EditIndexReq;
+import com.maywide.liveshow.net.req.FluReq;
 import com.maywide.liveshow.net.req.HomeKpiReq;
 import com.maywide.liveshow.net.req.HomeNewsReq;
 import com.maywide.liveshow.net.req.LiveBroadCastReq;
@@ -15,6 +16,7 @@ import com.maywide.liveshow.net.req.UpGradeReq;
 import com.maywide.liveshow.net.resp.BannerResp;
 import com.maywide.liveshow.net.resp.BroadCastInfoResp;
 import com.maywide.liveshow.net.resp.DetailBoxKpiResp;
+import com.maywide.liveshow.net.resp.FluResp;
 import com.maywide.liveshow.net.resp.HomeKpiResp;
 import com.maywide.liveshow.net.resp.HomeNewsResp;
 import com.maywide.liveshow.net.resp.LinkPerResp;
@@ -88,13 +90,13 @@ public interface API {
     Call<ResponseObj<DetailBoxKpiResp>> detailBoxKpi(@Body DetailBoxKpiReq req);
 
 
-    //录播开始和结束
+    //获取推流拉流url
     @Headers("Content-Type:application/json")
-    @POST("record/ctrl")
-    Call<ResponseObj<LiveRecordResp>> recordLive(@Body LiveRecordReq req);
+    @POST("channel/create")
+    Call<FluResp> getFlUrl(@Body FluReq req);
 
     //获取录播url
     @Headers("Content-Type:application/json")
     @GET("record/query")
-    Call<ResponseList<LiveRecordResp>> recordUrlLive(@Query("token")String token,@Query("url")String url);
+    Call<ResponseList<LiveRecordResp>> recordUrlLive(@Query("token") String token, @Query("url") String url);
 }

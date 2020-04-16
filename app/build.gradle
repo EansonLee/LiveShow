@@ -23,6 +23,13 @@ android {
         }
     }
     buildToolsVersion '26.0.2'
+    sourceSets {
+        main {
+            assets.srcDirs = ['assets']
+            jniLibs.srcDirs = ['jniLibs']
+        }
+
+    }
 }
 
 ext {
@@ -31,6 +38,7 @@ ext {
 
 dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
+    implementation fileTree(dir: 'jniLibs', include: '*.jar')
     implementation 'com.android.support:appcompat-v7:28.0.0'
     implementation "com.android.support:design:${supportLibVersion}"
     implementation "com.android.support:cardview-v7:${supportLibVersion}"
@@ -68,8 +76,6 @@ dependencies {
     implementation 'com.github.SheHuan:NiceDialog:1.1.9'
     //webview
     implementation 'com.just.agentweb:agentweb:4.0.2'
-    //三体
-    implementation(name: '3T_Native_SDK_for_Android', ext: 'aar')
     //圆形图片
     implementation 'com.makeramen:roundedimageview:2.3.0'
     //七牛上传图片

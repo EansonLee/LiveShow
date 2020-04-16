@@ -155,7 +155,7 @@ public class ManageKpiActivity extends BaseAcitivity implements View.OnClickList
     private void getKpiReq(final String type) {
         HomeKpiReq req = new HomeKpiReq();
         req.setIndexType(type);
-        req.setPhone(BaseAcitivity.mobile);
+//        req.setPhone(BaseAcitivity.mobile);
 
 
         RetrofitClient.getInstance().api(API.class).getHomeKpi(req).enqueue(new Callback<ResponseList<HomeKpiResp>>() {
@@ -200,7 +200,7 @@ public class ManageKpiActivity extends BaseAcitivity implements View.OnClickList
 
         }
         EditIndexReq req = new EditIndexReq();
-        req.setPhone(BaseAcitivity.mobile);
+//        req.setPhone(BaseAcitivity.mobile);
         req.setData(boxIdList);
 
 

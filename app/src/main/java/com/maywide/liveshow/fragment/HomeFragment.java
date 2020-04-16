@@ -309,7 +309,7 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener {
     private void getHomeKpiReq() {
         HomeKpiReq req = new HomeKpiReq();
         req.setIndexType("1");
-        req.setPhone(BaseAcitivity.mobile);
+//        req.setPhone(BaseAcitivity.mobile);
 
         showProgressDialog("");
         RetrofitClient.getInstance().api(API.class).getHomeKpi(req).enqueue(new Callback<ResponseList<HomeKpiResp>>() {
@@ -345,7 +345,7 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener {
     private void newsReq(final int pageIndex, int pageSize) {
 
         HomeNewsReq homeNewsReq = new HomeNewsReq();
-        homeNewsReq.setPhone(BaseAcitivity.mobile);
+//        homeNewsReq.setPhone(BaseAcitivity.mobile);
         homeNewsReq.setPageIndex(pageIndex);
         homeNewsReq.setPageSize(pageSize);
 

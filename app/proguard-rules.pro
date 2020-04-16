@@ -19,3 +19,10 @@
 # If you keep the line number information, uncomment this to
 # hide the original source file name.
 #-renamesourcefileattribute SourceFile
+-keep public class * implements java.io.Serializable { *; }
+-keep class * implements android.os.Parcelable { *; }
+-keep class * extends java.lang.annotation.Annotation
+-keepattributes Signature
+
+-keep class com.netease.vcloud.**{*;}
+-keep class com.netease.LSMediaCapture.**{*;}

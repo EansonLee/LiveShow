@@ -120,7 +120,7 @@ public class LoginActivity extends BaseAcitivity implements View.OnClickListener
         if (!TextUtils.isEmpty(phoneNum) && (!TextUtils.isEmpty(verCode))) {
             etPhone.setText(phoneNum);
             etVar.setText(verCode);
-            loginReq();
+//            loginReq();
         }
     }
 

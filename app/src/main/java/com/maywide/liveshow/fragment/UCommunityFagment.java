@@ -158,7 +158,7 @@ public class UCommunityFagment extends BaseFragment {
     private void newsReq(final int pageIndex, int pageSize) {
 
         HomeNewsReq homeNewsReq = new HomeNewsReq();
-        homeNewsReq.setPhone(BaseAcitivity.mobile);
+//        homeNewsReq.setPhone(BaseAcitivity.mobile);
         homeNewsReq.setPageIndex(pageIndex);
         homeNewsReq.setPageSize(pageSize);
 
