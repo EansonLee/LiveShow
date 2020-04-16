@@ -584,6 +584,9 @@ public class LiveActivity extends BaseAcitivity implements View.OnClickListener,
         if (!TextUtils.isEmpty(type)) {
             if (type.equals("chat") || type.equals("login")) {
                 ChatSocketResp chatResp = new Gson().fromJson(chatData, ChatSocketResp.class);
+                if (type.equals("login")) {
+                    chatResp.setContent("进入房间");
+                }
                 chatList.add(chatResp);
                 talkAdapter.notifyDataSetChanged();
             }
