@@ -53,6 +53,8 @@ public class LoginResp implements Serializable{
         private String headimgurl;
         //性别 1-男 2-女
         private int sex;
+        //推流url
+        private String pushUrl;
 
         public String getId() {
             return id;
@@ -148,6 +150,14 @@ public class LoginResp implements Serializable{
 
         public void setSex(int sex) {
             this.sex = sex;
+        }
+
+        public String getPushUrl() {
+            return pushUrl;
+        }
+
+        public void setPushUrl(String pushUrl) {
+            this.pushUrl = pushUrl;
         }
     }
 }

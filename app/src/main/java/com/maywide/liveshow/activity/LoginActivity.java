@@ -92,7 +92,7 @@ public class LoginActivity extends BaseAcitivity implements View.OnClickListener
         tvLogin.setOnClickListener(this);
         //设置输入模式
         etPhone.setInputType(InputType.TYPE_CLASS_PHONE);
-        etVar.setInputType(InputType.TYPE_TEXT_VARIATION_PASSWORD);
+        etVar.setInputType(InputType.TYPE_NUMBER_VARIATION_PASSWORD|InputType.TYPE_CLASS_NUMBER);
 
 //        timeCount = new TimeCount(60000, 1000);
 

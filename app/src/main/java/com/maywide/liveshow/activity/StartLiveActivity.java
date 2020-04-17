@@ -125,12 +125,12 @@ public class StartLiveActivity extends BaseAcitivity implements View.OnClickList
             //获取房间号
             roomNum = baseDetail.getAnchor_code();
             //推流地址
-//            mPushUrl = "rtmp://push.agegeage.hqcqz1.cn/live/" + roomNum;
+            mPushUrl = baseDetail.getPushUrl() + roomNum;
 //
-//            sendUrl = "http://m3u8.agegeage.hqcqz1.cn/live/" + roomNum + "/playlist.m3u8";
+            sendUrl = baseDetail.getPushUrl() + roomNum;
 //
-//            pullUrl = "rtmp://pull.agegeage.hqcqz1.cn/live/" + roomNum;
-            getFlUrl();
+            pullUrl = baseDetail.getPushUrl() + roomNum;
+//            getFlUrl();
         }
 
 //        if (!TextUtils.isEmpty(photoPath)) {

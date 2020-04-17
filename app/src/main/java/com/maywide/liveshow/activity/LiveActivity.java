@@ -209,11 +209,11 @@ public class LiveActivity extends BaseAcitivity implements View.OnClickListener,
             tvBroadcast.setText(baseDetail.getNotice());
 
             //推流地址
-            pushUrl = "rtmp://push.agegeage.hqcqz1.cn/live/" + roomNum;
+            pushUrl = baseDetail.getPushUrl() + roomNum;
 
-            sendUrl = "http://m3u8.agegeage.hqcqz1.cn/live/" + roomNum + "/playlist.m3u8";
+            sendUrl = baseDetail.getPushUrl() + roomNum;
 
-            pullUrl = "rtmp://pull.agegeage.hqcqz1.cn/live/" + roomNum;
+            pullUrl = baseDetail.getPushUrl() + roomNum;
 
 //            if (TextUtils.isEmpty(roomNum)){
 //                //开始录播
@@ -313,6 +313,7 @@ public class LiveActivity extends BaseAcitivity implements View.OnClickListener,
         }
         showToast("初始化中。。。");
         mThread = new Thread() {
+            @Override
             public void run() {
                 //正常网络下initLiveStream 1、2s就可完成，当网络很差时initLiveStream可能会消耗5-10s，因此另起线程防止UI卡住
                 if (!startAV()) {
